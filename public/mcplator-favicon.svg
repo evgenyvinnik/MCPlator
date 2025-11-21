@@ -1,0 +1,20 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="spark" x1="12" y1="12" x2="116" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a855f7" />
+      <stop offset="0.5" stop-color="#60a5fa" />
+      <stop offset="1" stop-color="#22d3ee" />
+    </linearGradient>
+  </defs>
+  <rect x="22" y="22" width="84" height="94" rx="12" fill="#0f172a" stroke="url(#spark)" stroke-width="4" />
+  <rect x="30" y="30" width="68" height="28" rx="6" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="3" />
+  <rect x="30" y="64" width="68" height="44" rx="8" fill="#111827" stroke="#1f2937" stroke-width="3" />
+  <circle cx="40" cy="76" r="6" fill="#f97316" />
+  <circle cx="60" cy="76" r="6" fill="#334155" />
+  <circle cx="80" cy="76" r="6" fill="#334155" />
+  <circle cx="40" cy="92" r="6" fill="#334155" />
+  <circle cx="60" cy="92" r="6" fill="#334155" />
+  <circle cx="80" cy="92" r="6" fill="#3b82f6" />
+  <path d="M18 32c12 0 18-4 20-16 2 12 8 16 20 16-12 0-18 4-20 16-2-12-8-16-20-16z" fill="url(#spark)" opacity="0.9" />
+  <path d="M100 14c5 0 7-2 8-7 1 5 3 7 8 7-5 0-7 2-8 7-1-5-3-7-8-7z" fill="url(#spark)" opacity="0.9" />
+</svg>
