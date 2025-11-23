@@ -20,7 +20,10 @@ interface CalculatorState {
   percent: () => void;
   memoryAdd: () => void;
   memorySubtract: () => void;
-  memoryRecallOrClear: () => void;
+  memoryRecall: () => void;
+  memoryClear: () => void;
+  allClear: () => void;
+  sqrt: () => void;
 }
 
 const MAX_LENGTH = 12;
@@ -88,6 +91,10 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
     }
   },
 
+  allClear: () => {
+    set({ display: '0', previous: null, operator: null, justEvaluated: false, poweredOff: false });
+  },
+
   togglePower: () => {
     const { poweredOff } = get();
     if (poweredOff) {
@@ -142,21 +149,45 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
     set({ display: formatNumber(value) });
   },
 
+  sqrt: () => {
+    const { poweredOff, display } = get();
+    if (poweredOff || display === 'Err') return;
+    const value = parseFloat(display || '0');
+    if (value < 0) {
+      set({ display: 'Err', justEvaluated: true });
+      return;
+    }
+    set({ display: formatNumber(Math.sqrt(value)), justEvaluated: true });
+  },
+
   memoryAdd: () => {
     const { poweredOff, display } = get();
     if (poweredOff || display === 'Err') return;
     const value = parseFloat(display || '0');
-    set((state) => ({ memory: state.memory + value, recallArmed: false }));
+    set((state) => ({ memory: state.memory + value, recallArmed: false, justEvaluated: true }));
   },
 
   memorySubtract: () => {
     const { poweredOff, display } = get();
     if (poweredOff || display === 'Err') return;
     const value = parseFloat(display || '0');
-    set((state) => ({ memory: state.memory - value, recallArmed: false }));
+    set((state) => ({ memory: state.memory - value, recallArmed: false, justEvaluated: true }));
+  },
+
+  memoryRecall: () => {
+    const { poweredOff, memory } = get();
+    if (poweredOff) return;
+    set({ display: formatNumber(memory), justEvaluated: true });
+  },
+
+  memoryClear: () => {
+    const { poweredOff } = get();
+    if (poweredOff) return;
+    set({ memory: 0 });
   },
 
   memoryRecallOrClear: () => {
+     // Keeping for backward compatibility if needed, but we have specific actions now
     const { poweredOff, recallArmed, memory } = get();
     if (poweredOff) return;
     if (recallArmed) {
