@@ -60,22 +60,22 @@ const buttonBaseStyle: React.CSSProperties = {
   fontWeight: 500,
   fontSize: '20px',
   color: 'white',
-  background: 'linear-gradient(to bottom, #505050 30%, #303030 100%)',
+  background: 'linear-gradient(to bottom, #545454 0%, #3d3d3d 45%, #2a2a2a 100%)',
   boxShadow: `1px 1px 1px 1px rgba(0, 0, 0, 0.1),
     0px 0px 0px 1px rgba(0, 0, 0, 0.8), 
     inset 1px 0px 1px 0px rgba(0, 0, 0, 0.3),
     inset -1px 0px 1px 0px rgba(0, 0, 0, 0.3),
-    inset 0px 1px 1px 0px rgba(255, 255, 255, 0.4),
-    inset 0px -3px 3px rgba(255, 255, 255, 0.1),
+    inset 0px 1px 1px 0px rgba(255, 255, 255, 0.5),
+    inset 0px -3px 3px rgba(255, 255, 255, 0.15),
     0px 8px 10px 0px rgba(0, 0, 0, 0.3),
-    inset 0px -3px 1px 1px rgba(0, 0, 0, 0.3),
+    inset 0px -3px 1px 1px rgba(0, 0, 0, 0.4),
     0px 0px 0px 3px rgba(0, 0, 0, 0.1)`,
   border: '1px solid #0b0c10',
   borderRadius: '6px 6px 12px 12px',
   transition: 'all 0.1s ease-out',
   cursor: 'pointer',
   outline: 'none',
-  textShadow: '2px 2px 0px rgba(0, 0, 0, 0.3)',
+  textShadow: '1px 2px 2px rgba(0, 0, 0, 0.5)',
 };
 
 const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
@@ -132,7 +132,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
     let buttonStyle: React.CSSProperties = { ...buttonBaseStyle, fontSize };
 
     if (isRed) {
-      buttonStyle.background = 'linear-gradient(to bottom, #975265 50%, #843a4f 100%)';
+      buttonStyle.background = 'linear-gradient(to bottom, #9d5565 0%, #7a3d4a 50%, #5d2f39 100%)';
     }
 
     if (isSmall) {
@@ -149,9 +149,9 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
 
     const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (isRed) {
-        e.currentTarget.style.background = 'linear-gradient(to bottom, #c0607b 30%, rgb(104, 46, 63) 100%)';
+        e.currentTarget.style.background = 'linear-gradient(to bottom, #b66575 0%, #8d4a56 50%, #6d3b45 100%)';
       } else {
-        e.currentTarget.style.background = 'linear-gradient(to bottom, #606060 30%, #303030 100%)';
+        e.currentTarget.style.background = 'linear-gradient(to bottom, #646464 0%, #4a4a4a 50%, #353535 100%)';
       }
       e.currentTarget.style.boxShadow = `3px 3px 5px 0px rgba(0, 0, 0, 0.3),
         0px 0px 0px 1px rgba(0, 0, 0, 0.9), 
@@ -172,9 +172,9 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
     const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.currentTarget.style.color = 'lightgray';
       if (isRed) {
-        e.currentTarget.style.background = 'linear-gradient(to bottom, #46222c 50%, #682d3d 100%)';
+        e.currentTarget.style.background = 'linear-gradient(to bottom, #5d2f39 0%, #4a2430 50%, #3a1d26 100%)';
       } else {
-        e.currentTarget.style.background = 'linear-gradient(to bottom, #202020 50%, #303030 100%)';
+        e.currentTarget.style.background = 'linear-gradient(to bottom, #2a2a2a 0%, #252525 50%, #202020 100%)';
       }
       e.currentTarget.style.transform = 'translateY(1px)';
       e.currentTarget.style.boxShadow = `1px 1px 1px 1px rgba(0, 0, 0, 0.1),

@@ -7,7 +7,7 @@ type RetroScreenProps = {
   negative: boolean;
 };
 
-const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory }) => {
+const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negative }) => {
   return (
     <div 
       style={{
@@ -36,28 +36,28 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory }) => {
         >
           {value}
         </span>
-        {memory && (
-          <span 
-            style={{
-              position: 'absolute',
-              top: '24px',
-              left: '0px',
-              width: '24px',
-              textAlign: 'center',
-              fontSize: '13px',
-              fontWeight: 600,
-              fontStyle: 'italic',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              lineHeight: '0.8'
-            }}
-          >
-            <div>M</div>
-            <div>&#x029EB;</div>
-            <div>E</div>
-          </span>
-        )}
+        {/* Indicators: M (memory), minus (negative), E (error) */}
+        <span 
+          style={{
+            position: 'absolute',
+            top: '24px',
+            left: '8px',
+            width: '24px',
+            textAlign: 'center',
+            fontSize: '13px',
+            fontWeight: 600,
+            fontStyle: 'italic',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            lineHeight: '0.8',
+            gap: '6px'
+          }}
+        >
+          <div style={{ opacity: memory ? 1 : 0.15 }}>M</div>
+          <div style={{ opacity: negative ? 1 : 0.15, fontSize: '16px', lineHeight: '0.6' }}>−</div>
+          <div style={{ opacity: error ? 1 : 0.15 }}>E</div>
+        </span>
       </div>
     </div>
   );

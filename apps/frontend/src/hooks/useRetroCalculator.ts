@@ -54,9 +54,10 @@ export const useRetroCalculator = () => {
       const entryKey = currentState.nextEntry !== null || currentState.operation !== null ? 'nextEntry' : 'currentEntry';
       const currentVal = currentState[entryKey];
       
-      // Fix: 8-digit limit
+      // Fix: 8-digit limit (count digits excluding decimal point and minus sign)
       const stringVal = currentVal === null ? '' : String(currentVal);
-      if (stringVal.replace('.', '').length >= MAX_DIGITS) {
+      const digitCount = stringVal.replace('.', '').replace('-', '').length;
+      if (digitCount >= MAX_DIGITS) {
         return currentState;
       }
 
@@ -97,9 +98,13 @@ export const useRetroCalculator = () => {
       if (value === 'sqrt') {
         const val = Number(currentState[entryKey] || 0);
         if (val < 0) return { ...currentState, error: true };
+        const result = Math.sqrt(val);
+        // Format to fit in 8 digits
+        const formatted = formatResult(result);
         return {
           ...currentState,
-          [entryKey]: Math.sqrt(val),
+          [entryKey]: formatted === 'ERROR' ? (currentState.error = true, currentState[entryKey]) : formatted,
+          error: formatted === 'ERROR',
         };
       }
     }
@@ -121,9 +126,12 @@ export const useRetroCalculator = () => {
         
         if (result === 'ERROR') return { ...currentState, error: true };
 
+        const formatted = formatResult(result);
+        if (formatted === 'ERROR') return { ...currentState, error: true };
+
         return {
           ...currentState,
-          currentEntry: result,
+          currentEntry: formatted,
           nextEntry: null,
           operation: null,
           lastAction: 'perform',
@@ -143,9 +151,12 @@ export const useRetroCalculator = () => {
       const result = calculate(Number(currentState.currentEntry), Number(currentState.nextEntry), currentState.operation!);
       if (result === 'ERROR') return { ...currentState, error: true };
 
+      const formatted = formatResult(result);
+      if (formatted === 'ERROR') return { ...currentState, error: true };
+
       return {
         ...currentState,
-        currentEntry: result,
+        currentEntry: formatted,
         nextEntry: null,
         operation: value,
       };
@@ -204,11 +215,45 @@ function calculate(a: number, b: number, op: string): number | 'ERROR' {
     default: return b;
   }
   
-  // Check 8 digit limit for result? Or just display limit?
-  // Usually calculators display E if result > 99999999
-  if (Math.abs(res) > 99999999) return 'ERROR';
+  return res;
+}
+
+function formatResult(num: number): number | string | 'ERROR' {
+  // Check if number is too large
+  if (!isFinite(num) || Math.abs(num) >= 100000000) return 'ERROR';
   
-  // Round to avoid float precision issues fitting in 8 digits
-  // This is a simple implementation
-  return parseFloat(res.toPrecision(8));
+  // Convert to string to count digits
+  let strNum = String(num);
+  
+  // Count actual digits (excluding sign, decimal point)
+  const digitCount = strNum.replace('-', '').replace('.', '').length;
+  
+  // If fits in 8 digits, return as-is
+  if (digitCount <= 8) {
+    return num;
+  }
+  
+  // Try to fit by reducing precision
+  // For numbers with many decimal places, limit decimal places
+  if (strNum.includes('.')) {
+    const parts = strNum.split('.');
+    const intPart = parts[0].replace('-', '');
+    const maxDecimals = 8 - intPart.length;
+    
+    if (maxDecimals > 0) {
+      return parseFloat(num.toFixed(maxDecimals));
+    } else if (maxDecimals === 0) {
+      return Math.round(num);
+    }
+  }
+  
+  // If still too large, use toPrecision
+  const result = parseFloat(num.toPrecision(8));
+  const resultStr = String(result).replace('-', '').replace('.', '');
+  
+  if (resultStr.length <= 8) {
+    return result;
+  }
+  
+  return 'ERROR';
 }
