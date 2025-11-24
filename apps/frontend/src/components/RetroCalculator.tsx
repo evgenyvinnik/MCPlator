@@ -121,6 +121,7 @@ const RetroCalculator: React.FC = () => {
           memory={!!state.memory}
           error={state.error}
           negative={Number(state.nextEntry !== null ? state.nextEntry : state.currentEntry) < 0}
+          isOn={state.open}
         />
         <div style={{ position: 'relative' }}>
           <h2 style={{ 

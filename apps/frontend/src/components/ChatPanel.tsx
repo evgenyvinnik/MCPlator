@@ -20,8 +20,9 @@ export const ChatPanel: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
-      <div className="bg-gray-100 p-4 border-b border-gray-200 font-bold text-gray-700">
+    <div className="flex flex-col h-full bg-transparent text-gray-200">
+      <div className="p-4 border-b border-white/10 font-bold text-gray-200 flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
         Calculator Brain
       </div>
       
@@ -30,7 +31,7 @@ export const ChatPanel: React.FC = () => {
           <div className="text-center text-gray-400 mt-10">
             Ask me to calculate something!
             <br />
-            <span className="text-sm">"Add 50 and 20 then multiply by 3"</span>
+            <span className="text-sm text-gray-500">"Add 50 and 20 then multiply by 3"</span>
           </div>
         )}
         
@@ -41,10 +42,10 @@ export const ChatPanel: React.FC = () => {
           >
             <div
               className={`
-                max-w-[80%] p-3 rounded-lg text-sm
+                max-w-[85%] p-3 rounded-lg text-sm
                 ${msg.role === 'user' 
-                  ? 'bg-blue-500 text-white rounded-br-none' 
-                  : 'bg-gray-200 text-gray-800 rounded-bl-none'}
+                  ? 'bg-purple-600 text-white rounded-br-none' 
+                  : 'bg-white/10 text-gray-200 rounded-bl-none'}
               `}
             >
               {msg.text}
@@ -54,7 +55,7 @@ export const ChatPanel: React.FC = () => {
         
         {isThinking && (
           <div className="flex justify-start">
-            <div className="bg-gray-200 text-gray-800 p-3 rounded-lg rounded-bl-none text-sm italic animate-pulse">
+            <div className="bg-white/10 text-gray-200 p-3 rounded-lg rounded-bl-none text-sm italic animate-pulse">
               Thinking...
             </div>
           </div>
@@ -62,20 +63,20 @@ export const ChatPanel: React.FC = () => {
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200 bg-gray-50">
+      <form onSubmit={handleSubmit} className="p-4 border-t border-white/10 bg-transparent">
         <div className="flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a request..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-2 bg-white/5 border border-white/10 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-500"
             disabled={isThinking}
           />
           <button
             type="submit"
             disabled={isThinking || !input.trim()}
-            className="bg-blue-500 text-white px-4 py-2 rounded-full font-bold hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Send
           </button>
