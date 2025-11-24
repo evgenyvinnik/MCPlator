@@ -32,10 +32,10 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
         <div 
           style={{ 
             fontFamily: 'digit',
-            fontSize: '44px', // Reduced from 70px
+            fontSize: '60px', // Increased for larger digits
             position: 'absolute',
             right: '12px',
-            top: '24px', // Adjusted for vertical centering
+            top: '18px', // Adjusted for vertical centering
             display: 'flex',
             alignItems: 'baseline',
             justifyContent: 'flex-end',
@@ -43,7 +43,9 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
             height: '80px',
             color: '#111', // Enforce dark color
             opacity: isOn ? 1 : 0, // Hide when off
-            transition: 'opacity 0.2s ease-in-out'
+            transition: 'opacity 0.2s ease-in-out',
+            gap: '1px', // Minimal gap between digits
+            letterSpacing: '1px' // Compress digits together
           }}
         >
           {(() => {
@@ -85,14 +87,14 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
             }
 
             return digits.map((d, i) => (
-              <div key={i} style={{ position: 'relative', display: 'flex', alignItems: 'baseline', marginRight: '0px' }}>
+              <div key={i} style={{ position: 'relative', display: 'flex', alignItems: 'baseline' }}>
                 {/* Thousand Separator */}
                 <div style={{
                   position: 'absolute',
                   top: '-2px',
-                  right: '-2px',
+                  right: '-3px',
                   opacity: d.hasSeparator ? 1 : 0,
-                  fontSize: '12px',
+                  fontSize: '24px', // Maximum size thousands separator
                   fontWeight: 'bold',
                   color: '#111',
                   fontFamily: 'sans-serif'
@@ -105,17 +107,14 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
                 {/* Decimal Point */}
                 <div 
                   style={{ 
-                    width: '5px', 
-                    height: '5px', 
+                    width: '6px', 
+                    height: '6px', 
                     background: d.hasDot ? '#111' : 'transparent',
                     borderRadius: '50%',
-                    marginLeft: '2px',
-                    marginRight: '2px',
-                    alignSelf: 'flex-end',
-                    marginBottom: '6px', 
                     opacity: d.hasDot ? 1 : 0,
-                    position: 'relative',
-                    top: '2px' 
+                    position: 'absolute',
+                    bottom: '8px',
+                    right: '-4px'
                   }} 
                 />
               </div>
@@ -150,13 +149,13 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
           {/* Negative Indicator - Hexagon */}
           <div style={{ 
             opacity: negative ? 1 : 0.1,
-            width: '12px',
-            height: '10px',
+            width: '16px',
+            height: '7px', // Squished height
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            <svg viewBox="0 0 100 86.6" width="100%" height="100%" style={{ fill: '#111' }}>
+            <svg viewBox="0 0 100 86.6" width="100%" height="100%" style={{ fill: '#111' }} preserveAspectRatio="none">
               <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3" />
             </svg>
           </div>
