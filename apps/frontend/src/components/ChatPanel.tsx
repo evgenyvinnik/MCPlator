@@ -20,67 +20,99 @@ export const ChatPanel: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-transparent text-gray-200">
-      <div className="p-4 border-b border-white/10 font-bold text-gray-200 flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-        Calculator Brain
+    <div className="flex h-full flex-col bg-transparent text-slate-100">
+      <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 font-mono text-sm text-cyan-200 shadow-inner shadow-black/50">
+            {'>_'}
+          </div>
+          <div>
+            <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-cyan-300">Calculator Brain</p>
+            <p className="text-sm text-slate-300">Codex channel · VS Code vibe</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-mono text-emerald-300">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+          Live
+        </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
         {messages.length === 0 && (
-          <div className="text-center text-gray-400 mt-10">
-            Ask me to calculate something!
-            <br />
-            <span className="text-sm text-gray-500">"Add 50 and 20 then multiply by 3"</span>
+          <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-6 text-center text-slate-300 shadow-inner shadow-black/40">
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-400">No thread yet</p>
+            <p className="mt-2 text-sm text-slate-400">
+              Ask the co-pilot to plan a calculation or stream a sequence of keypresses.
+            </p>
           </div>
         )}
         
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
+        {messages.map((msg) => {
+          const isUser = msg.role === 'user';
+          return (
             <div
-              className={`
-                max-w-[85%] p-3 rounded-lg text-sm
-                ${msg.role === 'user' 
-                  ? 'bg-purple-600 text-white rounded-br-none' 
-                  : 'bg-white/10 text-gray-200 rounded-bl-none'}
-              `}
+              key={msg.id}
+              className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
             >
-              {msg.text}
+              <div
+                className={`
+                  relative max-w-[92%] rounded-xl border p-4 shadow-[0_12px_45px_rgba(0,0,0,0.45)]
+                  ${isUser 
+                    ? 'border-cyan-400/20 bg-gradient-to-br from-[#18213a] to-[#0f1628]' 
+                    : 'border-white/10 bg-white/5'}
+                `}
+              >
+                <div className="mb-2 flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.16em] text-slate-400">
+                  <span className={`h-1.5 w-1.5 rounded-full ${isUser ? 'bg-cyan-300' : 'bg-emerald-300'}`} />
+                  {isUser ? 'You' : 'Codex'}
+                </div>
+                <p className="font-mono whitespace-pre-line text-sm leading-relaxed text-slate-100">
+                  {msg.text}
+                </p>
+                <div className="absolute inset-y-3 left-2 w-[1px] bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         
         {isThinking && (
           <div className="flex justify-start">
-            <div className="bg-white/10 text-gray-200 p-3 rounded-lg rounded-bl-none text-sm italic animate-pulse">
-              Thinking...
+            <div className="relative max-w-[92%] rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm italic text-slate-200 shadow-[0_12px_45px_rgba(0,0,0,0.45)]">
+              <div className="mb-1 flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.16em] text-slate-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                Drafting
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-white/70" />
+                <span className="h-2 w-2 animate-pulse rounded-full bg-white/70 [animation-delay:120ms]" />
+                <span className="h-2 w-2 animate-pulse rounded-full bg-white/70 [animation-delay:240ms]" />
+              </div>
             </div>
           </div>
         )}
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="p-4 border-t border-white/10 bg-transparent">
-        <div className="flex gap-2">
+      <form onSubmit={handleSubmit} className="border-t border-white/10 bg-[rgba(6,11,24,0.8)] px-5 py-4">
+        <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-[rgba(14,22,44,0.8)] shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
+          <span className="pl-4 pr-2 text-xs font-mono uppercase tracking-[0.12em] text-slate-500">calc&gt;</span>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a request..."
-            className="flex-1 px-4 py-2 bg-white/5 border border-white/10 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-500"
+            placeholder="Ask the agent to run steps on the calculator"
+            className="flex-1 bg-transparent px-1 py-3 text-white placeholder-slate-600 focus:outline-none"
             disabled={isThinking}
           />
           <button
             type="submit"
             disabled={isThinking || !input.trim()}
-            className="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="m-1 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-4 py-2 font-semibold text-white shadow-[0_10px_30px_rgba(76,201,240,0.35)] transition hover:from-cyan-400 hover:to-purple-500 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Send
           </button>
         </div>
+        <p className="mt-2 text-[11px] font-mono text-slate-500">Press Enter to transmit.</p>
       </form>
     </div>
   );

@@ -108,7 +108,8 @@ const RetroCalculator: React.FC = () => {
             fontWeight: 'bold',
             lineHeight: 2,
             fontSize: '10px',
-            textAlign: 'center'
+            textAlign: 'center',
+            color: '#000'
           }}>
             TWO WAY POWER
           </div>
@@ -128,7 +129,8 @@ const RetroCalculator: React.FC = () => {
             position: 'absolute', 
             fontSize: '10px', 
             top: '2px', 
-            left: '24px' 
+            left: '24px',
+            color: '#000'
           }}>
             SL-300SV
           </h2>

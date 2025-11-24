@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 @import "./assets/fonts/digit/index.css";
 @tailwind base;
@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 * {
@@ -16,9 +16,17 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at 50% 50%, #2d1b4e 0%, #1a102e 100%);
+  font-family: 'Sora', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #05060d;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(98, 64, 255, 0.28), transparent 30%),
+    radial-gradient(circle at 80% 10%, rgba(19, 192, 255, 0.22), transparent 28%),
+    radial-gradient(circle at 20% 80%, rgba(73, 255, 191, 0.16), transparent 28%),
+    linear-gradient(135deg, #05060d 0%, #070c16 40%, #05060d 100%);
   color: #e2e8f0;
+  background-attachment: fixed;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {

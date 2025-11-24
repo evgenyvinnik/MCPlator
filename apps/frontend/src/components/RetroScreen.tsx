@@ -22,7 +22,7 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
           position: 'relative',
           overflow: 'hidden',
           height: '94px',
-          padding: '16px 4px',
+          padding: '16px 6px',
           borderRadius: '4px',
           boxShadow: '0px 2px 3px 3px rgba(255, 255, 255, 0.3), -1px -3px 1px 3px rgba(0, 0, 0, 0.55)',
           background: 'linear-gradient(to bottom, #c3ced0 30%, #dbe2ea 100%)',
@@ -34,7 +34,7 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
             fontFamily: 'digit',
             fontSize: '60px', // Increased for larger digits
             position: 'absolute',
-            right: '8px',
+            right: '10px',
             top: '18px', // Adjusted for vertical centering
             display: 'flex',
             alignItems: 'baseline',
@@ -45,7 +45,8 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
             opacity: isOn ? 1 : 0, // Hide when off
             transition: 'opacity 0.2s ease-in-out',
             gap: '1px', // Minimal gap between digits
-            letterSpacing: '1px' // Compress digits together
+            letterSpacing: '1px', // Compress digits together
+            transform: 'skewX(-8deg)'
           }}
         >
           {(() => {

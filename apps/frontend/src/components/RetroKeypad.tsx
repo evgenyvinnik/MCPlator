@@ -1,4 +1,6 @@
 import React from 'react';
+import sqrtIcon from '../assets/icons/sqrt.svg';
+import changeSignIcon from '../assets/icons/change-sign.svg';
 
 // Define the layout matching original - 6 rows x 5 columns
 const layout = [
@@ -252,7 +254,33 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
         >
-          {keyDef.label}
+          {keyDef.value === 'sqrt' ? (
+            <img
+              src={sqrtIcon}
+              alt="sqrt"
+              style={{
+                width: '22px',
+                height: '22px',
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                marginTop: '-1px',
+              }}
+            />
+          ) : keyDef.value === 'change_sign' ? (
+            <img
+              src={changeSignIcon}
+              alt="+/-"
+              style={{
+                width: '26px',
+                height: '26px',
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                marginTop: '-1px',
+              }}
+            />
+          ) : (
+            keyDef.label
+          )}
         </button>
         {isACButton && (
           <div 
