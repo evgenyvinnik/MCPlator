@@ -6,67 +6,44 @@ function App() {
   useAnimationRunner();
 
   return (
-    <div className="relative min-h-screen w-screen overflow-hidden bg-[#05060f] text-slate-100">
+    <div className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-br from-[#0a0e1a] via-[#1a1f35] to-[#0f1629] text-slate-100">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-24 top-0 h-96 w-96 rounded-full bg-[radial-gradient(circle_at_center,rgba(102,76,255,0.35),transparent_55%)] blur-3xl" />
-        <div className="absolute right-[-8%] -top-10 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,223,255,0.25),transparent_55%)] blur-3xl" />
-        <div className="absolute left-[36%] bottom-[-12rem] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(94,255,199,0.18),transparent_60%)] blur-3xl" />
-        <div className="absolute inset-0 opacity-50 bg-[linear-gradient(120deg,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(0deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:140px_140px]" />
+        <div className="absolute -left-32 top-0 h-[32rem] w-[32rem] animate-pulse rounded-full bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.4),transparent_60%)] blur-3xl [animation-duration:8s]" />
+        <div className="absolute right-[-10%] -top-16 h-[36rem] w-[36rem] animate-pulse rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.35),transparent_60%)] blur-3xl [animation-delay:2s] [animation-duration:10s]" />
+        <div className="absolute left-[30%] bottom-[-16rem] h-[32rem] w-[32rem] animate-pulse rounded-full bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.3),transparent_65%)] blur-3xl [animation-delay:4s] [animation-duration:12s]" />
+        <div className="absolute right-[20%] top-[40%] h-[28rem] w-[28rem] animate-pulse rounded-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.25),transparent_65%)] blur-3xl [animation-delay:1s] [animation-duration:9s]" />
+        <div className="absolute left-[60%] top-[20%] h-[24rem] w-[24rem] animate-pulse rounded-full bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.2),transparent_65%)] blur-3xl [animation-delay:3s] [animation-duration:11s]" />
+        <div className="absolute inset-0 opacity-40 bg-[linear-gradient(120deg,rgba(139,92,246,0.08)_1px,transparent_1px),linear-gradient(0deg,rgba(59,130,246,0.06)_1px,transparent_1px)] bg-[size:120px_120px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e1a]/50 via-transparent to-transparent" />
       </div>
 
       <header className="relative z-10 flex items-center justify-between px-10 py-8">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-[0_14px_40px_rgba(0,0,0,0.5)]">
-            <span className="text-lg font-semibold tracking-tight text-cyan-200">MC</span>
-          </div>
-          <div className="space-y-1">
-            <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-cyan-300">MCPlator Labs</p>
-            <p className="text-xl font-display font-semibold text-white">Analog precision, AI intuition.</p>
-          </div>
-        </div>
-
         <div className="hidden items-center gap-3 text-xs font-mono text-slate-300 md:flex">
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Realtime math</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">LLM guidance</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Glass UI</span>
+          <span className="rounded-full border border-[#007acc]/30 bg-gradient-to-r from-[#007acc]/10 to-[#005a9e]/10 px-3 py-1.5 shadow-lg shadow-[#007acc]/10">Realtime math</span>
+          <span className="rounded-full border border-purple-500/30 bg-gradient-to-r from-purple-500/10 to-pink-500/10 px-3 py-1.5 shadow-lg shadow-purple-500/10">LLM guidance</span>
+          <span className="rounded-full border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 px-3 py-1.5 shadow-lg shadow-emerald-500/10">Glass UI</span>
         </div>
       </header>
 
       <main className="relative z-10 flex h-[calc(100vh-120px)] gap-8 px-8 pb-10">
         <div className="flex-1 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="max-w-xl space-y-6">
-            <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.16em] text-cyan-200">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-              Co-process with the calculator
-            </span>
-            <h1 className="text-4xl font-display font-semibold leading-tight text-white md:text-5xl">
+            <h1 className="text-4xl font-display font-bold leading-tight bg-gradient-to-r from-white via-slate-100 to-slate-200 bg-clip-text text-transparent md:text-5xl">
               The retro calculator now ships with a neural co-pilot.
             </h1>
-            <p className="text-lg leading-relaxed text-slate-300">
-              Drop your steps, let the Codex-style chat orchestrate the keystrokes, and watch the classic Casio keep up with future-grade reasoning.
-            </p>
-            <div className="flex flex-wrap gap-3 text-sm text-slate-200">
-              <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 shadow-lg shadow-emerald-500/10">
-                <p className="font-mono text-xs text-emerald-300">Signal</p>
-                <p className="font-semibold">Verified keypress stream</p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 shadow-lg shadow-cyan-500/10">
-                <p className="font-mono text-xs text-cyan-300">LLM</p>
-                <p className="font-semibold">Context-aware math agent</p>
-              </div>
-            </div>
           </div>
 
           <div className="relative flex items-center justify-center">
-            <div className="absolute -inset-6 rounded-[30px] bg-gradient-to-br from-white/10 via-white/5 to-transparent blur-3xl" />
-            <div className="absolute -inset-1 rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-xl" />
+            <div className="absolute -inset-8 rounded-[32px] bg-gradient-to-br from-purple-500/20 via-blue-500/15 to-pink-500/10 blur-3xl opacity-80" />
+            <div className="absolute -inset-4 rounded-[30px] bg-gradient-to-br from-[#007acc]/10 via-purple-500/10 to-emerald-500/10 blur-2xl" />
+            <div className="absolute -inset-1 rounded-[28px] border border-white/20 bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl shadow-2xl" />
             <div className="relative">
               <RetroCalculator />
             </div>
           </div>
         </div>
 
-        <div className="h-full w-full max-w-[440px] overflow-hidden rounded-2xl border border-white/10 bg-[rgba(11,16,33,0.8)] shadow-[0_20px_80px_rgba(0,0,0,0.55)] backdrop-blur-2xl">
+        <div className="h-full w-full max-w-[440px] overflow-hidden rounded-xl border border-[#3e3e42] bg-[#1e1e1e] shadow-[0_20px_80px_rgba(0,0,0,0.7),0_0_40px_rgba(0,122,204,0.15)] backdrop-blur-2xl">
           <ChatPanel />
         </div>
       </main>

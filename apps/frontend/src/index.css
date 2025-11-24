@@ -17,16 +17,28 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: 'Sora', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background-color: #05060d;
+  background-color: #0a0e1a;
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(98, 64, 255, 0.28), transparent 30%),
-    radial-gradient(circle at 80% 10%, rgba(19, 192, 255, 0.22), transparent 28%),
-    radial-gradient(circle at 20% 80%, rgba(73, 255, 191, 0.16), transparent 28%),
-    linear-gradient(135deg, #05060d 0%, #070c16 40%, #05060d 100%);
+    radial-gradient(circle at 15% 25%, rgba(139, 92, 246, 0.35), transparent 35%),
+    radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.3), transparent 32%),
+    radial-gradient(circle at 45% 75%, rgba(236, 72, 153, 0.25), transparent 30%),
+    radial-gradient(circle at 25% 85%, rgba(16, 185, 129, 0.2), transparent 35%),
+    radial-gradient(circle at 70% 60%, rgba(245, 158, 11, 0.15), transparent 28%),
+    linear-gradient(135deg, #0a0e1a 0%, #1a1f35 25%, #0f1629 50%, #1e2642 75%, #0a0e1a 100%);
   color: #e2e8f0;
   background-attachment: fixed;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  animation: gradient-shift 20s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 #root {
@@ -36,4 +48,72 @@ body {
 .glass-card {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(16px);
+}
+
+/* AI Startup Theme Animations */
+@keyframes gradient-flow {
+  0%, 100% {
+    background-position: 0% 50%;
+    background-size: 200% 200%;
+  }
+  50% {
+    background-position: 100% 50%;
+    background-size: 200% 200%;
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4),
+                0 0 40px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.6),
+                0 0 60px rgba(59, 130, 246, 0.3);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Gradient text effect */
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Enhanced scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #007acc 0%, #005a9e 100%);
+  border-radius: 5px;
+  border: 2px solid #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #1e8ad6 0%, #0066b8 100%);
+}
+
+/* Smooth transitions for all elements */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
