@@ -1,6 +1,6 @@
-import { CalculatorSurface } from './components/CalculatorSurface';
 import { ChatPanel } from './components/ChatPanel';
 import { useAnimationRunner } from './hooks/useAnimationRunner';
+import RetroCalculator from './components/RetroCalculator';
 
 function App() {
   useAnimationRunner();
@@ -9,7 +9,7 @@ function App() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 h-[800px] md:h-[600px]">
         <div className="flex items-center justify-center">
-          <CalculatorSurface />
+          <RetroCalculator />
         </div>
         <div className="h-full">
           <ChatPanel />
