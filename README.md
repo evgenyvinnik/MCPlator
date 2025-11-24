@@ -1,27 +1,52 @@
-# MCPlator
+# Casio LLM Calculator
 
-MCP + Calculator
+A web-based emulation of a Casio-style calculator with a pixel-ish accurate UI and an LLM-powered chat interface that can drive the calculator.
 
-A modern React application built with cutting-edge web technologies.
+## Project Summary
+
+- **Pixel-ish accurate UI** (buttons, LCD, indicators).
+- **Real calculator behavior** implemented in a **frontend engine** (JS/TS).
+- **LLM-powered chat** that:
+  - Understands natural language ("add 2 plus one hundred").
+  - Produces calculator key sequences.
+  - The frontend replays those key sequences visually on the calculator.
+- **State stored in the browser** (localStorage).
 
 ## Tech Stack
 
-- **React 19** - UI library
-- **Vite** - Build tool and dev server
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Utility-first CSS framework
-- **Zustand** - State management
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
-- **Playwright** - End-to-end testing
-- **babel-plugin-react-compiler** - React compiler optimization
-- **cross-env** - Cross-platform environment variables
+### Frontend (`apps/frontend`)
+- **Framework:** React + TypeScript
+- **Build:** Vite
+- **State management:** Zustand + `persist` middleware
+- **Styling:** Tailwind CSS
+
+### Backend (`apps/backend`)
+- **Platform:** Vercel Serverless Functions
+- **Runtime:** Node.js
+- **AI:** OpenAI API (using Tools)
+
+### Shared (`packages/`)
+- **Monorepo:** npm workspaces
+- **shared-types:** Common TypeScript definitions
+- **calculator-engine:** Core calculator logic shared between frontend and backend
+
+## Project Structure
+
+```text
+calculator-casio-llm/
+  packages/
+    shared-types/       # Shared TS types
+    calculator-engine/  # Canonical calculator logic
+  apps/
+    frontend/           # React application
+    backend/            # Vercel API routes
+```
 
 ## Getting Started
 
 ### Prerequisites
-
-- Node.js 18+ and npm
+- Node.js 18+
+- npm
 
 ### Installation
 
@@ -31,55 +56,26 @@ npm install
 
 ### Development
 
+Start the frontend development server:
+
 ```bash
 npm run dev
 ```
 
-### Build
+This runs `npm run dev -w apps/frontend`.
 
-```bash
-npm run build
-```
+### Environment Variables
 
-### Preview Production Build
+For the backend to work (LLM features), you need to set up your OpenAI API key.
 
-```bash
-npm run preview
-```
-
-## Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Run ESLint and fix issues
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting
-- `npm test` - Run Playwright tests
-- `npm run test:ui` - Run Playwright tests in UI mode
-- `npm run test:headed` - Run Playwright tests in headed mode
-
-## Project Structure
+Create a `.env` file in `apps/backend` (or set in Vercel dashboard):
 
 ```
-├── src/
-│   ├── App.tsx         # Main application component
-│   ├── store.ts        # Zustand state management
-│   ├── main.tsx        # Application entry point
-│   └── index.css       # Global styles with Tailwind directives
-├── tests/              # Playwright E2E tests
-├── public/             # Static assets
-└── dist/               # Production build output
+OPENAI_API_KEY=sk-...
 ```
 
-## Features
+## Scripts
 
-- ⚡️ Lightning-fast development with Vite HMR
-- 🎨 Modern UI with Tailwind CSS
-- 🔧 Type-safe development with TypeScript
-- 🧪 E2E testing with Playwright
-- 📦 Optimized state management with Zustand
-- 🚀 React Compiler for automatic optimizations
-- 🎯 Comprehensive linting and formatting
-- 🌐 Cross-platform compatibility with cross-env
+- `npm run dev` - Start frontend dev server
+- `npm run build` - Build all workspaces
+- `npm run test` - Run tests across workspaces
