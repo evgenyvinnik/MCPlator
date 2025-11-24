@@ -43,7 +43,7 @@ function App() {
           </div>
         </div>
 
-        <div className="h-full w-full max-w-[440px] overflow-hidden rounded-xl border border-[#3e3e42] bg-[#1e1e1e] shadow-[0_20px_80px_rgba(0,0,0,0.7),0_0_40px_rgba(0,122,204,0.15)] backdrop-blur-2xl">
+        <div className="h-full w-full max-w-[500px] overflow-hidden rounded-2xl border border-white/10 bg-[#0a0b0f]/80 shadow-[0_0_50px_rgba(124,58,237,0.15)] backdrop-blur-3xl">
           <ChatPanel />
         </div>
       </main>
