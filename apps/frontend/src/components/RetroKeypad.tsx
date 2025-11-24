@@ -108,8 +108,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
     const isLarge = keyDef.extraClass?.includes('-large');
     const isACButton = keyDef.extraClass?.includes('--acbutton');
     const isNumber = keyDef.type === 'NUMBER';
-    const isDivideOrPlus = keyDef.value === 'divide' || keyDef.value === 'plus';
-    const isFloatOrNumber = keyDef.value === 'float' || isNumber;
+    const isFloat = keyDef.value === 'float';
 
     // Cell classes
     const cellClasses = [
@@ -117,12 +116,17 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
       `${keyDef.type}_FUNC${keyDef.value}`
     ].join(' ');
 
-    // Determine font size based on button type
+    // Determine font size based on button type - matching original CSS exactly
     let fontSize = '20px';
-    if (isDivideOrPlus) fontSize = '28px';
-    else if (isFloatOrNumber) fontSize = '24px';
-    else if (isRed) fontSize = '22px';
-    else if (isSmall) fontSize = '18px';
+    if (keyDef.value === 'divide' || (keyDef.value === 'plus' && isLarge)) {
+      fontSize = '28px';
+    } else if (isNumber || isFloat) {
+      fontSize = '24px';
+    } else if (isRed) {
+      fontSize = '22px';
+    } else if (isSmall) {
+      fontSize = '18px';
+    }
 
     // Build button style
     let buttonStyle: React.CSSProperties = { ...buttonBaseStyle, fontSize };
@@ -253,16 +257,15 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
         {isACButton && (
           <div 
             style={{
-              content: '"ON"',
-              display: 'block',
               position: 'absolute',
-              bottom: '-20px',
-              left: '5px',
-              width: 'calc(100% - 8px)',
+              bottom: '-14px',
+              left: '50%',
+              transform: 'translateX(-50%)',
               fontSize: '10px',
               textAlign: 'center',
               color: '#404040',
-              textShadow: 'none'
+              textShadow: 'none',
+              whiteSpace: 'nowrap'
             }}
           >
             ON

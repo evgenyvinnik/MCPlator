@@ -11,7 +11,22 @@ const RetroCalculator: React.FC = () => {
     <div 
       style={{
         position: 'relative',
-        background: '#d0d1d7',
+        background: `
+          repeating-linear-gradient(
+            90deg,
+            #d0d1d7 0px,
+            #d4d5db 1px,
+            #d0d1d7 2px
+          ),
+          repeating-linear-gradient(
+            0deg,
+            #d0d1d7 0px,
+            #cdced4 1px,
+            #d0d1d7 2px
+          )
+        `,
+        backgroundColor: '#d0d1d7',
+        backgroundBlendMode: 'multiply',
         padding: '14px 6px',
         width: '320px',
         maxWidth: '100%',

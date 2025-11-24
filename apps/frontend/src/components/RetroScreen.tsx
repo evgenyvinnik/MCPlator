@@ -46,10 +46,16 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory }) => {
               textAlign: 'center',
               fontSize: '13px',
               fontWeight: 600,
-              fontStyle: 'italic'
+              fontStyle: 'italic',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              lineHeight: '0.8'
             }}
           >
-            M<div style={{ display: 'inline' }}>&#x029EB;</div>E
+            <div>M</div>
+            <div>&#x029EB;</div>
+            <div>E</div>
           </span>
         )}
       </div>
