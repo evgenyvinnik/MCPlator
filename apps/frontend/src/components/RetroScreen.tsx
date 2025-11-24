@@ -22,7 +22,7 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
           position: 'relative',
           overflow: 'hidden',
           height: '94px',
-          padding: '16px 6px',
+          padding: '16px 4px',
           borderRadius: '4px',
           boxShadow: '0px 2px 3px 3px rgba(255, 255, 255, 0.3), -1px -3px 1px 3px rgba(0, 0, 0, 0.55)',
           background: 'linear-gradient(to bottom, #c3ced0 30%, #dbe2ea 100%)',
@@ -92,12 +92,12 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
                 <div style={{
                   position: 'absolute',
                   top: '-2px',
-                  right: '-3px',
+                  right: '-4px',
                   opacity: d.hasSeparator ? 1 : 0,
-                  fontSize: '24px', // Maximum size thousands separator
+                  fontSize: '30px', // Maximum size thousands separator
                   fontWeight: 'bold',
                   color: '#111',
-                  fontFamily: 'sans-serif'
+                  fontFamily: 'sans-serif',
                 }}>
                   '
                 </div>
@@ -113,8 +113,8 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
                     borderRadius: '50%',
                     opacity: d.hasDot ? 1 : 0,
                     position: 'absolute',
-                    bottom: '8px',
-                    right: '-4px'
+                    bottom: '4px',
+                    right: '-3px'
                   }} 
                 />
               </div>
