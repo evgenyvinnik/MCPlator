@@ -12,6 +12,16 @@ A web-based emulation of a Casio-style calculator with a pixel-ish accurate UI a
   - The frontend replays those key sequences visually on the calculator.
 - **State stored in the browser** (localStorage).
 
+### Deployment
+
+For detailed, step-by-step deployment instructions, please refer to [BUILD.md](./BUILD.md).
+
+### Quick Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fevgenyvinnik%2FMCPlator&project-name=mcplator&repository-name=mcplator&root-directory=apps%2Ffrontend)
+
+**Note:** When deploying, ensure you set the **Root Directory** to `apps/frontend`.
+
 ## Tech Stack
 
 ### Frontend (`apps/frontend`)
