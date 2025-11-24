@@ -34,7 +34,7 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
             fontFamily: 'digit',
             fontSize: '60px', // Increased for larger digits
             position: 'absolute',
-            right: '12px',
+            right: '8px',
             top: '18px', // Adjusted for vertical centering
             display: 'flex',
             alignItems: 'baseline',
@@ -125,7 +125,7 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
         <div 
           style={{
             position: 'absolute',
-            top: '18px',
+            top: '24px',
             left: '8px',
             width: '24px',
             display: 'flex',
@@ -150,7 +150,7 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
           <div style={{ 
             opacity: negative ? 1 : 0.1,
             width: '16px',
-            height: '7px', // Squished height
+            height: '5px', // Squished height
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
