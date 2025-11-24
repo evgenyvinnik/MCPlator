@@ -1,0 +1,35 @@
+export type KeyId =
+  | 'digit_0' | 'digit_1' | 'digit_2' | 'digit_3' | 'digit_4'
+  | 'digit_5' | 'digit_6' | 'digit_7' | 'digit_8' | 'digit_9'
+  | 'decimal'
+  | 'add' | 'sub' | 'mul' | 'div'
+  | 'percent'
+  | 'equals'
+  | 'ac' | 'c'
+  | 'mc' | 'mr' | 'm_plus' | 'm_minus'
+  | 'rate' | 'euro' | 'local';
+
+export type CalculatorIndicators = {
+  error: boolean;           // E
+  memory: boolean;          // M
+  constant: boolean;        // K
+  euro: boolean;
+  local: boolean;
+  rate: boolean;
+  op: null | 'add' | 'sub' | 'mul' | 'div';
+};
+
+export type CalculatorDisplay = {
+  text: string;             // e.g., "0.", "11.4", "E"
+  indicators: CalculatorIndicators;
+};
+
+export type AnimationCommand =
+  | { type: 'pressKey'; key: KeyId; delayMs?: number }
+  | { type: 'setDisplay'; display: CalculatorDisplay }
+  | { type: 'sleep'; durationMs: number };
+
+export type AnimationSequence = {
+  id: string;
+  commands: AnimationCommand[];
+};

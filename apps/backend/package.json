@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "main": "api/chat.ts",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@calculator/shared-types": "*",
+    "@calculator/calculator-engine": "*",
+    "@vercel/node": "^3.0.0",
+    "openai": "^4.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.8",
+    "typescript": "^5.0.0"
+  }
+}
