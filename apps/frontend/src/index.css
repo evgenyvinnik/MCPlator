@@ -118,6 +118,18 @@ body {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Isolate RetroCalculator from inherited styles */
+.retro-calculator-container {
+  isolation: isolate;
+  color: initial;
+  filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
+.retro-calculator-container * {
+  transition: none !important;
+}
+
 
 /*! tailwindcss v4.1.3 | MIT License | https://tailwindcss.com */
 @layer properties {
