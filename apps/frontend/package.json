@@ -16,21 +16,26 @@
     "test:headed": "playwright test --headed"
   },
   "dependencies": {
+    "@calculator/calculator-engine": "*",
+    "@calculator/shared-types": "*",
+    "@radix-ui/react-slot": "^1.2.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.554.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "zustand": "^5.0.8",
-    "@calculator/shared-types": "*",
-    "@calculator/calculator-engine": "*",
-    "uuid": "^9.0.1"
+    "tailwind-merge": "^3.4.0",
+    "uuid": "^9.0.1",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.8",
     "@eslint/js": "^9.39.1",
     "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
+    "@types/uuid": "^9.0.8",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "^1.0.0",
