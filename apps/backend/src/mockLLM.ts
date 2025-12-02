@@ -108,7 +108,9 @@ export function getMockResponse(userMessage: string): MockResponse {
 function extractNumbers(text: string): number[] {
   const matches = text.match(/\b\d+(?:\.\d+)?\b/g);
   if (!matches) {
-    // Try word numbers
+    // Try word numbers with word boundaries to avoid false matches
+    // Note: This is a simple implementation and doesn't handle compound numbers
+    // like "twenty five". It will extract them as separate numbers [20, 5].
     const wordMap: Record<string, number> = {
       zero: 0, one: 1, two: 2, three: 3, four: 4,
       five: 5, six: 6, seven: 7, eight: 8, nine: 9,
@@ -121,8 +123,11 @@ function extractNumbers(text: string): number[] {
     
     const lower = text.toLowerCase();
     const numbers: number[] = [];
+    
+    // Use word boundaries to match whole words only
     for (const [word, num] of Object.entries(wordMap)) {
-      if (lower.includes(word)) {
+      const regex = new RegExp(`\\b${word}\\b`, 'i');
+      if (regex.test(lower)) {
         numbers.push(num);
         if (numbers.length >= 2) break;
       }
