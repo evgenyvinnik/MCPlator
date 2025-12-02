@@ -1,6 +1,36 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import sqrtIcon from '../assets/icons/sqrt.svg';
 import changeSignIcon from '../assets/icons/change-sign.svg';
+import { useCalculatorStore } from '../state/useCalculatorStore';
+import type { KeyId } from '@calculator/shared-types';
+
+// Mapping from KeyId (animation system) to RetroKeypad button identifier
+const keyIdToRetroKey: Partial<Record<KeyId, string>> = {
+  'digit_0': '0',
+  'digit_1': '1',
+  'digit_2': '2',
+  'digit_3': '3',
+  'digit_4': '4',
+  'digit_5': '5',
+  'digit_6': '6',
+  'digit_7': '7',
+  'digit_8': '8',
+  'digit_9': '9',
+  'decimal': 'float',
+  'add': 'plus',
+  'sub': 'minus',
+  'mul': 'multiply',
+  'div': 'divide',
+  'percent': 'percentage',
+  'equals': 'perform',
+  'ac': 'on',
+  'c': 'clear',
+  'mc': 'mc',
+  'mr': 'mr',
+  'm_plus': 'm+',
+  'm_minus': 'm-',
+  // 'rate', 'euro', 'local' are not available in RetroKeypad
+};
 
 // Define the layout matching original - 6 rows x 5 columns
 const layout = [
@@ -49,7 +79,7 @@ const keyDefinitions: Record<string, KeyDef> = {
 };
 
 type RetroKeypadProps = {
-  onKeyClick: (key: any) => void;
+  onKeyClick: (key: KeyDef) => void;
 };
 
 // Base button styles matching original exactly
@@ -81,6 +111,57 @@ const buttonBaseStyle: React.CSSProperties = {
 };
 
 const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
+  const pressedKey = useCalculatorStore((state) => state.pressedKey);
+  const buttonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  
+  // Get the RetroKeypad key identifier from the current pressedKey (KeyId)
+  const activeRetroKey = pressedKey ? (keyIdToRetroKey[pressedKey] || null) : null;
+  
+  // Helper function to simulate button press visually
+  const triggerButtonPress = React.useCallback((button: HTMLButtonElement) => {
+    const isRed = button.dataset.isRed === 'true';
+    const originalBackground = button.style.background;
+    const originalColor = button.style.color;
+    const originalTransform = button.style.transform;
+    const originalBoxShadow = button.style.boxShadow;
+    
+    // Apply pressed state
+    button.style.color = 'lightgray';
+    if (isRed) {
+      button.style.background = 'linear-gradient(to bottom, #5d2f39 0%, #4a2430 50%, #3a1d26 100%)';
+    } else {
+      button.style.background = 'linear-gradient(to bottom, #2a2a2a 0%, #252525 50%, #202020 100%)';
+    }
+    button.style.transform = 'translateY(1px)';
+    button.style.boxShadow = `1px 1px 1px 1px rgba(0, 0, 0, 0.1),
+      0px 0px 0px 1px rgba(0, 0, 0, 0.8), 
+      inset 1px 0px 1px 0px rgba(0, 0, 0, 0.3),
+      inset -1px 0px 1px 0px rgba(0, 0, 0, 0.3),
+      inset 0px 1px 1px 0px rgba(255, 255, 255, 0.4),
+      inset 0px -3px 3px rgba(255, 255, 255, 0.1),
+      0px 8px 10px 0px rgba(0, 0, 0, 0.3),
+      inset 0px 4px 1px 1px rgba(0, 0, 0, 0.3)`;
+    
+    // Release after a short delay
+    setTimeout(() => {
+      button.style.color = originalColor;
+      button.style.background = originalBackground;
+      button.style.transform = originalTransform;
+      button.style.boxShadow = originalBoxShadow;
+    }, 100);
+  }, []);
+  
+  // Trigger visual animation when pressedKey changes
+  useEffect(() => {
+    if (activeRetroKey && buttonRefs.current.has(activeRetroKey)) {
+      const button = buttonRefs.current.get(activeRetroKey);
+      if (button) {
+        // Programmatically trigger the pressed state
+        triggerButtonPress(button);
+      }
+    }
+  }, [activeRetroKey, triggerButtonPress]);
+  
   const renderCell = (cellKey: string | null, rowIndex: number, cellIndex: number) => {
     // Skip null cells (where large button extends)
     if (cellKey === null) {
@@ -130,7 +211,8 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
       fontSize = '18px';
     }
 
-    // Build button style
+    // Build button style (properties are mutated below)
+    // eslint-disable-next-line prefer-const
     let buttonStyle: React.CSSProperties = { ...buttonBaseStyle, fontSize };
 
     if (isRed) {
@@ -247,6 +329,14 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
           </>
         )}
         <button
+          ref={(el) => {
+            if (el) {
+              buttonRefs.current.set(cellKey, el);
+            } else {
+              buttonRefs.current.delete(cellKey);
+            }
+          }}
+          data-is-red={(isRed || false).toString()}
           style={buttonStyle}
           onClick={() => onKeyClick(keyDef)}
           onMouseEnter={handleMouseEnter}

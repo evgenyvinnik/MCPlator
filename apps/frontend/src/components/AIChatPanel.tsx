@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card } from "./ui/card";
-import { Send, X, MessageSquare } from "lucide-react";
+import { Send, MessageSquare } from "lucide-react";
 
 interface Message {
   id: string;
