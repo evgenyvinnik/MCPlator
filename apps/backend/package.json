@@ -4,16 +4,19 @@
   "main": "api/chat.ts",
   "scripts": {
     "start": "vercel dev",
+    "dev": "bun --watch src/dev-server.ts",
     "build": "tsc --noEmit"
   },
   "dependencies": {
-    "@calculator/shared-types": "*",
+    "@anthropic-ai/sdk": "^0.24.3",
     "@calculator/calculator-engine": "*",
+    "@calculator/shared-types": "*",
     "@vercel/node": "^3.0.0",
     "openai": "^4.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/bun": "^1.3.3",
     "@types/uuid": "^9.0.8",
     "typescript": "^5.0.0"
   }
