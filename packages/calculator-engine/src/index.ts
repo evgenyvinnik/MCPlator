@@ -2,7 +2,7 @@ import type {
   CalculatorEngine,
   CalculatorInternalState,
 } from './types';
-import type { CalculatorDisplay, KeyId } from '@calculator/shared-types';
+import type { CalculatorDisplay } from '@calculator/shared-types';
 
 export * from './types';
 
@@ -20,7 +20,7 @@ export const calculatorEngine: CalculatorEngine = {
     isLocalMode: true,
   }),
 
-  pressKey: (state, key) => {
+  pressKey: (state, _key) => {
     // TODO: implement full Casio logic here (AC/C, %, memory keys, constants, Euro/Local)
     // For now, just a dummy implementation to satisfy the interface
     return state;

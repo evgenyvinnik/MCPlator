@@ -12,9 +12,9 @@ export type ChatRequestBody = {
   history?: { role: ChatRole; text: string }[];
 };
 
+import type { AnimationSequence } from './calculator';
+
 export type ChatResponseBody = {
   message: ChatMessage;
   animation?: AnimationSequence;
 };
-
-import { AnimationSequence } from './calculator';
