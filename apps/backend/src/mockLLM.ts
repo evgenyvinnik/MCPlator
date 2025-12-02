@@ -11,6 +11,19 @@ interface MockResponse {
 }
 
 /**
+ * Map of word numbers to their numeric values
+ */
+const WORD_NUMBER_MAP: Record<string, number> = {
+  zero: 0, one: 1, two: 2, three: 3, four: 4,
+  five: 5, six: 6, seven: 7, eight: 8, nine: 9,
+  ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
+  fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
+  twenty: 20, thirty: 30, forty: 40, fifty: 50,
+  sixty: 60, seventy: 70, eighty: 80, ninety: 90,
+  hundred: 100, thousand: 1000,
+};
+
+/**
  * Try to parse a compound operation (multiple operations in sequence)
  * e.g., "hundred plus 2 divide by 3" -> 100 + 2 / 3 =
  */
@@ -90,18 +103,7 @@ function extractAllNumbers(text: string): number[] {
   }
   
   // Extract word numbers with their positions
-  const wordMap: Record<string, number> = {
-    zero: 0, one: 1, two: 2, three: 3, four: 4,
-    five: 5, six: 6, seven: 7, eight: 8, nine: 9,
-    ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
-    fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
-    twenty: 20, thirty: 30, forty: 40, fifty: 50,
-    sixty: 60, seventy: 70, eighty: 80, ninety: 90,
-    hundred: 100, thousand: 1000,
-  };
-  
-  // Create a single regex pattern for all word numbers
-  const wordPattern = Object.keys(wordMap).join('|');
+  const wordPattern = Object.keys(WORD_NUMBER_MAP).join('|');
   const wordRegex = new RegExp(`\\b(${wordPattern})\\b`, 'gi');
   
   const lower = text.toLowerCase();
@@ -109,7 +111,7 @@ function extractAllNumbers(text: string): number[] {
   for (const wordMatch of matches) {
     if (wordMatch.index !== undefined && wordMatch[1]) {
       const word = wordMatch[1].toLowerCase();
-      const value = wordMap[word];
+      const value = WORD_NUMBER_MAP[word];
       if (value !== undefined) {
         numberPositions.push({ value, index: wordMatch.index });
       }
