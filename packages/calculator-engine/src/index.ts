@@ -375,8 +375,8 @@ export const calculatorEngine: CalculatorEngine = {
       constant: !!state.constant,
       euro: state.isEuroMode,
       local: state.isLocalMode,
-      rate: state.euroRate != null,
-      op: state.lastOperator,
+      rate: state.euroRate !== null,
+      op: state.lastOperator, // UI layer should map to symbols: add→'+', sub→'-', mul→'×', div→'÷'
     },
   }),
 };

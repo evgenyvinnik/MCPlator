@@ -232,7 +232,7 @@ describe('Calculator Engine', () => {
     it('should handle compound expression (100 + 2 / 3)', () => {
       let state = calculatorEngine.initialState();
       state = pressKeys(state, ['digit_1', 'digit_0', 'digit_0', 'add', 'digit_2', 'div', 'digit_3', 'equals']);
-      // Calculator processes left-to-right: (100 + 2) / 3 = 102 / 3 = 34
+      // Calculator processes left-to-right: 100 + 2 → 102, then 102 / 3 → 34
       expect(state.displayValue).toBe('34');
     });
 
