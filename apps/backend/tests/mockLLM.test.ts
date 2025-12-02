@@ -12,6 +12,7 @@ describe('mockLLM', () => {
       const result = getMockResponse(input);
       
       expect(result.text).toContain('calculate');
+      expect(result.text).toContain('The result is 34');
       expect(result.keys).toBeDefined();
       
       const expectedKeys: KeyId[] = [
