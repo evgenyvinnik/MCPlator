@@ -14,9 +14,6 @@ export const LCDDisplay: React.FC = () => {
         <span className={indicators.error ? 'font-bold' : 'opacity-20'}>E</span>
         <span className={indicators.memory ? 'font-bold' : 'opacity-20'}>M</span>
         <span className={indicators.constant ? 'font-bold' : 'opacity-20'}>K</span>
-        <span className={indicators.euro ? 'font-bold' : 'opacity-20'}>€</span>
-        <span className={indicators.local ? 'font-bold' : 'opacity-20'}>LOCAL</span>
-        <span className={indicators.rate ? 'font-bold' : 'opacity-20'}>RATE</span>
         <span className={indicators.op ? 'font-bold' : 'opacity-20'}>
             {indicators.op === 'add' && '+'}
             {indicators.op === 'sub' && '-'}

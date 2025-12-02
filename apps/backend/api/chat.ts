@@ -1,8 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { OpenAI } from 'openai';
 import { calculatorEngine } from '@calculator/calculator-engine';
-import type { KeyId } from '@calculator/calculator-engine';
-import type { ChatRequestBody, ChatResponseBody } from '@calculator/shared-types';
+import type { KeyId, ChatRequestBody, ChatResponseBody } from '@calculator/shared-types';
 import { v4 as uuid } from 'uuid';
 
 const openai = new OpenAI({
@@ -28,7 +27,6 @@ const calculatorPressKeysTool = {
             'equals',
             'ac', 'c',
             'mc', 'mr', 'm_plus', 'm_minus',
-            'rate', 'euro', 'local',
           ],
         },
       },
