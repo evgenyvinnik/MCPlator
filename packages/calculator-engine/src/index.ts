@@ -15,13 +15,10 @@ export const calculatorEngine: CalculatorEngine = {
     lastOperator: null,
     lastOperand: null,
     isError: false,
-    euroRate: null,
-    isEuroMode: false,
-    isLocalMode: true,
   }),
 
   pressKey: (state, _key) => {
-    // TODO: implement full Casio logic here (AC/C, %, memory keys, constants, Euro/Local)
+    // TODO: implement full Casio logic here (AC/C, %, memory keys, constants)
     // For now, just a dummy implementation to satisfy the interface
     return state;
   },
@@ -32,9 +29,6 @@ export const calculatorEngine: CalculatorEngine = {
       error: state.isError,
       memory: state.hasMemory,
       constant: !!state.constant,
-      euro: state.isEuroMode,
-      local: state.isLocalMode,
-      rate: state.euroRate != null,
       op: state.lastOperator,
     },
   }),

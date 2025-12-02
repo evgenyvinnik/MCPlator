@@ -3,9 +3,6 @@ import { useCalculatorStore } from '../state/useCalculatorStore';
 import type { KeyId } from '@calculator/shared-types';
 
 const keys: { id: KeyId; label: string; className?: string }[] = [
-  { id: 'rate', label: 'RATE' },
-  { id: 'euro', label: '€' },
-  { id: 'local', label: 'LOCAL' },
   { id: 'mc', label: 'MC' },
   { id: 'mr', label: 'MR' },
   { id: 'm_minus', label: 'M-' },
