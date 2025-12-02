@@ -5,7 +5,7 @@ import { useCalculatorStore } from '../state/useCalculatorStore';
 import type { KeyId } from '@calculator/shared-types';
 
 // Mapping from KeyId (animation system) to RetroKeypad button identifier
-const keyIdToRetroKey: Record<KeyId, string> = {
+const keyIdToRetroKey: Partial<Record<KeyId, string>> = {
   'digit_0': '0',
   'digit_1': '1',
   'digit_2': '2',
@@ -29,9 +29,7 @@ const keyIdToRetroKey: Record<KeyId, string> = {
   'mr': 'mr',
   'm_plus': 'm+',
   'm_minus': 'm-',
-  'rate': '', // Not available in RetroKeypad
-  'euro': '', // Not available in RetroKeypad
-  'local': '', // Not available in RetroKeypad
+  // 'rate', 'euro', 'local' are not available in RetroKeypad
 };
 
 // Define the layout matching original - 6 rows x 5 columns
@@ -117,7 +115,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
   const buttonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
   
   // Get the RetroKeypad key identifier from the current pressedKey (KeyId)
-  const activeRetroKey = pressedKey ? keyIdToRetroKey[pressedKey] : null;
+  const activeRetroKey = pressedKey ? (keyIdToRetroKey[pressedKey] || null) : null;
   
   // Helper function to simulate button press visually
   const triggerButtonPress = React.useCallback((button: HTMLButtonElement) => {
@@ -213,7 +211,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
       fontSize = '18px';
     }
 
-    // Build button style
+    // Build button style (properties are mutated below)
     // eslint-disable-next-line prefer-const
     let buttonStyle: React.CSSProperties = { ...buttonBaseStyle, fontSize };
 
