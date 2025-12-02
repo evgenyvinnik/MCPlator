@@ -35,7 +35,11 @@ You can deploy the application using the Vercel Dashboard (recommended for begin
     *   **Install Command**: `npm install` (Default)
     *   *Note: Since we selected the Root Directory as `apps/frontend`, these defaults should work correctly for that specific workspace.*
 6.  **Environment Variables**:
-    *   If the application requires any environment variables (check `.env.example` if it exists), expand the **Environment Variables** section and add them here. Currently, the basic calculator app may not require any specific secrets for a standard deployment.
+    *   **Important:** To enable the AI-powered chat features, you need to add your Anthropic API key. See [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md) for detailed instructions on obtaining an API key.
+    *   Expand the **Environment Variables** section and add:
+        *   **Name:** `ANTHROPIC_API_KEY`
+        *   **Value:** Your Anthropic API key (starts with `sk-ant-`)
+    *   Without this API key, the calculator will work but the AI chat feature will not function.
 7.  Click **Deploy**.
 
 Vercel will now build and deploy your application. This process may take a minute or two. Once complete, you will see a "Congratulations!" screen with a screenshot of your app and a button to **Visit** your live site.
@@ -63,7 +67,14 @@ If you prefer using the command line:
     *   What’s your project’s name? (Press Enter)
     *   In which directory is your code located? **apps/frontend** (Important: Type `apps/frontend` instead of `./`)
     *   Want to modify these settings? **N**
-5.  Wait for the deployment to complete. You will get a Production URL.
+5.  Add your Anthropic API key:
+    ```bash
+    vercel env add ANTHROPIC_API_KEY
+    ```
+    *   When prompted, enter your Anthropic API key
+    *   Select all environments (production, preview, development)
+    *   See [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md) for instructions on obtaining an API key
+6.  Wait for the deployment to complete. You will get a Production URL.
 
 ## Troubleshooting
 
@@ -76,3 +87,10 @@ If the build fails, check the logs in the Vercel Dashboard. Common issues includ
 If you see a 404 error after deployment:
 *   Verify that the **Output Directory** is set to `dist`.
 *   Ensure that your `vite.config.ts` does not have a `base` path set that conflicts with the root domain.
+
+### AI Chat Not Working
+If the calculator loads but the chat feature doesn't work:
+*   Verify you've added the `ANTHROPIC_API_KEY` environment variable in Vercel.
+*   Check the Vercel function logs for error messages.
+*   Ensure your API key is valid and has sufficient credits.
+*   See [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md) for detailed troubleshooting.
