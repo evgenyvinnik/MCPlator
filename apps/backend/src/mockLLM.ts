@@ -10,8 +10,126 @@ interface MockResponse {
   keys?: KeyId[];
 }
 
+/**
+ * Map of word numbers to their numeric values
+ */
+const WORD_NUMBER_MAP: Record<string, number> = {
+  zero: 0, one: 1, two: 2, three: 3, four: 4,
+  five: 5, six: 6, seven: 7, eight: 8, nine: 9,
+  ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
+  fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
+  twenty: 20, thirty: 30, forty: 40, fifty: 50,
+  sixty: 60, seventy: 70, eighty: 80, ninety: 90,
+  hundred: 100, thousand: 1000,
+};
+
+/**
+ * Try to parse a compound operation (multiple operations in sequence)
+ * e.g., "hundred plus 2 divide by 3" -> 100 + 2 / 3 =
+ */
+function tryParseCompoundOperation(text: string): MockResponse | null {
+  const lower = text.toLowerCase().trim();
+  
+  // Check if there are multiple operations
+  const operationPatterns = [
+    { regex: /\b(add|plus|\+)\b/g, op: 'add' as const, name: 'plus' },
+    { regex: /\b(subtract|minus|-)\b/g, op: 'sub' as const, name: 'minus' },
+    { regex: /\b(multiply|times|\*|×)\b/g, op: 'mul' as const, name: 'times' },
+    { regex: /\b(divide|divided\s+by|\/|÷)\b/g, op: 'div' as const, name: 'divided by' },
+  ];
+  
+  // Find all operations in order of appearance
+  const operations: { index: number; op: KeyId; name: string }[] = [];
+  for (const pattern of operationPatterns) {
+    const matches = [...lower.matchAll(pattern.regex)];
+    for (const match of matches) {
+      if (match.index !== undefined) {
+        operations.push({ index: match.index, op: pattern.op, name: pattern.name });
+      }
+    }
+  }
+  
+  // If we have 2 or more operations, treat as compound
+  if (operations.length >= 2) {
+    // Sort by position in the text
+    operations.sort((a, b) => a.index - b.index);
+    
+    // Extract all numbers (not limited to 2)
+    const numbers = extractAllNumbers(text);
+    
+    // We need at least as many numbers as operations + 1
+    if (numbers.length >= operations.length + 1) {
+      // Build the key sequence
+      const keys: KeyId[] = [];
+      let description = `I'll calculate `;
+      
+      // First number
+      keys.push(...digitKeys(numbers[0]));
+      description += `${numbers[0]}`;
+      
+      // Then alternate operations and numbers
+      for (let i = 0; i < operations.length; i++) {
+        keys.push(operations[i].op);
+        keys.push(...digitKeys(numbers[i + 1]));
+        description += ` ${operations[i].name} ${numbers[i + 1]}`;
+      }
+      
+      // Finally, equals
+      keys.push('equals');
+      description += ' for you.';
+      
+      return {
+        text: description,
+        keys,
+      };
+    }
+  }
+  
+  return null;
+}
+
+/**
+ * Extract all numbers from text (including word numbers)
+ * This function extracts both digit numbers and word numbers, preserving their order
+ */
+function extractAllNumbers(text: string): number[] {
+  const numberPositions: { value: number; index: number }[] = [];
+  
+  // Extract digit numbers with their positions
+  const digitRegex = /\b\d+(?:\.\d+)?\b/g;
+  let match;
+  while ((match = digitRegex.exec(text)) !== null) {
+    numberPositions.push({ value: Number(match[0]), index: match.index });
+  }
+  
+  // Extract word numbers with their positions
+  const wordPattern = Object.keys(WORD_NUMBER_MAP).join('|');
+  const wordRegex = new RegExp(`\\b(${wordPattern})\\b`, 'gi');
+  
+  const lower = text.toLowerCase();
+  const matches = [...lower.matchAll(wordRegex)];
+  for (const wordMatch of matches) {
+    if (wordMatch.index !== undefined && wordMatch[1]) {
+      const word = wordMatch[1].toLowerCase();
+      const value = WORD_NUMBER_MAP[word];
+      if (value !== undefined) {
+        numberPositions.push({ value, index: wordMatch.index });
+      }
+    }
+  }
+  
+  // Sort by position and extract values
+  return numberPositions.sort((a, b) => a.index - b.index).map(n => n.value);
+}
+
 export function getMockResponse(userMessage: string): MockResponse {
   const lower = userMessage.toLowerCase().trim();
+
+  // Check for compound operations (multiple operations in one request)
+  const compoundResult = tryParseCompoundOperation(userMessage);
+  if (compoundResult) {
+    return compoundResult;
+  }
 
   // Addition patterns
   if (lower.match(/add|plus|\+|sum/)) {
@@ -103,38 +221,11 @@ export function getMockResponse(userMessage: string): MockResponse {
 }
 
 /**
- * Extract numbers from a string
+ * Extract numbers from a string (limited to first 2 for simple operations)
  */
 function extractNumbers(text: string): number[] {
-  const matches = text.match(/\b\d+(?:\.\d+)?\b/g);
-  if (!matches) {
-    // Try word numbers with word boundaries to avoid false matches
-    // Note: This is a simple implementation and doesn't handle compound numbers
-    // like "twenty five". It will extract them as separate numbers [20, 5].
-    const wordMap: Record<string, number> = {
-      zero: 0, one: 1, two: 2, three: 3, four: 4,
-      five: 5, six: 6, seven: 7, eight: 8, nine: 9,
-      ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
-      fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
-      twenty: 20, thirty: 30, forty: 40, fifty: 50,
-      sixty: 60, seventy: 70, eighty: 80, ninety: 90,
-      hundred: 100, thousand: 1000,
-    };
-    
-    const lower = text.toLowerCase();
-    const numbers: number[] = [];
-    
-    // Use word boundaries to match whole words only
-    for (const [word, num] of Object.entries(wordMap)) {
-      const regex = new RegExp(`\\b${word}\\b`, 'i');
-      if (regex.test(lower)) {
-        numbers.push(num);
-        if (numbers.length >= 2) break;
-      }
-    }
-    return numbers;
-  }
-  return matches.map(Number);
+  const allNumbers = extractAllNumbers(text);
+  return allNumbers.slice(0, 2);
 }
 
 /**
