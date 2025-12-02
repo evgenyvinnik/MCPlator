@@ -25,18 +25,28 @@ const WORD_NUMBER_MAP: Record<string, number> = {
 
 /**
  * Format a numeric result for display
- * Handles integers and decimals appropriately
+ * Handles integers and decimals appropriately, removing trailing zeros
  */
 function formatResult(result: number): string {
-  return Number.isInteger(result) ? result.toString() : result.toFixed(2);
+  if (Number.isInteger(result)) {
+    return result.toString();
+  }
+  // Format with up to 2 decimal places, but remove trailing zeros
+  const formatted = result.toFixed(2);
+  return formatted.replace(/\.?0+$/, '');
 }
 
 /**
  * Calculate the result of a sequence of operations
  * Calculator processes operations left-to-right (not following PEMDAS)
- * Returns NaN if any division by zero is encountered
+ * Returns NaN if any division by zero is encountered or invalid input
  */
 function calculateResult(numbers: number[], operations: { op: KeyId }[]): number {
+  // Validate input
+  if (numbers.length !== operations.length + 1) {
+    return NaN;
+  }
+  
   let result = numbers[0];
   
   for (let i = 0; i < operations.length; i++) {
