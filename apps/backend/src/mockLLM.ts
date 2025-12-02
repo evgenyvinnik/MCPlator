@@ -55,7 +55,7 @@ function tryParseCompoundOperation(text: string): MockResponse | null {
       description += `${numbers[0]}`;
       
       // Then alternate operations and numbers
-      for (let i = 0; i < operations.length && i + 1 < numbers.length; i++) {
+      for (let i = 0; i < operations.length; i++) {
         keys.push(operations[i].op);
         keys.push(...digitKeys(numbers[i + 1]));
         description += ` ${operations[i].name} ${numbers[i + 1]}`;
@@ -100,13 +100,18 @@ function extractAllNumbers(text: string): number[] {
     hundred: 100, thousand: 1000,
   };
   
+  // Create a single regex pattern for all word numbers
+  const wordPattern = Object.keys(wordMap).join('|');
+  const wordRegex = new RegExp(`\\b(${wordPattern})\\b`, 'gi');
+  
   const lower = text.toLowerCase();
-  for (const [word, num] of Object.entries(wordMap)) {
-    const regex = new RegExp(`\\b${word}\\b`, 'gi');
-    const matches = [...lower.matchAll(regex)];
-    for (const wordMatch of matches) {
-      if (wordMatch.index !== undefined) {
-        numberPositions.push({ value: num, index: wordMatch.index });
+  const matches = [...lower.matchAll(wordRegex)];
+  for (const wordMatch of matches) {
+    if (wordMatch.index !== undefined && wordMatch[1]) {
+      const word = wordMatch[1].toLowerCase();
+      const value = wordMap[word];
+      if (value !== undefined) {
+        numberPositions.push({ value, index: wordMatch.index });
       }
     }
   }
