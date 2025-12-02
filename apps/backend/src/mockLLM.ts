@@ -24,8 +24,17 @@ const WORD_NUMBER_MAP: Record<string, number> = {
 };
 
 /**
+ * Format a numeric result for display
+ * Handles integers and decimals appropriately
+ */
+function formatResult(result: number): string {
+  return Number.isInteger(result) ? result.toString() : result.toFixed(2);
+}
+
+/**
  * Calculate the result of a sequence of operations
  * Calculator processes operations left-to-right (not following PEMDAS)
+ * Returns NaN if any division by zero is encountered
  */
 function calculateResult(numbers: number[], operations: { op: KeyId }[]): number {
   let result = numbers[0];
@@ -114,9 +123,7 @@ function tryParseCompoundOperation(text: string): MockResponse | null {
       // Calculate the result
       const result = calculateResult(numbers, operations);
       if (!isNaN(result) && isFinite(result)) {
-        // Format the result nicely
-        const formattedResult = Number.isInteger(result) ? result : result.toFixed(2);
-        description += ` The result is ${formattedResult}.`;
+        description += ` The result is ${formatResult(result)}.`;
       }
       
       return {
@@ -228,20 +235,14 @@ export function getMockResponse(userMessage: string): MockResponse {
     const numbers = extractNumbers(userMessage);
     if (numbers.length === 2) {
       if (numbers[1] === 0) {
+        // Don't send keys for division by zero - just return error message
         return {
           text: `I cannot divide ${numbers[0]} by zero. That would cause an error.`,
-          keys: [
-            ...digitKeys(numbers[0]),
-            'div',
-            ...digitKeys(numbers[1]),
-            'equals',
-          ],
         };
       }
       const result = numbers[0] / numbers[1];
-      const formattedResult = Number.isInteger(result) ? result : result.toFixed(2);
       return {
-        text: `I'll divide ${numbers[0]} by ${numbers[1]}. The result is ${formattedResult}.`,
+        text: `I'll divide ${numbers[0]} by ${numbers[1]}. The result is ${formatResult(result)}.`,
         keys: [
           ...digitKeys(numbers[0]),
           'div',
