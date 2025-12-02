@@ -1,0 +1,5 @@
+[install]
+auto = true
+
+[workspace]
+packages = ["packages/*", "apps/*"]

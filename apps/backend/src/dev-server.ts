@@ -1,11 +1,10 @@
-import { anthropic, MODEL } from '../src/anthropicClient';
-import { calculatorPressKeysTool, handleCalculatorPressKeys } from '../src/tools';
+import { anthropic, MODEL } from './anthropicClient';
+import { calculatorPressKeysTool, handleCalculatorPressKeys } from './tools';
 import type { ChatRequestBody, KeyId } from '@calculator/shared-types';
 import { v4 as uuid } from 'uuid';
 
-export const config = {
-  runtime: 'edge', // Use Edge runtime for streaming
-};
+const DEFAULT_PORT = 3001;
+const PORT = process.env.PORT || DEFAULT_PORT;
 
 const SYSTEM_PROMPT = `
 You are an assistant controlling a Casio-like calculator UI in the browser.
@@ -27,16 +26,11 @@ Available keys:
 - Currency: rate, euro, local
 `;
 
-// Helper to format SSE events
 function sseEvent(event: string, data: object): string {
   return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 }
 
-export default async function handler(req: Request): Promise<Response> {
-  if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
-  }
-
+async function handleChat(req: Request): Promise<Response> {
   const body: ChatRequestBody = await req.json();
   const { message, history } = body;
 
@@ -48,7 +42,6 @@ export default async function handler(req: Request): Promise<Response> {
     { role: 'user' as const, content: message },
   ];
 
-  // Create a TransformStream for SSE
   const { readable, writable } = new TransformStream();
   const writer = writable.getWriter();
   const encoder = new TextEncoder();
@@ -60,7 +53,6 @@ export default async function handler(req: Request): Promise<Response> {
       let keys: KeyId[] = [];
       const messageId = uuid();
 
-      // Initial request with streaming
       const stream = await anthropic.messages.stream({
         model: MODEL,
         max_tokens: 1024,
@@ -77,25 +69,19 @@ export default async function handler(req: Request): Promise<Response> {
             await writer.write(encoder.encode(sseEvent('token', { token })));
           }
         } else if (event.type === 'content_block_stop') {
-          // Check if we have a tool use
           const message = stream.currentMessage;
           const toolUse = message?.content.find((c) => c.type === 'tool_use');
-          
+
           if (toolUse && toolUse.type === 'tool_use') {
             const toolInput = toolUse.input as { keys: KeyId[] };
             const toolResult = handleCalculatorPressKeys(toolInput.keys);
             keys = toolResult.keys;
 
-            // Send keys event immediately
             await writer.write(encoder.encode(sseEvent('keys', { keys })));
 
-            // Continue conversation with tool result for final response
             const finalMessages = [
               ...messages,
-              {
-                role: 'assistant' as const,
-                content: message!.content,
-              },
+              { role: 'assistant' as const, content: message!.content },
               {
                 role: 'user' as const,
                 content: [
@@ -112,7 +98,6 @@ export default async function handler(req: Request): Promise<Response> {
               },
             ];
 
-            // Get final response after tool use (also streamed)
             const finalStream = await anthropic.messages.stream({
               model: MODEL,
               max_tokens: 1024,
@@ -134,7 +119,6 @@ export default async function handler(req: Request): Promise<Response> {
         }
       }
 
-      // Send done event
       await writer.write(encoder.encode(sseEvent('done', { messageId, fullText })));
     } catch (error) {
       console.error('Stream error:', error);
@@ -151,6 +135,39 @@ export default async function handler(req: Request): Promise<Response> {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive',
+      'Access-Control-Allow-Origin': '*',
     },
   });
 }
+
+Bun.serve({
+  port: PORT,
+  async fetch(req: Request) {
+    const url = new URL(req.url);
+
+    // CORS preflight
+    if (req.method === 'OPTIONS') {
+      return new Response(null, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      });
+    }
+
+    // Chat endpoint
+    if (url.pathname === '/api/chat' && req.method === 'POST') {
+      return handleChat(req);
+    }
+
+    // Health check
+    if (url.pathname === '/health') {
+      return new Response('OK', { status: 200 });
+    }
+
+    return new Response('Not Found', { status: 404 });
+  },
+});
+
+console.log(`🚀 Dev server running on http://localhost:${PORT}`);

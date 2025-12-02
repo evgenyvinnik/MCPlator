@@ -27,13 +27,16 @@ For detailed, step-by-step deployment instructions, please refer to [BUILD.md](.
 ### Frontend (`apps/frontend`)
 - **Framework:** React + TypeScript
 - **Build:** Vite
-- **State management:** Zustand + `persist` middleware
+- **State management:** Zustand + IndexedDB (manual persistence)
 - **Styling:** Tailwind CSS
+- **Storage:** IndexedDB (via `idb` library)
+- **Streaming:** Native `fetch` API for SSE
 
 ### Backend (`apps/backend`)
-- **Platform:** Vercel Serverless Functions
-- **Runtime:** Node.js
-- **AI:** OpenAI API (using Tools)
+- **Platform:** Vercel Edge Functions (for SSE support)
+- **Runtime:** Edge Runtime / Bun (local dev)
+- **AI:** Anthropic Claude API (Haiku model)
+- **Streaming:** Server-Sent Events (SSE)
 
 ### Shared (`packages/`)
 - **Monorepo:** npm workspaces
@@ -66,23 +69,34 @@ npm install
 
 ### Development
 
-Start the frontend development server:
-
+**Frontend only:**
 ```bash
 npm run dev
 ```
 
-This runs `npm run dev -w apps/frontend`.
+**Backend only (requires Bun):**
+```bash
+npm run dev:backend
+```
+
+**Both frontend and backend (requires `concurrently` package):**
+```bash
+npm run dev:all
+```
+
+The frontend runs on `http://localhost:5173` and the backend dev server on `http://localhost:3001`.
 
 ### Environment Variables
 
-For the backend to work (LLM features), you need to set up your OpenAI API key.
+For the backend to work (LLM features), you need to set up your Anthropic API key.
 
 Create a `.env` file in `apps/backend` (or set in Vercel dashboard):
 
 ```
-OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
 ```
+
+See `.env.example` files in `apps/backend` and `apps/frontend` for more details.
 
 ## Scripts
 

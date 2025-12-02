@@ -15,6 +15,9 @@ export const calculatorEngine: CalculatorEngine = {
     lastOperator: null,
     lastOperand: null,
     isError: false,
+    euroRate: null,
+    isEuroMode: false,
+    isLocalMode: true,
   }),
 
   pressKey: (state, _key) => {
@@ -29,6 +32,9 @@ export const calculatorEngine: CalculatorEngine = {
       error: state.isError,
       memory: state.hasMemory,
       constant: !!state.constant,
+      euro: state.isEuroMode,
+      local: state.isLocalMode,
+      rate: state.euroRate != null,
       op: state.lastOperator,
     },
   }),
