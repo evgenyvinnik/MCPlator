@@ -80,6 +80,8 @@ Frontend                          Backend (Vercel Edge)
    │                                     │
 ```
 
+*Note: Event data shown in simplified format for clarity. Actual SSE events follow the structure defined in §4.3.*
+
 This diagram shows:
 1. Frontend initiates a POST request to `/api/chat`
 2. Backend streams responses from Claude API
