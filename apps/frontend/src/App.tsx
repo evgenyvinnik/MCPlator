@@ -1,9 +1,18 @@
+import { useEffect } from 'react';
 import { AIChatPanel } from './components/AIChatPanel';
 import { useAnimationRunner } from './hooks/useAnimationRunner';
 import RetroCalculator from './components/RetroCalculator';
+import { useCalculatorStore } from './state/useCalculatorStore';
+import { useChatStore } from './state/useChatStore';
 
 function App() {
   useAnimationRunner();
+
+  // Hydrate stores from IndexedDB on mount
+  useEffect(() => {
+    useCalculatorStore.getState().hydrate();
+    useChatStore.getState().hydrate();
+  }, []);
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-[#0a0e1a] via-[#1a1f35] to-[#0f1629] text-slate-100">

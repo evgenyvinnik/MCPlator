@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { calculatorEngine } from '@calculator/calculator-engine';
 import type {
   CalculatorDisplay,
@@ -7,6 +6,7 @@ import type {
   KeyId,
 } from '@calculator/shared-types';
 import type { CalculatorInternalState } from '@calculator/calculator-engine';
+import { getDB } from '../db/indexedDB';
 
 type CalculatorStoreState = {
   internalState: CalculatorInternalState;
@@ -14,6 +14,7 @@ type CalculatorStoreState = {
   pressedKey: KeyId | null;
   isAnimating: boolean;
   animationQueue: AnimationSequence[];
+  isHydrated: boolean;
 };
 
 type CalculatorStoreActions = {
@@ -21,41 +22,55 @@ type CalculatorStoreActions = {
   enqueueAnimation: (sequence: AnimationSequence) => void;
   setPressedKey: (key: KeyId | null) => void;
   setIsAnimating: (val: boolean) => void;
+  hydrate: () => Promise<void>;
 };
 
-const STORAGE_KEY = 'casio_calculator_state_v1';
-
 export const useCalculatorStore = create<CalculatorStoreState & CalculatorStoreActions>()(
-  persist(
-    (set, get) => ({
-      internalState: calculatorEngine.initialState(),
-      display: calculatorEngine.toDisplay(calculatorEngine.initialState()),
-      pressedKey: null,
-      isAnimating: false,
-      animationQueue: [],
+  (set, get) => ({
+    internalState: calculatorEngine.initialState(),
+    display: calculatorEngine.toDisplay(calculatorEngine.initialState()),
+    pressedKey: null,
+    isAnimating: false,
+    animationQueue: [],
+    isHydrated: false,
 
-      pressKey: (key) => {
-        const current = get().internalState;
-        const next = calculatorEngine.pressKey(current, key);
-        const display = calculatorEngine.toDisplay(next);
-        set({ internalState: next, display });
-      },
-
-      enqueueAnimation: (sequence) => {
-        set((state) => ({
-          animationQueue: [...state.animationQueue, sequence],
-        }));
-      },
-
-      setPressedKey: (key) => set({ pressedKey: key }),
-      setIsAnimating: (val) => set({ isAnimating: val }),
-    }),
-    {
-      name: STORAGE_KEY,
-      partialize: (state) => ({
-        internalState: state.internalState,
-        display: state.display,
-      }),
+    hydrate: async () => {
+      const db = await getDB();
+      const stored = await db.get('calculator-state', 'current');
+      if (stored) {
+        set({
+          internalState: stored.state,
+          display: stored.display,
+          isHydrated: true,
+        });
+      } else {
+        set({ isHydrated: true });
+      }
     },
-  ),
+
+    pressKey: async (key) => {
+      const current = get().internalState;
+      const next = calculatorEngine.pressKey(current, key);
+      const display = calculatorEngine.toDisplay(next);
+      set({ internalState: next, display });
+
+      // Persist to IndexedDB
+      const db = await getDB();
+      await db.put('calculator-state', {
+        id: 'current',
+        state: next,
+        display,
+        updatedAt: new Date().toISOString(),
+      });
+    },
+
+    enqueueAnimation: (sequence) => {
+      set((state) => ({
+        animationQueue: [...state.animationQueue, sequence],
+      }));
+    },
+
+    setPressedKey: (key) => set({ pressedKey: key }),
+    setIsAnimating: (val) => set({ isAnimating: val }),
+  }),
 );
