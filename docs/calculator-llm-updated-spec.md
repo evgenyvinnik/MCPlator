@@ -65,7 +65,32 @@ No MCP server, no Redis, no DB, no user registration.
 
 ---
 
-## 2. Monorepo Structure
+## 2. SSE Communication Flow
+
+```text
+Frontend                          Backend (Vercel Edge)
+   │                                     │
+   │──POST /api/chat─────────────────────▶│
+   │                                     │──▶ Claude API (streaming)
+   │◀─event: token {token: "I"}──────────│◀──
+   │◀─event: token {token: "'ll"}────────│◀──
+   │◀─event: keys {keys: ["digit_1"...]}─│    (tool use detected)
+   │◀─event: token {token: "Done!"}──────│◀──
+   │◀─event: done {fullText: "..."}──────│
+   │                                     │
+```
+
+This diagram shows:
+1. Frontend initiates a POST request to `/api/chat`
+2. Backend streams responses from Claude API
+3. `token` events stream text as it's generated
+4. `keys` event is sent when a calculator tool use is detected (allowing animation to start early)
+5. `done` event signals completion with the full response text
+
+
+---
+
+## 3. Monorepo Structure
 
 ```text
 calculator-casio-llm/
@@ -126,9 +151,9 @@ calculator-casio-llm/
 
 ---
 
-## 3. Shared Types (`packages/shared-types`)
+## 4. Shared Types (`packages/shared-types`)
 
-### 3.1 Calculator types
+### 4.1 Calculator types
 
 ```ts
 // packages/shared-types/src/calculator.ts
@@ -170,7 +195,7 @@ export type AnimationSequence = {
 };
 ```
 
-### 3.2 Chat types
+### 4.2 Chat types
 
 ```ts
 // packages/shared-types/src/chat.ts
@@ -190,7 +215,7 @@ export type ChatRequestBody = {
 };
 ```
 
-### 3.3 SSE Event types
+### 4.3 SSE Event types
 
 ```ts
 // packages/shared-types/src/sse.ts
@@ -243,11 +268,11 @@ export type SSEEvent =
 
 ---
 
-## 4. Calculator Engine (`packages/calculator-engine`)
+## 5. Calculator Engine (`packages/calculator-engine`)
 
 Goal: single canonical implementation of calculator behavior, shared by frontend and backend (backend uses it only for tool validation; frontend uses it as the real state holder).
 
-### 4.1 Types
+### 5.1 Types
 
 ```ts
 // packages/calculator-engine/src/types.ts
@@ -276,7 +301,7 @@ export type CalculatorEngine = {
 };
 ```
 
-### 4.2 Skeleton implementation
+### 5.2 Skeleton implementation
 
 ```ts
 // packages/calculator-engine/src/index.ts
@@ -323,9 +348,9 @@ export const calculatorEngine: CalculatorEngine = {
 
 ---
 
-## 5. Frontend State & Behavior (`apps/frontend`)
+## 6. Frontend State & Behavior (`apps/frontend`)
 
-### 5.1 IndexedDB Setup
+### 6.1 IndexedDB Setup
 
 ```ts
 // apps/frontend/src/db/indexedDB.ts
@@ -379,7 +404,7 @@ export const getDB = () => {
 };
 ```
 
-### 5.2 Chat Database Operations
+### 6.2 Chat Database Operations
 
 ```ts
 // apps/frontend/src/db/chatDB.ts
@@ -409,7 +434,7 @@ export const chatDB = {
 };
 ```
 
-### 5.3 Quota Database Operations
+### 6.3 Quota Database Operations
 
 ```ts
 // apps/frontend/src/db/quotaDB.ts
@@ -461,7 +486,7 @@ export const quotaDB = {
 };
 ```
 
-### 5.4 SSE Client
+### 6.4 SSE Client
 
 ```ts
 // apps/frontend/src/api/sseClient.ts
@@ -555,7 +580,7 @@ export async function streamChat(
 }
 ```
 
-### 5.5 Streaming Chat Hook
+### 6.5 Streaming Chat Hook
 
 ```ts
 // apps/frontend/src/api/useStreamingChat.ts
@@ -677,7 +702,7 @@ export const useStreamingChat = () => {
 };
 ```
 
-### 5.6 Calculator store (Zustand + IndexedDB sync)
+### 6.6 Calculator store (Zustand + IndexedDB sync)
 
 ```ts
 // apps/frontend/src/state/useCalculatorStore.ts
@@ -759,7 +784,7 @@ export const useCalculatorStore = create<CalculatorStoreState & CalculatorStoreA
 );
 ```
 
-### 5.7 Chat store (with streaming support)
+### 6.7 Chat store (with streaming support)
 
 ```ts
 // apps/frontend/src/state/useChatStore.ts
@@ -821,7 +846,7 @@ export const useChatStore = create<ChatState & ChatActions>()(
 );
 ```
 
-### 5.8 Animation runner hook
+### 6.8 Animation runner hook
 
 ```ts
 // apps/frontend/src/hooks/useAnimationRunner.ts
@@ -872,9 +897,9 @@ export const useAnimationRunner = () => {
 };
 ```
 
-## 6. Backend API (`apps/backend`)
+## 7. Backend API (`apps/backend`)
 
-### 6.1 Anthropic Client Setup
+### 7.1 Anthropic Client Setup
 
 ```ts
 // apps/backend/src/anthropicClient.ts
@@ -887,7 +912,7 @@ export const anthropic = new Anthropic({
 export const MODEL = 'claude-3-5-haiku-20241022';
 ```
 
-### 6.2 Calculator Tool Definition
+### 7.2 Calculator Tool Definition
 
 ```ts
 // apps/backend/src/tools.ts
@@ -934,7 +959,7 @@ export const handleCalculatorPressKeys = (keys: KeyId[]) => {
 };
 ```
 
-### 6.3 Vercel API Route with SSE Streaming
+### 7.3 Vercel API Route with SSE Streaming
 
 ```ts
 // apps/backend/api/chat.ts
@@ -1096,7 +1121,7 @@ export default async function handler(req: Request): Promise<Response> {
 }
 ```
 
-### 6.4 Bun Local Development Server
+### 7.4 Bun Local Development Server
 
 ```ts
 // apps/backend/src/dev-server.ts
@@ -1277,9 +1302,9 @@ console.log(`🚀 Dev server running on http://localhost:${PORT}`);
 
 ---
 
-## 7. Configuration Files
+## 8. Configuration Files
 
-### 7.1 Bun Workspace Configuration
+### 8.1 Bun Workspace Configuration
 
 ```toml
 # bunfig.toml
@@ -1290,7 +1315,7 @@ auto = true
 packages = ["packages/*", "apps/*"]
 ```
 
-### 7.2 Root package.json
+### 8.2 Root package.json
 
 ```json
 {
@@ -1308,7 +1333,7 @@ packages = ["packages/*", "apps/*"]
 }
 ```
 
-### 7.3 Vercel Configuration
+### 8.3 Vercel Configuration
 
 ```json
 // vercel.json
@@ -1327,7 +1352,7 @@ packages = ["packages/*", "apps/*"]
 }
 ```
 
-### 7.4 Backend package.json
+### 8.4 Backend package.json
 
 ```json
 {
@@ -1349,7 +1374,7 @@ packages = ["packages/*", "apps/*"]
 }
 ```
 
-### 7.5 Frontend package.json
+### 8.5 Frontend package.json
 
 ```json
 {
@@ -1385,7 +1410,7 @@ packages = ["packages/*", "apps/*"]
 
 ---
 
-## 8. Environment Variables
+## 9. Environment Variables
 
 ```bash
 # Backend (.env)
@@ -1397,9 +1422,9 @@ VITE_API_URL=http://localhost:3001
 
 ---
 
-## 9. Quotas & Claude Cost Notes
+## 10. Quotas & Claude Cost Notes
 
-- **Per-browser soft limit** using IndexedDB and `quotaDB.canMakeCall()/recordCall()` (see §5.3).
+- **Per-browser soft limit** using IndexedDB and `quotaDB.canMakeCall()/recordCall()` (see §6.3).
 - On Anthropic side:
   - Set **low monthly hard limit** in the console (e.g., $10).
   - Use Claude Haiku for cost efficiency.
@@ -1410,7 +1435,7 @@ VITE_API_URL=http://localhost:3001
 
 ---
 
-## 10. Migration Notes from v1
+## 11. Migration Notes from v1
 
 | Aspect | v1 | v2 |
 |--------|----|----|
