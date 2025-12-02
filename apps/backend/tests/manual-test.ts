@@ -19,6 +19,7 @@ interface TestCase {
   expectedKeys?: KeyId[];
   shouldContainOps?: KeyId[];
   shouldHaveKeysCount?: number;
+  shouldContainText?: string;
 }
 
 const testCases: TestCase[] = [
@@ -32,7 +33,8 @@ const testCases: TestCase[] = [
       'div',
       'digit_3', // 3
       'equals'
-    ]
+    ],
+    shouldContainText: 'The result is 34'
   },
   {
     name: 'Simple addition',
@@ -117,6 +119,16 @@ function runTests(): void {
         testPassed = false;
       } else {
         console.log(`  ${GREEN}✓ Key count matches${RESET}`);
+      }
+    }
+    
+    // Check if text contains expected string
+    if (test.shouldContainText !== undefined) {
+      if (!result.text.includes(test.shouldContainText)) {
+        console.log(`  ${RED}✗ Expected text to contain: "${test.shouldContainText}"${RESET}`);
+        testPassed = false;
+      } else {
+        console.log(`  ${GREEN}✓ Text contains expected string${RESET}`);
       }
     }
     

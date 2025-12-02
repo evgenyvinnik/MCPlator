@@ -24,6 +24,39 @@ const WORD_NUMBER_MAP: Record<string, number> = {
 };
 
 /**
+ * Calculate the result of a sequence of operations
+ * Calculator processes operations left-to-right (not following PEMDAS)
+ */
+function calculateResult(numbers: number[], operations: { op: KeyId }[]): number {
+  let result = numbers[0];
+  
+  for (let i = 0; i < operations.length; i++) {
+    const nextNum = numbers[i + 1];
+    const op = operations[i].op;
+    
+    switch (op) {
+      case 'add':
+        result += nextNum;
+        break;
+      case 'sub':
+        result -= nextNum;
+        break;
+      case 'mul':
+        result *= nextNum;
+        break;
+      case 'div':
+        if (nextNum === 0) {
+          return NaN; // Division by zero
+        }
+        result /= nextNum;
+        break;
+    }
+  }
+  
+  return result;
+}
+
+/**
  * Try to parse a compound operation (multiple operations in sequence)
  * e.g., "hundred plus 2 divide by 3" -> 100 + 2 / 3 =
  */
@@ -77,6 +110,14 @@ function tryParseCompoundOperation(text: string): MockResponse | null {
       // Finally, equals
       keys.push('equals');
       description += ' for you.';
+      
+      // Calculate the result
+      const result = calculateResult(numbers, operations);
+      if (!isNaN(result) && isFinite(result)) {
+        // Format the result nicely
+        const formattedResult = Number.isInteger(result) ? result : result.toFixed(2);
+        description += ` The result is ${formattedResult}.`;
+      }
       
       return {
         text: description,
@@ -135,8 +176,9 @@ export function getMockResponse(userMessage: string): MockResponse {
   if (lower.match(/add|plus|\+|sum/)) {
     const numbers = extractNumbers(userMessage);
     if (numbers.length === 2) {
+      const result = numbers[0] + numbers[1];
       return {
-        text: `I'll add ${numbers[0]} and ${numbers[1]} for you.`,
+        text: `I'll add ${numbers[0]} and ${numbers[1]} for you. The result is ${result}.`,
         keys: [
           ...digitKeys(numbers[0]),
           'add',
@@ -151,8 +193,9 @@ export function getMockResponse(userMessage: string): MockResponse {
   if (lower.match(/subtract|minus|-|difference/)) {
     const numbers = extractNumbers(userMessage);
     if (numbers.length === 2) {
+      const result = numbers[0] - numbers[1];
       return {
-        text: `I'll subtract ${numbers[1]} from ${numbers[0]}.`,
+        text: `I'll subtract ${numbers[1]} from ${numbers[0]}. The result is ${result}.`,
         keys: [
           ...digitKeys(numbers[0]),
           'sub',
@@ -167,8 +210,9 @@ export function getMockResponse(userMessage: string): MockResponse {
   if (lower.match(/multiply|times|\*|×|product/)) {
     const numbers = extractNumbers(userMessage);
     if (numbers.length === 2) {
+      const result = numbers[0] * numbers[1];
       return {
-        text: `I'll multiply ${numbers[0]} by ${numbers[1]}.`,
+        text: `I'll multiply ${numbers[0]} by ${numbers[1]}. The result is ${result}.`,
         keys: [
           ...digitKeys(numbers[0]),
           'mul',
@@ -183,8 +227,21 @@ export function getMockResponse(userMessage: string): MockResponse {
   if (lower.match(/divide|divided by|\/|÷/)) {
     const numbers = extractNumbers(userMessage);
     if (numbers.length === 2) {
+      if (numbers[1] === 0) {
+        return {
+          text: `I cannot divide ${numbers[0]} by zero. That would cause an error.`,
+          keys: [
+            ...digitKeys(numbers[0]),
+            'div',
+            ...digitKeys(numbers[1]),
+            'equals',
+          ],
+        };
+      }
+      const result = numbers[0] / numbers[1];
+      const formattedResult = Number.isInteger(result) ? result : result.toFixed(2);
       return {
-        text: `I'll divide ${numbers[0]} by ${numbers[1]}.`,
+        text: `I'll divide ${numbers[0]} by ${numbers[1]}. The result is ${formattedResult}.`,
         keys: [
           ...digitKeys(numbers[0]),
           'div',
