@@ -6,12 +6,16 @@ export type KeyId =
   | 'percent'
   | 'equals'
   | 'ac' | 'c'
-  | 'mc' | 'mr' | 'm_plus' | 'm_minus';
+  | 'mc' | 'mr' | 'm_plus' | 'm_minus'
+  | 'rate' | 'euro' | 'local';
 
 export type CalculatorIndicators = {
   error: boolean;           // E
   memory: boolean;          // M
   constant: boolean;        // K
+  euro: boolean;
+  local: boolean;
+  rate: boolean;
   op: null | 'add' | 'sub' | 'mul' | 'div';
 };
 

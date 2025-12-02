@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "main": "api/chat.ts",
   "scripts": {
-    "start": "vercel dev"
+    "start": "vercel dev",
+    "build": "tsc --noEmit"
   },
   "dependencies": {
     "@calculator/shared-types": "*",
