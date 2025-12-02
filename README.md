@@ -69,17 +69,21 @@ npm install
 
 ### Development
 
+**Quick Start - Test Locally Without API Key:**
+
+For detailed local testing instructions including mock mode, see [LOCAL_TESTING.md](./LOCAL_TESTING.md).
+
 **Frontend only:**
 ```bash
 npm run dev
 ```
 
-**Backend only (requires Bun):**
+**Backend only:**
 ```bash
 npm run dev:backend
 ```
 
-**Both frontend and backend (requires `concurrently` package):**
+**Both frontend and backend:**
 ```bash
 npm run dev:all
 ```
@@ -90,11 +94,23 @@ The frontend runs on `http://localhost:5173` and the backend dev server on `http
 
 For the backend to work (LLM features), you need to set up your Anthropic API key.
 
+**For detailed instructions on getting an Anthropic API key, see [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md).**
+
 Create a `.env` file in `apps/backend` (or set in Vercel dashboard):
 
 ```
 ANTHROPIC_API_KEY=sk-ant-...
 ```
+
+#### Local Testing Without API Key
+
+You can test the UI locally without an Anthropic API key by using mock mode:
+
+```
+USE_MOCK_LLM=true
+```
+
+This simulates LLM responses for basic calculator operations (addition, subtraction, multiplication, division) without calling the Anthropic API. See [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md) for more details.
 
 See `.env.example` files in `apps/backend` and `apps/frontend` for more details.
 

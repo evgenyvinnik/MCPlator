@@ -2,9 +2,11 @@ import { anthropic, MODEL } from './anthropicClient';
 import { calculatorPressKeysTool, handleCalculatorPressKeys } from './tools';
 import type { ChatRequestBody, KeyId } from '@calculator/shared-types';
 import { v4 as uuid } from 'uuid';
+import { handleMockChat } from './mockChatHandler';
 
 const DEFAULT_PORT = 3001;
 const PORT = process.env.PORT || DEFAULT_PORT;
+const USE_MOCK_LLM = process.env.USE_MOCK_LLM === 'true';
 
 const SYSTEM_PROMPT = `
 You are an assistant controlling a Casio-like calculator UI in the browser.
@@ -158,7 +160,7 @@ Bun.serve({
 
     // Chat endpoint
     if (url.pathname === '/api/chat' && req.method === 'POST') {
-      return handleChat(req);
+      return USE_MOCK_LLM ? handleMockChat(req) : handleChat(req);
     }
 
     // Health check
@@ -171,3 +173,4 @@ Bun.serve({
 });
 
 console.log(`🚀 Dev server running on http://localhost:${PORT}`);
+console.log(`📡 Mode: ${USE_MOCK_LLM ? 'MOCK LLM (no API key needed)' : 'Anthropic API'}`);
