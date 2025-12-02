@@ -3,7 +3,8 @@ import { calculatorPressKeysTool, handleCalculatorPressKeys } from './tools';
 import type { ChatRequestBody, KeyId } from '@calculator/shared-types';
 import { v4 as uuid } from 'uuid';
 
-const PORT = process.env.PORT || 3001;
+const DEFAULT_PORT = 3001;
+const PORT = process.env.PORT || DEFAULT_PORT;
 
 const SYSTEM_PROMPT = `
 You are an assistant controlling a Casio-like calculator UI in the browser.

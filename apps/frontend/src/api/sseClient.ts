@@ -1,5 +1,9 @@
 import type { ChatRequestBody } from '@calculator/shared-types';
 
+// SSE prefix lengths
+const SSE_EVENT_PREFIX_LENGTH = 7;  // "event: ".length
+const SSE_DATA_PREFIX_LENGTH = 6;   // "data: ".length
+
 export type SSECallbacks = {
   onToken: (token: string) => void;
   onKeys: (keys: string[]) => void;
@@ -51,9 +55,9 @@ export async function streamChat(
 
       for (const line of lines) {
         if (line.startsWith('event: ')) {
-          eventType = line.slice(7);
+          eventType = line.slice(SSE_EVENT_PREFIX_LENGTH);
         } else if (line.startsWith('data: ')) {
-          eventData = line.slice(6);
+          eventData = line.slice(SSE_DATA_PREFIX_LENGTH);
         } else if (line === '' && eventType && eventData) {
           // End of event, process it
           try {
@@ -75,6 +79,7 @@ export async function streamChat(
             }
           } catch (e) {
             console.error('Failed to parse SSE data:', e);
+            callbacks.onError('Failed to parse server response');
           }
           
           eventType = '';
