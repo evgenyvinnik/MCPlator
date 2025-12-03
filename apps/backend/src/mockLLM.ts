@@ -154,10 +154,15 @@ function extractAllNumbers(text: string): number[] {
   const numberPositions: { value: number; index: number }[] = [];
   
   // Extract digit numbers with their positions (including negative numbers)
-  const digitRegex = /-?\b\d+(?:\.\d+)?\b/g;
+  // Use a pattern that correctly handles negative numbers without word boundary issues
+  const digitRegex = /(?:^|[^\w.])-?\d+(?:\.\d+)?(?![.\w])/g;
   let match;
   while ((match = digitRegex.exec(text)) !== null) {
-    numberPositions.push({ value: Number(match[0]), index: match.index });
+    // Trim any non-digit prefix (space, punctuation) to get just the number
+    const numStr = match[0].match(/-?\d+(?:\.\d+)?/)?.[0];
+    if (numStr) {
+      numberPositions.push({ value: Number(numStr), index: match.index + (match[0].length - numStr.length) });
+    }
   }
   
   // Extract word numbers with their positions
