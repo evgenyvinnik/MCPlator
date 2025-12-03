@@ -4,6 +4,7 @@ export type KeyId =
   | 'decimal'
   | 'add' | 'sub' | 'mul' | 'div'
   | 'percent'
+  | 'sqrt' | 'plus_minus'
   | 'equals'
   | 'ac' | 'c'
   | 'mc' | 'mr' | 'm_plus' | 'm_minus'
