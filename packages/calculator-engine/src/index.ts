@@ -280,6 +280,34 @@ export const calculatorEngine: CalculatorEngine = {
       };
     }
 
+    // Handle square root
+    if (key === 'sqrt') {
+      const currentValue = parseDisplayValue(state.displayValue);
+      if (currentValue < 0) {
+        return {
+          ...state,
+          displayValue: 'E',
+          isError: true,
+        };
+      }
+      const result = Math.sqrt(currentValue);
+      return {
+        ...state,
+        displayValue: formatForDisplay(result),
+        shouldStartNewNumber: true,
+      };
+    }
+
+    // Handle sign change (plus/minus)
+    if (key === 'plus_minus') {
+      const currentValue = parseDisplayValue(state.displayValue);
+      const result = -currentValue;
+      return {
+        ...state,
+        displayValue: formatForDisplay(result),
+      };
+    }
+
     // Handle memory operations
     if (key === 'mc') {
       // Memory Clear

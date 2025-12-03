@@ -275,6 +275,59 @@ describe('Calculator Engine', () => {
     });
   });
 
+  describe('Square Root', () => {
+    it('should calculate square root', () => {
+      let state = calculatorEngine.initialState();
+      state = pressKeys(state, ['digit_1', 'digit_6', 'sqrt']);
+      expect(state.displayValue).toBe('4');
+    });
+
+    it('should calculate square root of decimal', () => {
+      let state = calculatorEngine.initialState();
+      state = pressKeys(state, ['digit_2', 'decimal', 'digit_2', 'digit_5', 'sqrt']);
+      expect(state.displayValue).toBe('1.5');
+    });
+
+    it('should handle square root of zero', () => {
+      let state = calculatorEngine.initialState();
+      state = pressKeys(state, ['digit_0', 'sqrt']);
+      expect(state.displayValue).toBe('0');
+    });
+
+    it('should show error for square root of negative number', () => {
+      let state = calculatorEngine.initialState();
+      state = pressKeys(state, ['digit_5', 'plus_minus', 'sqrt']);
+      expect(state.displayValue).toBe('E');
+      expect(state.isError).toBe(true);
+    });
+  });
+
+  describe('Sign Change', () => {
+    it('should change sign of positive number', () => {
+      let state = calculatorEngine.initialState();
+      state = pressKeys(state, ['digit_5', 'plus_minus']);
+      expect(state.displayValue).toBe('-5');
+    });
+
+    it('should change sign of negative number', () => {
+      let state = calculatorEngine.initialState();
+      state = pressKeys(state, ['digit_5', 'plus_minus', 'plus_minus']);
+      expect(state.displayValue).toBe('5');
+    });
+
+    it('should change sign of decimal', () => {
+      let state = calculatorEngine.initialState();
+      state = pressKeys(state, ['digit_3', 'decimal', 'digit_1', 'digit_4', 'plus_minus']);
+      expect(state.displayValue).toBe('-3.14');
+    });
+
+    it('should change sign of zero', () => {
+      let state = calculatorEngine.initialState();
+      state = pressKeys(state, ['digit_0', 'plus_minus']);
+      expect(state.displayValue).toBe('0');
+    });
+  });
+
   describe('Edge Cases', () => {
     it('should handle equals without operator', () => {
       let state = calculatorEngine.initialState();

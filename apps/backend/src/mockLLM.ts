@@ -153,8 +153,8 @@ function tryParseCompoundOperation(text: string): MockResponse | null {
 function extractAllNumbers(text: string): number[] {
   const numberPositions: { value: number; index: number }[] = [];
   
-  // Extract digit numbers with their positions
-  const digitRegex = /\b\d+(?:\.\d+)?\b/g;
+  // Extract digit numbers with their positions (including negative numbers)
+  const digitRegex = /-?\b\d+(?:\.\d+)?\b/g;
   let match;
   while ((match = digitRegex.exec(text)) !== null) {
     numberPositions.push({ value: Number(match[0]), index: match.index });
@@ -180,7 +180,30 @@ function extractAllNumbers(text: string): number[] {
   return numberPositions.sort((a, b) => a.index - b.index).map(n => n.value);
 }
 
+/**
+ * Validate user input and return error message if invalid
+ */
+function validateInput(userMessage: string): string | null {
+  if (!userMessage || userMessage.trim().length === 0) {
+    return "Please provide a calculation request. For example, 'add 5 and 3' or 'square root of 16'.";
+  }
+  
+  if (userMessage.trim().length > 500) {
+    return "Your message is too long. Please keep it under 500 characters.";
+  }
+  
+  return null; // Input is valid
+}
+
 export function getMockResponse(userMessage: string): MockResponse {
+  // Validate input
+  const validationError = validateInput(userMessage);
+  if (validationError) {
+    return {
+      text: validationError,
+    };
+  }
+  
   const lower = userMessage.toLowerCase().trim();
 
   // Check for compound operations (multiple operations in one request)
@@ -189,11 +212,106 @@ export function getMockResponse(userMessage: string): MockResponse {
     return compoundResult;
   }
 
+  // Memory operations - check BEFORE general addition/subtraction patterns
+  if (lower.match(/memory\s+(clear|delete|reset)|clear\s+memory|mc\b/)) {
+    return {
+      text: "I'll clear the calculator's memory.",
+      keys: ['mc'],
+    };
+  }
+
+  if (lower.match(/memory\s+(recall|retrieve|get)|recall\s+memory|mr\b/)) {
+    return {
+      text: "I'll recall the value from memory.",
+      keys: ['mr'],
+    };
+  }
+
+  if (lower.match(/memory\s+(add|plus|\+)|\b(add|store)\s+.*\s+(to|in)\s+memory|memory\s+add|m\+|m\s*plus/)) {
+    const numbers = extractNumbers(userMessage);
+    if (numbers.length >= 1) {
+      return {
+        text: `I'll add ${numbers[0]} to memory.`,
+        keys: [...digitKeys(numbers[0]), 'm_plus'],
+      };
+    }
+    return {
+      text: "I'll add the current value to memory.",
+      keys: ['m_plus'],
+    };
+  }
+
+  if (lower.match(/memory\s+(subtract|minus|-)|\bsubtract\s+.*\s+from\s+memory|memory\s+subtract|m-|m\s*minus/)) {
+    const numbers = extractNumbers(userMessage);
+    if (numbers.length >= 1) {
+      return {
+        text: `I'll subtract ${numbers[0]} from memory.`,
+        keys: [...digitKeys(numbers[0]), 'm_minus'],
+      };
+    }
+    return {
+      text: "I'll subtract the current value from memory.",
+      keys: ['m_minus'],
+    };
+  }
+
+  // Clear patterns - check BEFORE general patterns that might match "clear"
+  if (lower.match(/clear\s+(all|everything)|reset|all\s+clear|ac\b/)) {
+    return {
+      text: "I'll clear the calculator completely for you.",
+      keys: ['ac'],
+    };
+  }
+  
+  if (lower.match(/clear\s+(entry|display|current)?|^clear$/)) {
+    return {
+      text: "I'll clear the current entry.",
+      keys: ['c'],
+    };
+  }
+
+  // Square root patterns - check BEFORE subtraction (to handle negative numbers properly)
+  if (lower.match(/square\s*root|sqrt|√/)) {
+    const numbers = extractNumbers(userMessage);
+    if (numbers.length >= 1) {
+      const num = numbers[0];
+      if (num < 0) {
+        return {
+          text: `I cannot calculate the square root of a negative number (${num}). That would result in an error.`,
+        };
+      }
+      const result = Math.sqrt(num);
+      return {
+        text: `I'll calculate the square root of ${num}. The result is ${formatResult(result)}.`,
+        keys: [...digitKeys(num), 'sqrt'],
+      };
+    }
+  }
+
+  // Sign change patterns - check BEFORE subtraction
+  if (lower.match(/change\s+sign|negate|plus[\s-]*minus|negative|make.*negative|opposite\s+sign/)) {
+    const numbers = extractNumbers(userMessage);
+    if (numbers.length >= 1) {
+      const num = numbers[0];
+      const result = -num;
+      return {
+        text: `I'll change the sign of ${num} to ${result}.`,
+        keys: [...digitKeys(num), 'plus_minus'],
+      };
+    }
+  }
+
   // Addition patterns
   if (lower.match(/add|plus|\+|sum/)) {
     const numbers = extractNumbers(userMessage);
     if (numbers.length === 2) {
       const result = numbers[0] + numbers[1];
+      // Check for overflow
+      if (!isFinite(result)) {
+        return {
+          text: `The result of adding ${numbers[0]} and ${numbers[1]} would cause an overflow error.`,
+        };
+      }
       return {
         text: `I'll add ${numbers[0]} and ${numbers[1]} for you. The result is ${result}.`,
         keys: [
@@ -204,6 +322,11 @@ export function getMockResponse(userMessage: string): MockResponse {
         ],
       };
     }
+    if (numbers.length < 2) {
+      return {
+        text: "I need two numbers to perform addition. For example, 'add 5 and 3'.",
+      };
+    }
   }
 
   // Subtraction patterns
@@ -211,6 +334,11 @@ export function getMockResponse(userMessage: string): MockResponse {
     const numbers = extractNumbers(userMessage);
     if (numbers.length === 2) {
       const result = numbers[0] - numbers[1];
+      if (!isFinite(result)) {
+        return {
+          text: `The result of subtracting ${numbers[1]} from ${numbers[0]} would cause an overflow error.`,
+        };
+      }
       return {
         text: `I'll subtract ${numbers[1]} from ${numbers[0]}. The result is ${result}.`,
         keys: [
@@ -221,6 +349,11 @@ export function getMockResponse(userMessage: string): MockResponse {
         ],
       };
     }
+    if (numbers.length < 2) {
+      return {
+        text: "I need two numbers to perform subtraction. For example, 'subtract 7 from 20'.",
+      };
+    }
   }
 
   // Multiplication patterns
@@ -228,6 +361,11 @@ export function getMockResponse(userMessage: string): MockResponse {
     const numbers = extractNumbers(userMessage);
     if (numbers.length === 2) {
       const result = numbers[0] * numbers[1];
+      if (!isFinite(result)) {
+        return {
+          text: `The result of multiplying ${numbers[0]} by ${numbers[1]} would cause an overflow error.`,
+        };
+      }
       return {
         text: `I'll multiply ${numbers[0]} by ${numbers[1]}. The result is ${result}.`,
         keys: [
@@ -236,6 +374,11 @@ export function getMockResponse(userMessage: string): MockResponse {
           ...digitKeys(numbers[1]),
           'equals',
         ],
+      };
+    }
+    if (numbers.length < 2) {
+      return {
+        text: "I need two numbers to perform multiplication. For example, 'multiply 12 by 4'.",
       };
     }
   }
@@ -251,6 +394,11 @@ export function getMockResponse(userMessage: string): MockResponse {
         };
       }
       const result = numbers[0] / numbers[1];
+      if (!isFinite(result)) {
+        return {
+          text: `The result of dividing ${numbers[0]} by ${numbers[1]} would cause an overflow error.`,
+        };
+      }
       return {
         text: `I'll divide ${numbers[0]} by ${numbers[1]}. The result is ${formatResult(result)}.`,
         keys: [
@@ -261,14 +409,11 @@ export function getMockResponse(userMessage: string): MockResponse {
         ],
       };
     }
-  }
-
-  // Clear patterns
-  if (lower.match(/clear|reset|ac/)) {
-    return {
-      text: "I'll clear the calculator for you.",
-      keys: ['ac'],
-    };
+    if (numbers.length < 2) {
+      return {
+        text: "I need two numbers to perform division. For example, 'divide 100 by 5'.",
+      };
+    }
   }
 
   // Percentage patterns
@@ -284,7 +429,7 @@ export function getMockResponse(userMessage: string): MockResponse {
 
   // Default response for unrecognized patterns
   return {
-    text: "I'm a mock calculator assistant. I can help you with basic operations like addition, subtraction, multiplication, and division. Try saying something like 'add 5 and 3' or 'multiply 12 by 4'.",
+    text: "I'm a mock calculator assistant. I can help you with operations like addition, subtraction, multiplication, division, square root, percentage, memory operations, and more. Try saying something like 'add 5 and 3', 'square root of 16', or 'store 42 in memory'.",
   };
 }
 
