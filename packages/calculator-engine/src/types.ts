@@ -14,6 +14,7 @@ export type CalculatorInternalState = {
   euroRate: number | null;
   isEuroMode: boolean;
   isLocalMode: boolean;
+  shouldStartNewNumber: boolean; // Flag to indicate next digit should start a new number
 };
 
 export type CalculatorEngine = {

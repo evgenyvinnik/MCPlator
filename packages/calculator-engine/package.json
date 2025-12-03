@@ -5,7 +5,8 @@
   "types": "./src/index.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "tsc --noEmit"
+    "build": "tsc --noEmit",
+    "test": "bun test"
   },
   "dependencies": {
     "@calculator/shared-types": "*"
