@@ -88,14 +88,14 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
             }
 
             return digits.map((d, i) => (
-              <div key={i} style={{ position: 'relative', display: 'flex', alignItems: 'baseline' }}>
+              <div key={i} style={{ position: 'relative', display: 'inline-flex', alignItems: 'flex-end' }}>
                 {/* Thousand Separator */}
                 <div style={{
                   position: 'absolute',
-                  top: '-2px',
+                  top: '8px',
                   right: '-4px',
                   opacity: d.hasSeparator ? 1 : 0,
-                  fontSize: '30px', // Maximum size thousands separator
+                  fontSize: '16px',
                   fontWeight: 'bold',
                   color: '#111',
                   fontFamily: 'sans-serif',
@@ -103,7 +103,7 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
                   '
                 </div>
 
-                <span>{d.char}</span>
+                <span style={{ lineHeight: 1 }}>{d.char}</span>
                 
                 {/* Decimal Point */}
                 <div 
@@ -113,9 +113,9 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
                     background: d.hasDot ? '#111' : 'transparent',
                     borderRadius: '50%',
                     opacity: d.hasDot ? 1 : 0,
-                    position: 'absolute',
-                    top: '50px',
-                    right: '-3px'
+                    marginLeft: '-2px',
+                    marginBottom: '4px',
+                    alignSelf: 'flex-end'
                   }} 
                 />
               </div>
