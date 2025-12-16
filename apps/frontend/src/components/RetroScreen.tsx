@@ -114,7 +114,7 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
                     borderRadius: '50%',
                     opacity: d.hasDot ? 1 : 0,
                     position: 'absolute',
-                    bottom: '4px',
+                    top: '50px',
                     right: '-3px'
                   }} 
                 />
