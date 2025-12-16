@@ -10,6 +10,7 @@ export default defineConfig({
       },
     }),
   ],
+  assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf'],
   server: {
     proxy: {
       '/api': {
