@@ -5,14 +5,12 @@
   "framework": "vite",
   "rewrites": [
     { 
-      "source": "/((?!api).*)", 
+      "source": "/api/:path*", 
+      "destination": "/apps/backend/api/:path*" 
+    },
+    { 
+      "source": "/(.*)", 
       "destination": "/index.html" 
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/apps/backend/api/$1"
     }
   ]
 }
