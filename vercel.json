@@ -14,10 +14,5 @@
       "src": "/api/(.*)",
       "dest": "/apps/backend/api/$1"
     }
-  ],
-  "functions": {
-    "apps/backend/api/**/*.ts": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  ]
 }
