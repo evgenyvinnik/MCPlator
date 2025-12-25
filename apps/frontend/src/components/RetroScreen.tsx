@@ -29,12 +29,12 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
           textAlign: 'right'
         }}
       >
-        <div 
-          style={{ 
+        <div
+          style={{
             fontFamily: 'digit',
             fontSize: '52px', // Balanced size for better proportion with decimal/separator
             position: 'absolute',
-            right: '10px',
+            right: '6px',
             top: '22px', // Adjusted for vertical centering
             display: 'flex',
             alignItems: 'baseline',
@@ -45,7 +45,8 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
             opacity: isOn ? 1 : 0, // Hide when off
             transition: 'opacity 0.2s ease-in-out',
             gap: '0px', // Minimal gap between digits
-            letterSpacing: '-1px', // Compress digits together
+            letterSpacing: '0px', // Use consistent spacing for monospace
+            fontVariantNumeric: 'tabular-nums', // Ensure monospaced digits
             transform: 'skewX(-8deg)'
           }}
         >
@@ -102,8 +103,13 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
                   '
                 </div>
 
-                <span style={{ lineHeight: 1 }}>{d.char}</span>
-                
+                <span style={{
+                  lineHeight: 1,
+                  display: 'inline-block',
+                  minWidth: '22px', // Fixed width for each digit to ensure monospace
+                  textAlign: 'center'
+                }}>{d.char}</span>
+
                 {/* Decimal Point */}
                 <div
                   style={{

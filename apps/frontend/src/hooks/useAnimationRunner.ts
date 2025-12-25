@@ -24,8 +24,9 @@ export const useAnimationRunner = () => {
       for (const cmd of commands) {
         if (cmd.type === 'pressKey') {
           setPressedKey(cmd.key);
-          await sleep(cmd.delayMs ?? 150);
+          await sleep(cmd.delayMs ?? 350); // Slower key press animation
           setPressedKey(null);
+          await sleep(100); // Pause between key release and next action
           // apply logic to calculator
           pressKey(cmd.key);
         } else if (cmd.type === 'setDisplay') {

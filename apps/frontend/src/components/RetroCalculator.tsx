@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import RetroScreen from './RetroScreen';
 import RetroKeypad from './RetroKeypad';
 import { useCalculatorStore } from '../state/useCalculatorStore';
@@ -20,12 +20,32 @@ const retroKeyToKeyId: Record<string, KeyId> = {
   'on': 'ac', 'clear': 'c',
   // Percent
   'percentage': 'percent',
+  // Plus/Minus (change sign)
+  'change_sign': 'plus_minus',
 };
 
 const RetroCalculator: React.FC = () => {
   const { display, pressKey } = useCalculatorStore();
+  const [isOn, setIsOn] = useState(true);
 
   const handleClick = (key: { value: string }) => {
+    // Handle power buttons
+    if (key.value === 'off') {
+      setIsOn(false);
+      return;
+    }
+    if (key.value === 'on') {
+      setIsOn(true);
+      // Also trigger AC when turning on
+      pressKey('ac');
+      return;
+    }
+
+    // Ignore other keys when calculator is off
+    if (!isOn) {
+      return;
+    }
+
     const keyId = retroKeyToKeyId[key.value];
     if (keyId) {
       pressKey(keyId);
@@ -114,12 +134,12 @@ const RetroCalculator: React.FC = () => {
       </header>
 
       <main>
-        <RetroScreen 
-          value={displayValue} 
+        <RetroScreen
+          value={displayValue}
           memory={display.indicators.memory}
           error={display.indicators.error}
           negative={isNegative}
-          isOn={true}
+          isOn={isOn}
         />
         <div style={{ position: 'relative' }}>
           <h2 style={{ 

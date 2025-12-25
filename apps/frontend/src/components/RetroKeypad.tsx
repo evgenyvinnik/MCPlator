@@ -29,7 +29,8 @@ const keyIdToRetroKey: Partial<Record<KeyId, string>> = {
   'mr': 'mr',
   'm_plus': 'm+',
   'm_minus': 'm-',
-  // 'rate', 'euro', 'local' are not available in RetroKeypad
+  'plus_minus': 'change_sign',
+  // 'rate', 'euro', 'local', 'sqrt' are not available in RetroKeypad
 };
 
 // Define the layout matching original - 6 rows x 5 columns
@@ -104,7 +105,7 @@ const buttonBaseStyle: React.CSSProperties = {
     0px 0px 0px 3px rgba(0, 0, 0, 0.1)`,
   border: '1px solid #0b0c10',
   borderRadius: '6px 6px 12px 12px',
-  transition: 'all 0.1s ease-out',
+  transition: 'all 0.15s ease-out',
   cursor: 'pointer',
   outline: 'none',
   textShadow: '1px 2px 2px rgba(0, 0, 0, 0.5)',
@@ -124,31 +125,34 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
     const originalColor = button.style.color;
     const originalTransform = button.style.transform;
     const originalBoxShadow = button.style.boxShadow;
-    
-    // Apply pressed state
-    button.style.color = 'lightgray';
+    const originalFilter = button.style.filter;
+
+    // Apply pressed state - more pronounced effect
+    button.style.color = '#aaa';
     if (isRed) {
-      button.style.background = 'linear-gradient(to bottom, #5d2f39 0%, #4a2430 50%, #3a1d26 100%)';
+      button.style.background = 'linear-gradient(to bottom, #4a2430 0%, #3a1d26 50%, #2a1520 100%)';
     } else {
-      button.style.background = 'linear-gradient(to bottom, #2a2a2a 0%, #252525 50%, #202020 100%)';
+      button.style.background = 'linear-gradient(to bottom, #1a1a1a 0%, #151515 50%, #101010 100%)';
     }
-    button.style.transform = 'translateY(1px)';
-    button.style.boxShadow = `1px 1px 1px 1px rgba(0, 0, 0, 0.1),
-      0px 0px 0px 1px rgba(0, 0, 0, 0.8), 
-      inset 1px 0px 1px 0px rgba(0, 0, 0, 0.3),
-      inset -1px 0px 1px 0px rgba(0, 0, 0, 0.3),
-      inset 0px 1px 1px 0px rgba(255, 255, 255, 0.4),
-      inset 0px -3px 3px rgba(255, 255, 255, 0.1),
-      0px 8px 10px 0px rgba(0, 0, 0, 0.3),
-      inset 0px 4px 1px 1px rgba(0, 0, 0, 0.3)`;
-    
-    // Release after a short delay
+    button.style.transform = 'translateY(3px) scale(0.98)';
+    button.style.filter = 'brightness(0.85)';
+    button.style.boxShadow = `0px 0px 1px 1px rgba(0, 0, 0, 0.2),
+      0px 0px 0px 1px rgba(0, 0, 0, 0.9),
+      inset 2px 0px 2px 0px rgba(0, 0, 0, 0.5),
+      inset -2px 0px 2px 0px rgba(0, 0, 0, 0.5),
+      inset 0px 2px 2px 0px rgba(255, 255, 255, 0.2),
+      inset 0px -2px 2px rgba(255, 255, 255, 0.05),
+      0px 2px 4px 0px rgba(0, 0, 0, 0.4),
+      inset 0px 6px 3px 2px rgba(0, 0, 0, 0.4)`;
+
+    // Release after animation duration
     setTimeout(() => {
       button.style.color = originalColor;
       button.style.background = originalBackground;
       button.style.transform = originalTransform;
       button.style.boxShadow = originalBoxShadow;
-    }, 100);
+      button.style.filter = originalFilter;
+    }, 300);
   }, []);
   
   // Trigger visual animation when pressedKey changes

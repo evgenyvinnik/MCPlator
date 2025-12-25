@@ -6,12 +6,12 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "bun run --filter apps/frontend dev",
-    "dev:backend": "bun run --filter apps/backend dev",
+    "dev": "bun run --filter 'mc-plator' dev",
+    "dev:backend": "bun run --filter 'backend' dev",
     "dev:all": "concurrently \"bun run dev\" \"bun run dev:backend\"",
     "build": "bun run --filter '*' build",
-    "build:packages": "bun run --filter packages/shared-types build && bun run --filter packages/calculator-engine build",
-    "build:apps": "bun run --filter apps/frontend build",
+    "build:packages": "bun run --filter '@calculator/shared-types' build && bun run --filter '@calculator/calculator-engine' build",
+    "build:apps": "bun run --filter 'mc-plator' build",
     "test": "bun run --filter '*' test"
   },
   "dependencies": {
