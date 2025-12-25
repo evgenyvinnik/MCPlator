@@ -77,6 +77,18 @@ describe('Calculator Engine', () => {
       state = pressKeys(state, ['digit_1', 'decimal', 'digit_5', 'decimal']);
       expect(state.displayValue).toBe('1.5');
     });
+
+    it('should allow decimal point with 8 total digits (decimal does not count toward limit)', () => {
+      let state = calculatorEngine.initialState();
+      state = pressKeys(state, [
+        'digit_1', 'digit_2', 'digit_3', 'digit_4',
+        'digit_5', 'digit_6',
+        'decimal', // Should be allowed (decimal doesn't count)
+        'digit_7', 'digit_8', // Should be allowed (total 8 digits)
+        'digit_9', // Should be ignored (would be 9th digit)
+      ]);
+      expect(state.displayValue).toBe('123456.78');
+    });
   });
 
   describe('Addition', () => {

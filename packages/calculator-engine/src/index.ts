@@ -28,21 +28,23 @@ function formatForDisplay(value: number): string {
     return value.toExponential(2);
   }
   
-  // Convert to string and check length
+  // Convert to string and check digit count (excluding decimal point and minus sign)
   let str = value.toString();
-  
-  // If it's too long, truncate to 8 characters (including decimal point and minus sign)
-  if (str.length > 8) {
+  const digitCount = str.replace('.', '').replace('-', '').length;
+
+  // If it has more than 8 digits, truncate (decimal point and minus sign don't count)
+  if (digitCount > 8) {
     // Try to format with reduced precision
     const sign = value < 0 ? '-' : '';
     const absStr = Math.abs(value).toString();
-    
+
     if (absStr.includes('.')) {
       // Has decimal point - reduce decimal places
       const parts = absStr.split('.');
       const integerPart = parts[0];
-      const maxDecimals = 8 - sign.length - integerPart.length - 1; // -1 for decimal point
-      
+      // Max decimals = 8 total digits minus integer digits (decimal point itself doesn't count)
+      const maxDecimals = 8 - integerPart.length;
+
       if (maxDecimals > 0) {
         str = sign + parseFloat(absStr).toFixed(maxDecimals);
         // Remove trailing zeros after decimal point
@@ -121,8 +123,9 @@ export const calculatorEngine: CalculatorEngine = {
         };
       }
       
-      // Append digit (max 8 characters)
-      if (state.displayValue.length < 8) {
+      // Append digit (max 8 digits, excluding decimal point and minus sign)
+      const digitCount = state.displayValue.replace('.', '').replace('-', '').length;
+      if (digitCount < 8) {
         return {
           ...state,
           displayValue: state.displayValue + digit,
@@ -143,12 +146,16 @@ export const calculatorEngine: CalculatorEngine = {
         };
       }
       
-      // Only add decimal if not already present
-      if (!state.displayValue.includes('.') && state.displayValue.length < 7) {
-        return {
-          ...state,
-          displayValue: state.displayValue + '.',
-        };
+      // Only add decimal if not already present and we have room (8 digits max, decimal doesn't count)
+      if (!state.displayValue.includes('.')) {
+        const digitCount = state.displayValue.replace('-', '').length;
+        // Allow decimal even at 8 digits since decimal doesn't count toward limit
+        if (digitCount <= 8) {
+          return {
+            ...state,
+            displayValue: state.displayValue + '.',
+          };
+        }
       }
       
       return state;

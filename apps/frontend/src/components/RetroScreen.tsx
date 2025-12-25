@@ -44,8 +44,8 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
             color: '#111', // Enforce dark color
             opacity: isOn ? 1 : 0, // Hide when off
             transition: 'opacity 0.2s ease-in-out',
-            gap: '1px', // Minimal gap between digits
-            letterSpacing: '1px', // Compress digits together
+            gap: '0px', // Minimal gap between digits
+            letterSpacing: '-1px', // Compress digits together
             transform: 'skewX(-8deg)'
           }}
         >
@@ -92,10 +92,10 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
                 {/* Thousand Separator */}
                 <div style={{
                   position: 'absolute',
-                  top: '2px',
-                  right: '-2px',
+                  top: '-10px',
+                  right: '-1px',
                   opacity: d.hasSeparator ? 1 : 0,
-                  fontSize: '32px',
+                  fontSize: '40px',
                   color: '#111',
                   fontFamily: 'digit',
                 }}>
@@ -105,17 +105,17 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
                 <span style={{ lineHeight: 1 }}>{d.char}</span>
                 
                 {/* Decimal Point */}
-                <div 
-                  style={{ 
+                <div
+                  style={{
                     opacity: d.hasDot ? 1 : 0,
                     marginLeft: '-2px',
-                    marginBottom: '5px',
+                    marginBottom: '15px',
                     alignSelf: 'flex-end',
-                    fontSize: '32px',
+                    fontSize: '50px',
                     fontFamily: 'digit',
                     color: '#111',
                     lineHeight: 0.3,
-                  }} 
+                  }}
                 >.</div>
               </div>
             ));
