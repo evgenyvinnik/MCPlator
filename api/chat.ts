@@ -9,10 +9,10 @@ type KeyId =
   | 'decimal'
   | 'add' | 'sub' | 'mul' | 'div'
   | 'percent'
+  | 'sqrt' | 'plus_minus'
   | 'equals'
   | 'ac' | 'c'
-  | 'mc' | 'mr' | 'm_plus' | 'm_minus'
-  | 'rate' | 'euro' | 'local';
+  | 'mc' | 'mr' | 'm_plus' | 'm_minus';
 
 interface ChatRequestBody {
   message: string;
@@ -24,7 +24,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
-const MODEL = 'claude-sonnet-4-20250514';
+const MODEL = 'claude-3-5-haiku-20241022';
 
 export const config = {
   runtime: 'edge',
@@ -35,7 +35,8 @@ You are an assistant controlling a Casio-like calculator UI in the browser.
 
 Rules:
 - For any numeric calculator operation, you MUST use the "calculator_press_keys" tool.
-- The browser holds the actual calculator state; this tool is for validating key sequences.
+- ALWAYS start key sequences with "ac" (all clear) to reset the calculator before entering new calculations.
+- The browser holds the actual calculator state; this tool is for specifying key sequences.
 - After using the tool, provide a short natural language explanation of what you did.
 - If the user request is not a calculator operation (like general chat), respond normally without using the tool.
 
@@ -44,10 +45,13 @@ Available keys:
 - Decimal point: decimal
 - Operations: add, sub, mul, div
 - Equals: equals
-- Clear: ac (all clear), c (clear entry)
+- Clear: ac (all clear - USE THIS FIRST), c (clear entry)
 - Memory: mc (clear), mr (recall), m_plus (add to memory), m_minus (subtract from memory)
 - Percent: percent
-- Currency: rate, euro, local
+- Square root: sqrt
+- Change sign: plus_minus (toggles positive/negative)
+
+Example: To calculate 2 + 3, use keys: ["ac", "digit_2", "add", "digit_3", "equals"]
 `;
 
 const calculatorPressKeysTool: Tool = {
@@ -66,10 +70,10 @@ const calculatorPressKeysTool: Tool = {
             'decimal',
             'add', 'sub', 'mul', 'div',
             'percent',
+            'sqrt', 'plus_minus',
             'equals',
             'ac', 'c',
             'mc', 'mr', 'm_plus', 'm_minus',
-            'rate', 'euro', 'local',
           ],
         },
         description: 'Array of calculator keys to press in sequence',

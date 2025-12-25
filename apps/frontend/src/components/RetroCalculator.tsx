@@ -1,48 +1,45 @@
 import React from 'react';
 import RetroScreen from './RetroScreen';
 import RetroKeypad from './RetroKeypad';
-import { useRetroCalculator } from '../hooks/useRetroCalculator';
+import { useCalculatorStore } from '../state/useCalculatorStore';
 import logo from '../assets/casio_logo.svg';
+import type { KeyId } from '@calculator/shared-types';
+
+// Map RetroKeypad key values to KeyId
+const retroKeyToKeyId: Record<string, KeyId> = {
+  // Numbers
+  '0': 'digit_0', '1': 'digit_1', '2': 'digit_2', '3': 'digit_3', '4': 'digit_4',
+  '5': 'digit_5', '6': 'digit_6', '7': 'digit_7', '8': 'digit_8', '9': 'digit_9',
+  // Decimal
+  'float': 'decimal',
+  // Operations
+  'plus': 'add', 'minus': 'sub', 'multiply': 'mul', 'divide': 'div',
+  // Equals
+  'perform': 'equals',
+  // Clear
+  'on': 'ac', 'clear': 'c',
+  // Percent
+  'percentage': 'percent',
+};
 
 const RetroCalculator: React.FC = () => {
-  const { state, handleClick } = useRetroCalculator();
+  const { display, pressKey } = useCalculatorStore();
 
-  // Format display value to fit in 8 digits
-  const formatDisplayValue = (val: string | number): string => {
-    if (val === '') return '';
-    
-    const strVal = String(val);
-    
-    // Remove leading minus for counting
-    const absStr = strVal.replace('-', '');
-    
-    // Count digits (excluding decimal point)
-    const digitCount = absStr.replace('.', '').length;
-    
-    // If within limit, return as-is
-    if (digitCount <= 8) {
-      return strVal;
+  const handleClick = (key: { value: string }) => {
+    const keyId = retroKeyToKeyId[key.value];
+    if (keyId) {
+      pressKey(keyId);
     }
-    
-    // Try to format with scientific notation or truncate
-    const numVal = Number(val);
-    if (Math.abs(numVal) >= 99999999 || digitCount > 8) {
-      // Show first 8 significant digits
-      const formatted = numVal.toPrecision(8);
-      // Make sure it still fits
-      if (formatted.replace('-', '').replace('.', '').length <= 8) {
-        return formatted;
-      }
-      // Otherwise return as much as we can fit
-      return String(numVal).slice(0, 8);
-    }
-    
-    return strVal;
   };
 
-  const displayValue = formatDisplayValue(
-    state.open ? (state.nextEntry !== null ? state.nextEntry : state.currentEntry) : ''
-  );
+  // Format display value to fit in 8 digits
+  const formatDisplayValue = (val: string): string => {
+    if (val === '') return '0';
+    return val;
+  };
+
+  const displayValue = formatDisplayValue(display.text);
+  const isNegative = display.text.startsWith('-');
 
   return (
     <div 
@@ -119,10 +116,10 @@ const RetroCalculator: React.FC = () => {
       <main>
         <RetroScreen 
           value={displayValue} 
-          memory={!!state.memory}
-          error={state.error}
-          negative={Number(state.nextEntry !== null ? state.nextEntry : state.currentEntry) < 0}
-          isOn={state.open}
+          memory={display.indicators.memory}
+          error={display.indicators.error}
+          negative={isNegative}
+          isOn={true}
         />
         <div style={{ position: 'relative' }}>
           <h2 style={{ 
