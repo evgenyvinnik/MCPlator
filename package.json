@@ -6,13 +6,13 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run dev -w apps/frontend",
-    "dev:backend": "npm run dev -w apps/backend",
-    "dev:all": "concurrently \"npm run dev\" \"npm run dev:backend\"",
-    "build": "npm run build --workspaces",
-    "build:packages": "npm run build -w packages/shared-types && npm run build -w packages/calculator-engine",
-    "build:apps": "npm run build -w apps/frontend",
-    "test": "npm run test --workspaces"
+    "dev": "bun run --filter apps/frontend dev",
+    "dev:backend": "bun run --filter apps/backend dev",
+    "dev:all": "concurrently \"bun run dev\" \"bun run dev:backend\"",
+    "build": "bun run --filter '*' build",
+    "build:packages": "bun run --filter packages/shared-types build && bun run --filter packages/calculator-engine build",
+    "build:apps": "bun run --filter apps/frontend build",
+    "test": "bun run --filter '*' test"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.3",
