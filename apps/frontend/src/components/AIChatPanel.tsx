@@ -10,12 +10,14 @@ interface AIChatPanelProps {
   className?: string;
   isMobile?: boolean;
   onToggle?: () => void;
+  onOpen?: () => void;
 }
 
 export function AIChatPanel({
   className = "",
   isMobile = false,
   onToggle,
+  onOpen,
 }: AIChatPanelProps) {
   const { messages, streamingMessage, isThinking } = useChatStore();
   const { sendChat, isStreaming } = useStreamingChat();
@@ -37,16 +39,16 @@ export function AIChatPanel({
     const text = inputText;
     setInputText("");
 
-    // On mobile, minimize chat when sending a message
-    if (isMobile) {
-      setIsMinimized(true);
+    // On mobile, close the bottom sheet while processing
+    if (isMobile && onToggle) {
+      onToggle();
     }
 
     await sendChat(text);
 
-    // On mobile, maximize chat when response is received
-    if (isMobile) {
-      setIsMinimized(false);
+    // On mobile, re-open the bottom sheet when response is received
+    if (isMobile && onOpen) {
+      onOpen();
     }
   };
 

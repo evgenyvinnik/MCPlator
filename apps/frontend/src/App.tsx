@@ -145,6 +145,7 @@ function App() {
           <AIChatPanel
             isMobile={true}
             onToggle={() => setIsChatOpen(false)}
+            onOpen={() => setIsChatOpen(true)}
           />
         </div>
       )}
