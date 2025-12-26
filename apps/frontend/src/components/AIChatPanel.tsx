@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Card } from "./ui/card";
 import { Send, MessageSquare, ChevronDown } from "lucide-react";
 import { useChatStore } from "../state/useChatStore";
@@ -25,6 +24,16 @@ export function AIChatPanel({
   const [isMinimized, setIsMinimized] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea as content changes
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
+    }
+  }, [inputText]);
 
   useEffect(() => {
     // Only scroll if there are messages (not on initial load)
@@ -52,7 +61,7 @@ export function AIChatPanel({
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -161,13 +170,16 @@ export function AIChatPanel({
           {/* Chat Input */}
           <div className={`${isMobile ? 'p-5' : 'p-4'} relative z-20 border-t border-white/10 backdrop-blur-lg bg-white/5`}>
             <Card className={`backdrop-blur-lg bg-white/10 border border-white/20 ${isMobile ? 'p-4' : 'p-3'} shadow-xl`}>
-              <div className="flex gap-2">
-                <Input
+              <div className="flex gap-2 items-end">
+                <textarea
+                  ref={textareaRef}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyPress}
                   placeholder="Type your message..."
-                  className={`flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60 rounded-full focus:ring-2 focus:ring-cyan-400 focus:border-transparent ${isMobile ? 'text-base py-3' : ''}`}
+                  rows={1}
+                  className={`flex-1 bg-white/10 border border-white/20 text-white placeholder:text-white/60 rounded-full focus:ring-2 focus:ring-cyan-400 focus:border-transparent focus:outline-none resize-none px-4 scrollbar-hide ${isMobile ? 'text-base py-3' : 'text-sm py-2'}`}
+                  style={{ maxHeight: '120px', lineHeight: '1.5' }}
                 />
                 <Button
                   onClick={handleSendMessage}
