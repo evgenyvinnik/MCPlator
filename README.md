@@ -1,16 +1,16 @@
-# Casio LLM Calculator
+# MCPlator - Retro Calculator with AI Co-Pilot
 
-A web-based emulation of a Casio-style calculator with a pixel-ish accurate UI and an LLM-powered chat interface that can drive the calculator.
+A fully functional retro Casio-style calculator with an LLM-powered AI assistant. Features a polished retro UI with authentic animations and natural language calculator control.
 
 ## Project Summary
 
-- **Pixel-ish accurate UI** (buttons, LCD, indicators).
-- **Real calculator behavior** implemented in a **frontend engine** (JS/TS).
-- **LLM-powered chat** that:
-  - Understands natural language ("add 2 plus one hundred").
-  - Produces calculator key sequences.
-  - The frontend replays those key sequences visually on the calculator.
-- **State stored in the browser** (localStorage).
+- **Authentic Casio calculator** with complete functionality (memory, percentage, square root, sign change, etc.)
+- **Polished retro UI** built with CSS Modules featuring authentic 3D button effects and LCD display
+- **LLM-powered AI chat** that:
+  - Understands natural language ("add 2 plus one hundred", "what's 15% of 80", "square root of 144")
+  - Translates requests into calculator key sequences
+  - Animates key presses on the calculator display in real-time
+- **Persistent state** stored in IndexedDB (calculator memory, chat history, daily quota)
 
 ### Deployment
 
@@ -25,23 +25,23 @@ For detailed, step-by-step deployment instructions, please refer to [BUILD.md](.
 ## Tech Stack
 
 ### Frontend (`apps/frontend`)
-- **Framework:** React + TypeScript
-- **Build:** Vite
+- **Framework:** React 19 + TypeScript 5.9
+- **Build:** Vite 7.2
 - **State management:** Zustand + IndexedDB (manual persistence)
-- **Styling:** Tailwind CSS
+- **Styling:** CSS Modules + Tailwind CSS 4.1 (hybrid approach)
 - **Storage:** IndexedDB (via `idb` library)
 - **Streaming:** Native `fetch` API for SSE
 
 ### Backend (`apps/backend`)
 - **Platform:** Vercel Edge Functions (for SSE support)
-- **Runtime:** Edge Runtime / Bun (local dev)
-- **AI:** Anthropic Claude API (Haiku model)
-- **Streaming:** Server-Sent Events (SSE)
+- **Runtime:** Edge Runtime (production) / Bun (local dev)
+- **AI:** Anthropic Claude API (Claude 3.5 Haiku model)
+- **Streaming:** Server-Sent Events (SSE) for real-time token streaming
 
 ### Shared (`packages/`)
-- **Monorepo:** npm workspaces
-- **shared-types:** Common TypeScript definitions
-- **calculator-engine:** Core calculator logic shared between frontend and backend
+- **Monorepo:** Bun workspaces
+- **shared-types:** Common TypeScript definitions (KeyId, ChatMessage, SSE types)
+- **calculator-engine:** Complete Casio-style calculator logic (86 tests, 100% passing)
 
 ## Project Structure
 
