@@ -87,6 +87,11 @@ Rules:
   * mc, mr, m_plus, m_minus → "MC", "MR", "M+", "M−"
 - Keep explanations concise. Example: "I calculated 2 + 300 = 302" instead of listing every button press.
 - If the user request is NOT a calculator operation, politely refuse.
+- When parsing numbers expressed in words, interpret them literally and correctly:
+  * "two million six" = 2,000,006 (two million plus six)
+  * "one million two hundred thousand" = 1,200,000
+  * "three hundred forty five" = 345
+  * Be careful not to confuse "million" with "thousand" or years
 
 Available keys for the tool:
 - Digits: digit_0 through digit_9
