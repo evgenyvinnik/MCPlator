@@ -8,19 +8,24 @@ import type {
 import type { CalculatorInternalState } from '@calculator/calculator-engine';
 import { getDB } from '../db/indexedDB';
 
+type AnimationCompleteCallback = (displayText: string) => void;
+
 type CalculatorStoreState = {
   internalState: CalculatorInternalState;
   display: CalculatorDisplay;
   pressedKey: KeyId | null;
   isAnimating: boolean;
   animationQueue: AnimationSequence[];
+  animationCallbacks: Map<string, AnimationCompleteCallback>;
   isHydrated: boolean;
   shouldFlash: boolean;
 };
 
 type CalculatorStoreActions = {
   pressKey: (key: KeyId) => void;
-  enqueueAnimation: (sequence: AnimationSequence) => void;
+  enqueueAnimation: (sequence: AnimationSequence, onComplete?: AnimationCompleteCallback) => void;
+  getAnimationCallback: (id: string) => AnimationCompleteCallback | undefined;
+  removeAnimationCallback: (id: string) => void;
   setPressedKey: (key: KeyId | null) => void;
   setIsAnimating: (val: boolean) => void;
   hydrate: () => Promise<void>;
@@ -33,6 +38,7 @@ export const useCalculatorStore = create<CalculatorStoreState & CalculatorStoreA
     pressedKey: null,
     isAnimating: false,
     animationQueue: [],
+    animationCallbacks: new Map(),
     isHydrated: false,
     shouldFlash: false,
 
@@ -80,10 +86,29 @@ export const useCalculatorStore = create<CalculatorStoreState & CalculatorStoreA
       });
     },
 
-    enqueueAnimation: (sequence) => {
-      set((state) => ({
-        animationQueue: [...state.animationQueue, sequence],
-      }));
+    enqueueAnimation: (sequence, onComplete) => {
+      if (onComplete) {
+        const callbacks = new Map(get().animationCallbacks);
+        callbacks.set(sequence.id, onComplete);
+        set((state) => ({
+          animationQueue: [...state.animationQueue, sequence],
+          animationCallbacks: callbacks,
+        }));
+      } else {
+        set((state) => ({
+          animationQueue: [...state.animationQueue, sequence],
+        }));
+      }
+    },
+
+    getAnimationCallback: (id) => {
+      return get().animationCallbacks.get(id);
+    },
+
+    removeAnimationCallback: (id) => {
+      const callbacks = new Map(get().animationCallbacks);
+      callbacks.delete(id);
+      set({ animationCallbacks: callbacks });
     },
 
     setPressedKey: (key) => set({ pressedKey: key }),

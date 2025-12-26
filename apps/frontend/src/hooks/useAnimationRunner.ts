@@ -10,6 +10,8 @@ export const useAnimationRunner = () => {
     isAnimating,
     setIsAnimating,
     setPressedKey,
+    getAnimationCallback,
+    removeAnimationCallback,
   } = useCalculatorStore();
 
   const pressKey = useCalculatorStore((s) => s.pressKey);
@@ -38,10 +40,18 @@ export const useAnimationRunner = () => {
     };
 
     run(current.commands).finally(() => {
+      // Get the final display value and call the callback if registered
+      const callback = getAnimationCallback(current.id);
+      if (callback) {
+        const displayText = useCalculatorStore.getState().display.text;
+        callback(displayText);
+        removeAnimationCallback(current.id);
+      }
+
       useCalculatorStore.setState({
         animationQueue: rest,
         isAnimating: false,
       });
     });
-  }, [animationQueue, isAnimating, pressKey, setIsAnimating, setPressedKey]);
+  }, [animationQueue, isAnimating, pressKey, setIsAnimating, setPressedKey, getAnimationCallback, removeAnimationCallback]);
 };

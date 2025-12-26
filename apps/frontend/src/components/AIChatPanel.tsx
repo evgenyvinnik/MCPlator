@@ -134,18 +134,29 @@ export function AIChatPanel({
                 key={message.id}
                 className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
               >
-                <Card
-                  className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl ${
-                    message.role === "user"
-                      ? "bg-cyan-600/80 text-white"
-                      : "bg-white/10 text-white border border-white/20"
-                  }`}
-                >
-                  <p className={isMobile ? 'text-base' : 'text-sm'}>{message.text}</p>
-                  <p className={`${isMobile ? 'text-sm' : 'text-xs'} opacity-70 mt-1`}>
-                    {new Date(message.createdAt).toLocaleTimeString()}
-                  </p>
-                </Card>
+                {message.type === 'result' ? (
+                  // Result message - special styling with bold text
+                  <Card
+                    className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl bg-gradient-to-r from-emerald-500/30 to-cyan-500/30 border border-emerald-400/40`}
+                  >
+                    <p className={`${isMobile ? 'text-xs' : 'text-xs'} text-emerald-300 uppercase tracking-wider mb-1`}>Result</p>
+                    <p className={`${isMobile ? 'text-2xl' : 'text-xl'} font-bold text-white font-mono`}>{message.text}</p>
+                  </Card>
+                ) : (
+                  // Regular message
+                  <Card
+                    className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl ${
+                      message.role === "user"
+                        ? "bg-cyan-600/80 text-white"
+                        : "bg-white/10 text-white border border-white/20"
+                    }`}
+                  >
+                    <p className={isMobile ? 'text-base' : 'text-sm'}>{message.text}</p>
+                    <p className={`${isMobile ? 'text-sm' : 'text-xs'} opacity-70 mt-1`}>
+                      {new Date(message.createdAt).toLocaleTimeString()}
+                    </p>
+                  </Card>
+                )}
               </div>
             ))}
 

@@ -64,14 +64,27 @@ export const useStreamingChat = () => {
             updateStreamingMessage(assistantMsgId, streamedText);
           },
           onKeys: (keys) => {
-            enqueueAnimation({
-              id: uuid(),
-              commands: keys.map((k) => ({
-                type: 'pressKey' as const,
-                key: k as KeyId,
-                delayMs: 180,
-              })),
-            });
+            const animationId = uuid();
+            enqueueAnimation(
+              {
+                id: animationId,
+                commands: keys.map((k) => ({
+                  type: 'pressKey' as const,
+                  key: k as KeyId,
+                  delayMs: 180,
+                })),
+              },
+              // Callback when animation completes - add result message
+              async (displayText) => {
+                await addMessage({
+                  id: uuid(),
+                  role: 'assistant',
+                  text: displayText,
+                  type: 'result',
+                  createdAt: new Date().toISOString(),
+                });
+              }
+            );
           },
           onDone: async (_messageId, fullText) => {
             await addMessage({
