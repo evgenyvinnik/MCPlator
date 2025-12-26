@@ -22,10 +22,12 @@ const retroKeyToKeyId: Record<string, KeyId> = {
   'percentage': 'percent',
   // Plus/Minus (change sign)
   'change_sign': 'plus_minus',
+  // Square root
+  'sqrt': 'sqrt',
 };
 
 const RetroCalculator: React.FC = () => {
-  const { display, pressKey } = useCalculatorStore();
+  const { display, pressKey, shouldFlash } = useCalculatorStore();
   const [isOn, setIsOn] = useState(true);
 
   const handleClick = (key: { value: string }) => {
@@ -140,6 +142,7 @@ const RetroCalculator: React.FC = () => {
           error={display.indicators.error}
           negative={isNegative}
           isOn={isOn}
+          shouldFlash={shouldFlash}
         />
         <div style={{ position: 'relative' }}>
           <h2 style={{ 

@@ -21,13 +21,14 @@ function formatForDisplay(value: number): string {
   if (!isFinite(value)) {
     return 'E';
   }
-  
-  // Handle very large or very small numbers with scientific notation
+
   const absValue = Math.abs(value);
-  if (absValue >= 99999999 || (absValue > 0 && absValue < 0.00000001)) {
-    return value.toExponential(2);
+
+  // Check if the absolute value exceeds the maximum displayable value (99,999,999)
+  if (absValue >= 100000000) {
+    return 'E'; // Error - number too large
   }
-  
+
   // Convert to string and check digit count (excluding decimal point and minus sign)
   let str = value.toString();
   const digitCount = str.replace('.', '').replace('-', '').length;
@@ -50,15 +51,15 @@ function formatForDisplay(value: number): string {
         // Remove trailing zeros after decimal point
         str = str.replace(/\.?0+$/, '');
       } else {
-        // No room for decimals, just show integer part
-        str = sign + integerPart;
+        // No room for decimals, show error
+        return 'E';
       }
     } else {
       // No decimal point, number is too large
-      str = value.toExponential(2);
+      return 'E';
     }
   }
-  
+
   return str;
 }
 
@@ -191,7 +192,7 @@ export const calculatorEngine: CalculatorEngine = {
       if (state.lastOperator !== null && state.lastOperand !== null && !state.shouldStartNewNumber) {
         // Chain operations: execute the pending operation
         const result = performOperation(state.lastOperand, state.lastOperator, currentValue);
-        
+
         if (!isFinite(result)) {
           return {
             ...state,
@@ -202,10 +203,22 @@ export const calculatorEngine: CalculatorEngine = {
             shouldStartNewNumber: false,
           };
         }
-        
+
+        const formattedResult = formatForDisplay(result);
+        if (formattedResult === 'E') {
+          return {
+            ...state,
+            displayValue: 'E',
+            isError: true,
+            lastOperator: null,
+            lastOperand: null,
+            shouldStartNewNumber: false,
+          };
+        }
+
         return {
           ...state,
-          displayValue: formatForDisplay(result),
+          displayValue: formattedResult,
           lastOperator: key,
           lastOperand: result,
           shouldStartNewNumber: true,
@@ -227,12 +240,12 @@ export const calculatorEngine: CalculatorEngine = {
       if (state.lastOperator === null) {
         return state;
       }
-      
+
       const leftOperand = state.lastOperand !== null ? state.lastOperand : parseDisplayValue(state.displayValue);
       const rightOperand = parseDisplayValue(state.displayValue);
-      
+
       const result = performOperation(leftOperand, state.lastOperator, rightOperand);
-      
+
       if (!isFinite(result)) {
         return {
           ...state,
@@ -243,11 +256,23 @@ export const calculatorEngine: CalculatorEngine = {
           shouldStartNewNumber: false,
         };
       }
-      
+
+      const formattedResult = formatForDisplay(result);
+      if (formattedResult === 'E') {
+        return {
+          ...state,
+          displayValue: 'E',
+          isError: true,
+          lastOperator: null,
+          lastOperand: null,
+          shouldStartNewNumber: false,
+        };
+      }
+
       // Enable constant mode for repeated equals presses
       return {
         ...state,
-        displayValue: formatForDisplay(result),
+        displayValue: formattedResult,
         constant: {
           operator: state.lastOperator,
           value: rightOperand,

@@ -6,9 +6,10 @@ type RetroScreenProps = {
   error: boolean;
   negative: boolean;
   isOn: boolean;
+  shouldFlash: boolean;
 };
 
-const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negative, isOn }) => {
+const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negative, isOn, shouldFlash }) => {
   return (
     <div 
       style={{
@@ -17,7 +18,7 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
         padding: '18px 14px'
       }}
     >
-      <div 
+      <div
         style={{
           position: 'relative',
           overflow: 'hidden',
@@ -26,7 +27,8 @@ const RetroScreen: React.FC<RetroScreenProps> = ({ value, memory, error, negativ
           borderRadius: '4px',
           boxShadow: '0px 2px 3px 3px rgba(255, 255, 255, 0.3), -1px -3px 1px 3px rgba(0, 0, 0, 0.55)',
           background: 'linear-gradient(to bottom, #c3ced0 30%, #dbe2ea 100%)',
-          textAlign: 'right'
+          textAlign: 'right',
+          animation: shouldFlash ? 'flash 0.2s ease-in-out' : 'none'
         }}
       >
         <div

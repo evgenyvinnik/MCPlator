@@ -15,6 +15,7 @@ type CalculatorStoreState = {
   isAnimating: boolean;
   animationQueue: AnimationSequence[];
   isHydrated: boolean;
+  shouldFlash: boolean;
 };
 
 type CalculatorStoreActions = {
@@ -33,6 +34,7 @@ export const useCalculatorStore = create<CalculatorStoreState & CalculatorStoreA
     isAnimating: false,
     animationQueue: [],
     isHydrated: false,
+    shouldFlash: false,
 
     hydrate: async () => {
       const db = await getDB();
@@ -52,6 +54,20 @@ export const useCalculatorStore = create<CalculatorStoreState & CalculatorStoreA
       const current = get().internalState;
       const next = calculatorEngine.pressKey(current, key);
       const display = calculatorEngine.toDisplay(next);
+
+      // Check if the key press was rejected (state didn't change for digit/decimal keys)
+      // This happens when the digit limit is reached
+      const wasRejected = (key.startsWith('digit_') || key === 'decimal') &&
+                          current.displayValue === next.displayValue &&
+                          current.shouldStartNewNumber === next.shouldStartNewNumber;
+
+      if (wasRejected) {
+        // Trigger flash effect
+        set({ shouldFlash: true });
+        setTimeout(() => set({ shouldFlash: false }), 200);
+        return;
+      }
+
       set({ internalState: next, display });
 
       // Persist to IndexedDB
