@@ -7,6 +7,60 @@ export const config = {
   runtime: 'edge', // Use Edge runtime for streaming
 };
 
+// Pre-filter to detect calculator-related queries
+function isCalculatorRelated(message: string): boolean {
+  const lowerMessage = message.toLowerCase();
+
+  // Calculator-related keywords and patterns
+  const calculatorPatterns = [
+    // Math operations
+    /\b(add|plus|sum|subtract|minus|multiply|times|divide|divided by)\b/,
+    /\b(calculate|compute|what is|what's|how much|equals?)\b/,
+    /\b(percent|percentage|%)\b/,
+    /\b(square root|sqrt)\b/,
+    /\b(memory|store|recall|clear)\b/,
+    // Numbers with operators
+    /\d+\s*[\+\-\*\/\%]\s*\d+/,
+    /\d+\s*(plus|minus|times|divided|multiplied)\s*\d+/i,
+    // Asking about calculator
+    /\b(calculator|calc)\b/,
+  ];
+
+  // Check if message matches any calculator pattern
+  const isCalculator = calculatorPatterns.some(pattern => pattern.test(lowerMessage));
+
+  // Non-calculator keywords that should be rejected
+  const nonCalculatorPatterns = [
+    /\b(write|code|script|program|application|app)\b/,
+    /\b(article|essay|story|poem|song|letter)\b/,
+    /\b(explain|describe|tell me about|what is a)\b(?!.*\d)/,  // "what is a" without numbers
+    /\b(python|javascript|java|html|css|sql|rust|go|ruby)\b/,
+    /\b(weather|news|recipe|joke|riddle)\b/,
+    /\b(translate|summarize|rewrite)\b/,
+    /\b(help me with|how to|how do i)\b(?!.*(calculate|add|subtract|multiply|divide))/,
+  ];
+
+  const isNonCalculator = nonCalculatorPatterns.some(pattern => pattern.test(lowerMessage));
+
+  // If it matches non-calculator patterns, reject it (even if it also matches calculator patterns)
+  if (isNonCalculator && !isCalculator) {
+    return false;
+  }
+
+  // If it clearly matches calculator patterns, allow it
+  if (isCalculator) {
+    return true;
+  }
+
+  // For ambiguous cases, check if the message contains numbers (likely a calculation)
+  const hasNumbers = /\d/.test(message);
+  const isShort = message.split(' ').length <= 10;
+
+  return hasNumbers && isShort;
+}
+
+const REJECTION_MESSAGE = "I'm a calculator assistant and can only help with math calculations. Try asking me something like \"What is 25 times 4?\" or \"Calculate 15% of 200\".";
+
 const SYSTEM_PROMPT = `
 You are an assistant controlling a Casio-like calculator UI in the browser.
 
@@ -56,6 +110,33 @@ export default async function handler(req: Request): Promise<Response> {
 
   const body: ChatRequestBody = await req.json();
   const { message, history } = body;
+
+  // Pre-filter: Check if message is calculator-related before sending to LLM
+  if (!isCalculatorRelated(message)) {
+    const { readable, writable } = new TransformStream();
+    const writer = writable.getWriter();
+    const encoder = new TextEncoder();
+
+    (async () => {
+      const messageId = uuid();
+      // Stream the rejection message token by token for consistent UX
+      const words = REJECTION_MESSAGE.split(' ');
+      for (const word of words) {
+        await writer.write(encoder.encode(sseEvent('token', { token: word + ' ' })));
+        await new Promise(resolve => setTimeout(resolve, 20)); // Small delay for streaming effect
+      }
+      await writer.write(encoder.encode(sseEvent('done', { messageId, fullText: REJECTION_MESSAGE })));
+      await writer.close();
+    })();
+
+    return new Response(readable, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
+  }
 
   const messages = [
     ...(history ?? []).map((m) => ({
