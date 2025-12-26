@@ -122,13 +122,14 @@ const RetroCalculator: React.FC = () => {
               <div style={{ flex: 1 }}></div>
             </div>
           </div>
-          <div style={{ 
+          <div style={{
             fontFamily: 'Trebuchet MS, Lucida Sans Unicode, Lucida Grande, Lucida Sans, Arial, sans-serif',
             fontWeight: 'bold',
             lineHeight: 2,
             fontSize: '10px',
             textAlign: 'center',
-            color: '#000'
+            color: '#000',
+            transform: 'scaleY(0.8)'
           }}>
             TWO WAY POWER
           </div>
@@ -148,8 +149,9 @@ const RetroCalculator: React.FC = () => {
           <h2 style={{ 
             position: 'absolute', 
             fontSize: '10px', 
-            top: '2px', 
-            left: '24px',
+            fontWeight: 'bold',
+            top: '20px', 
+            left: '34px',
             color: '#000'
           }}>
             SL-300SV
