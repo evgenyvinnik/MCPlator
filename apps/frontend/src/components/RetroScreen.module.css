@@ -1,0 +1,187 @@
+/* Flash animation for calculator screen */
+@keyframes flash {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Screen container */
+.screenContainer {
+  background: linear-gradient(to bottom, #4f5053 50%, #6e727b 100%);
+  border-radius: 6px 6px 12px 12px;
+  padding: 18px 14px;
+}
+
+/* Display area */
+.displayArea {
+  position: relative;
+  overflow: hidden;
+  height: 94px;
+  padding: 16px 6px;
+  border-radius: 4px;
+  box-shadow: 0px 2px 3px 3px rgba(255, 255, 255, 0.3), -1px -3px 1px 3px rgba(0, 0, 0, 0.55);
+  background: linear-gradient(to bottom, #c3ced0 30%, #dbe2ea 100%);
+  text-align: right;
+}
+
+.displayArea.flash {
+  animation: flash 0.2s ease-in-out;
+}
+
+/* Display value container */
+.displayValue {
+  font-family: 'digit';
+  font-size: 52px;
+  position: absolute;
+  right: 6px;
+  top: 22px;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  width: calc(100% - 40px);
+  height: 80px;
+  color: #111;
+  transition: opacity 0.2s ease-in-out;
+  gap: 0px;
+  letter-spacing: 0px;
+  font-variant-numeric: tabular-nums;
+  transform: skewX(-8deg);
+}
+
+.displayValue.off {
+  opacity: 0;
+}
+
+.displayValue.on {
+  opacity: 1;
+}
+
+/* Digit container */
+.digitContainer {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-end;
+}
+
+/* Individual digit */
+.digit {
+  line-height: 1;
+  display: inline-block;
+  min-width: 22px;
+  text-align: center;
+}
+
+/* Thousand separator */
+.separator {
+  position: absolute;
+  top: -10px;
+  right: -1px;
+  font-size: 40px;
+  color: #111;
+  font-family: 'digit';
+}
+
+.separator.hidden {
+  opacity: 0;
+}
+
+.separator.visible {
+  opacity: 1;
+}
+
+/* Decimal point */
+.decimalPoint {
+  margin-left: -2px;
+  margin-bottom: 15px;
+  align-self: flex-end;
+  font-size: 50px;
+  font-family: 'digit';
+  color: #111;
+  line-height: 0.3;
+}
+
+.decimalPoint.hidden {
+  opacity: 0;
+}
+
+.decimalPoint.visible {
+  opacity: 1;
+}
+
+/* Indicators area */
+.indicatorsArea {
+  position: absolute;
+  top: 24px;
+  left: 8px;
+  width: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.indicatorsArea.off {
+  opacity: 0;
+}
+
+.indicatorsArea.on {
+  opacity: 1;
+}
+
+/* Memory indicator */
+.memoryIndicator {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: sans-serif;
+  color: #111;
+}
+
+.memoryIndicator.active {
+  opacity: 1;
+}
+
+.memoryIndicator.inactive {
+  opacity: 0.1;
+}
+
+/* Negative indicator (hexagon) */
+.negativeIndicator {
+  width: 16px;
+  height: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.negativeIndicator.active {
+  opacity: 1;
+}
+
+.negativeIndicator.inactive {
+  opacity: 0.1;
+}
+
+.hexagon {
+  fill: #111;
+}
+
+/* Error indicator */
+.errorIndicator {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: sans-serif;
+  color: #111;
+}
+
+.errorIndicator.active {
+  opacity: 1;
+}
+
+.errorIndicator.inactive {
+  opacity: 0.1;
+}

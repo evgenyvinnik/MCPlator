@@ -1,0 +1,11 @@
+/* Isolate RetroCalculator from inherited global styles */
+.retroCalculatorContainer {
+  isolation: isolate;
+  color: initial;
+  filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
+.retroCalculatorContainer * {
+  transition: none !important;
+}

@@ -1,0 +1,150 @@
+/* Keypad container */
+.keypad {
+  padding: 4px 10px 14px;
+}
+
+/* Row */
+.row {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Cell wrapper */
+.cell {
+  display: inline-block;
+  position: relative;
+  width: 20%;
+  padding: 6px 4px;
+}
+
+/* Base button styles */
+.button {
+  position: relative;
+  z-index: 5;
+  display: block;
+  width: 100%;
+  height: 40px;
+  font-weight: 500;
+  font-size: 20px;
+  color: white;
+  background: linear-gradient(to bottom, #545454 0%, #3d3d3d 45%, #2a2a2a 100%);
+  box-shadow:
+    1px 1px 1px 1px rgba(0, 0, 0, 0.1),
+    0px 0px 0px 1px rgba(0, 0, 0, 0.8),
+    inset 1px 0px 1px 0px rgba(0, 0, 0, 0.3),
+    inset -1px 0px 1px 0px rgba(0, 0, 0, 0.3),
+    inset 0px 1px 1px 0px rgba(255, 255, 255, 0.5),
+    inset 0px -3px 3px rgba(255, 255, 255, 0.15),
+    0px 8px 10px 0px rgba(0, 0, 0, 0.3),
+    inset 0px -3px 1px 1px rgba(0, 0, 0, 0.4),
+    0px 0px 0px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #0b0c10;
+  border-radius: 6px 6px 12px 12px;
+  transition: all 0.15s ease-out;
+  cursor: pointer;
+  outline: none;
+  text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Red button variant */
+.button.red {
+  background: linear-gradient(to bottom, #9d5565 0%, #7a3d4a 50%, #5d2f39 100%);
+}
+
+/* Small button variant */
+.button.small {
+  height: 30px;
+}
+
+/* Large button variant (plus button) */
+.button.large {
+  height: 92px;
+  z-index: 100;
+  position: absolute;
+  top: -13px;
+  width: calc(100% - 8px);
+}
+
+/* Font size variants */
+.button.fontSizeDivide,
+.button.fontSizePlus {
+  font-size: 28px;
+}
+
+.button.fontSizeNumber,
+.button.fontSizeFloat {
+  font-size: 24px;
+}
+
+.button.fontSizeRed {
+  font-size: 22px;
+}
+
+.button.fontSizeSmall {
+  font-size: 18px;
+}
+
+/* AC button decorative elements */
+.acDecorativeLeft {
+  z-index: 1;
+  position: absolute;
+  content: '';
+  display: block;
+  height: 28px;
+  width: 6px;
+  top: 10px;
+  left: -2px;
+  transform: skewX(3deg);
+  border-radius: 6px 0px 6px 9px;
+  border: 2px solid #0b0c10;
+  background: linear-gradient(to bottom, #404040 60%, #5e6474 100%);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.acDecorativeRight {
+  z-index: 1;
+  position: absolute;
+  content: '';
+  display: block;
+  height: 28px;
+  width: 6px;
+  top: 10px;
+  left: auto;
+  right: -1px;
+  transform: skewX(-3deg);
+  border-radius: 0px 6px 6px 9px;
+  border: 2px solid #0b0c10;
+  background: linear-gradient(to bottom, #404040 60%, #5e6474 100%);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.acOnLabel {
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  text-align: center;
+  color: #404040;
+  text-shadow: none;
+  white-space: nowrap;
+}
+
+/* Icon styles */
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: -1px;
+}
+
+.sqrtIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.changeSignIcon {
+  width: 26px;
+  height: 26px;
+}

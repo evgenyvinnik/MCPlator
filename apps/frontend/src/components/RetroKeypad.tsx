@@ -3,6 +3,7 @@ import sqrtIcon from '../assets/icons/sqrt.svg';
 import changeSignIcon from '../assets/icons/change-sign.svg';
 import { useCalculatorStore } from '../state/useCalculatorStore';
 import type { KeyId } from '@calculator/shared-types';
+import styles from './RetroKeypad.module.css';
 
 // Mapping from KeyId (animation system) to RetroKeypad button identifier
 const keyIdToRetroKey: Partial<Record<KeyId, string>> = {
@@ -83,34 +84,6 @@ type RetroKeypadProps = {
   onKeyClick: (key: KeyDef) => void;
 };
 
-// Base button styles matching original exactly
-const buttonBaseStyle: React.CSSProperties = {
-  position: 'relative',
-  zIndex: 5,
-  display: 'block',
-  width: '100%',
-  height: '40px',
-  fontWeight: 500,
-  fontSize: '20px',
-  color: 'white',
-  background: 'linear-gradient(to bottom, #545454 0%, #3d3d3d 45%, #2a2a2a 100%)',
-  boxShadow: `1px 1px 1px 1px rgba(0, 0, 0, 0.1),
-    0px 0px 0px 1px rgba(0, 0, 0, 0.8), 
-    inset 1px 0px 1px 0px rgba(0, 0, 0, 0.3),
-    inset -1px 0px 1px 0px rgba(0, 0, 0, 0.3),
-    inset 0px 1px 1px 0px rgba(255, 255, 255, 0.5),
-    inset 0px -3px 3px rgba(255, 255, 255, 0.15),
-    0px 8px 10px 0px rgba(0, 0, 0, 0.3),
-    inset 0px -3px 1px 1px rgba(0, 0, 0, 0.4),
-    0px 0px 0px 3px rgba(0, 0, 0, 0.1)`,
-  border: '1px solid #0b0c10',
-  borderRadius: '6px 6px 12px 12px',
-  transition: 'all 0.15s ease-out',
-  cursor: 'pointer',
-  outline: 'none',
-  textShadow: '1px 2px 2px rgba(0, 0, 0, 0.5)',
-};
-
 const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
   const pressedKey = useCalculatorStore((state) => state.pressedKey);
   const buttonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
@@ -174,17 +147,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
 
     // Handle empty cells
     if (cellKey === '') {
-      return (
-        <div 
-          key={`${rowIndex}-${cellIndex}`} 
-          style={{ 
-            display: 'inline-block', 
-            position: 'relative', 
-            width: '20%', 
-            padding: '6px 4px' 
-          }}
-        />
-      );
+      return <div key={`${rowIndex}-${cellIndex}`} className={styles.cell} />;
     }
 
     const keyDef = keyDefinitions[cellKey];
@@ -197,43 +160,38 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
     const isNumber = keyDef.type === 'NUMBER';
     const isFloat = keyDef.value === 'float';
 
-    // Cell classes
-    const cellClasses = [
-      keyDef.extraClass || '',
-      `${keyDef.type}_FUNC${keyDef.value}`
-    ].join(' ');
+    // Build button class names
+    const buttonClasses = [styles.button];
 
-    // Determine font size based on button type - matching original CSS exactly
-    let fontSize = '20px';
+    if (isRed) buttonClasses.push(styles.red);
+    if (isSmall) buttonClasses.push(styles.small);
+    if (isLarge) buttonClasses.push(styles.large);
+
+    // Font size classes
     if (keyDef.value === 'divide' || (keyDef.value === 'plus' && isLarge)) {
-      fontSize = '28px';
+      buttonClasses.push(keyDef.value === 'divide' ? styles.fontSizeDivide : styles.fontSizePlus);
     } else if (isNumber || isFloat) {
-      fontSize = '24px';
+      buttonClasses.push(isNumber ? styles.fontSizeNumber : styles.fontSizeFloat);
     } else if (isRed) {
-      fontSize = '22px';
+      buttonClasses.push(styles.fontSizeRed);
     } else if (isSmall) {
-      fontSize = '18px';
+      buttonClasses.push(styles.fontSizeSmall);
     }
 
-    // Build button style (properties are mutated below)
-    // eslint-disable-next-line prefer-const
-    let buttonStyle: React.CSSProperties = { ...buttonBaseStyle, fontSize };
+    // Get base backgrounds for restoring after hover/press
+    const baseBackground = isRed
+      ? 'linear-gradient(to bottom, #9d5565 0%, #7a3d4a 50%, #5d2f39 100%)'
+      : 'linear-gradient(to bottom, #545454 0%, #3d3d3d 45%, #2a2a2a 100%)';
 
-    if (isRed) {
-      buttonStyle.background = 'linear-gradient(to bottom, #9d5565 0%, #7a3d4a 50%, #5d2f39 100%)';
-    }
-
-    if (isSmall) {
-      buttonStyle.height = '30px';
-    }
-
-    if (isLarge) {
-      buttonStyle.height = '92px';
-      buttonStyle.zIndex = 100;
-      buttonStyle.position = 'absolute';
-      buttonStyle.top = '-13px';
-      buttonStyle.width = 'calc(100% - 8px)';
-    }
+    const baseBoxShadow = `1px 1px 1px 1px rgba(0, 0, 0, 0.1),
+      0px 0px 0px 1px rgba(0, 0, 0, 0.8),
+      inset 1px 0px 1px 0px rgba(0, 0, 0, 0.3),
+      inset -1px 0px 1px 0px rgba(0, 0, 0, 0.3),
+      inset 0px 1px 1px 0px rgba(255, 255, 255, 0.5),
+      inset 0px -3px 3px rgba(255, 255, 255, 0.15),
+      0px 8px 10px 0px rgba(0, 0, 0, 0.3),
+      inset 0px -3px 1px 1px rgba(0, 0, 0, 0.4),
+      0px 0px 0px 3px rgba(0, 0, 0, 0.1)`;
 
     const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (isRed) {
@@ -242,7 +200,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
         e.currentTarget.style.background = 'linear-gradient(to bottom, #646464 0%, #4a4a4a 50%, #353535 100%)';
       }
       e.currentTarget.style.boxShadow = `3px 3px 5px 0px rgba(0, 0, 0, 0.3),
-        0px 0px 0px 1px rgba(0, 0, 0, 0.9), 
+        0px 0px 0px 1px rgba(0, 0, 0, 0.9),
         inset 1px 0px 1px 0px rgba(0, 0, 0, 0.3),
         inset -1px 0px 1px 0px rgba(0, 0, 0, 0.3),
         inset 0px 1px 1px 0px rgba(255, 255, 255, 0.9),
@@ -253,8 +211,8 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
     };
 
     const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.background = buttonStyle.background as string;
-      e.currentTarget.style.boxShadow = buttonBaseStyle.boxShadow as string;
+      e.currentTarget.style.background = baseBackground;
+      e.currentTarget.style.boxShadow = baseBoxShadow;
     };
 
     const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -266,7 +224,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
       }
       e.currentTarget.style.transform = 'translateY(1px)';
       e.currentTarget.style.boxShadow = `1px 1px 1px 1px rgba(0, 0, 0, 0.1),
-        0px 0px 0px 1px rgba(0, 0, 0, 0.8), 
+        0px 0px 0px 1px rgba(0, 0, 0, 0.8),
         inset 1px 0px 1px 0px rgba(0, 0, 0, 0.3),
         inset -1px 0px 1px 0px rgba(0, 0, 0, 0.3),
         inset 0px 1px 1px 0px rgba(255, 255, 255, 0.4),
@@ -277,59 +235,17 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
 
     const handleMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.currentTarget.style.color = 'white';
-      e.currentTarget.style.background = buttonStyle.background as string;
+      e.currentTarget.style.background = baseBackground;
       e.currentTarget.style.transform = 'translateY(0)';
-      e.currentTarget.style.boxShadow = buttonBaseStyle.boxShadow as string;
+      e.currentTarget.style.boxShadow = baseBoxShadow;
     };
 
     return (
-      <div 
-        key={`${rowIndex}-${cellIndex}`}
-        className={cellClasses}
-        style={{ 
-          display: 'inline-block', 
-          position: 'relative', 
-          width: '20%', 
-          padding: '6px 4px' 
-        }}
-      >
+      <div key={`${rowIndex}-${cellIndex}`} className={styles.cell}>
         {isACButton && (
           <>
-            <div 
-              style={{
-                zIndex: 1,
-                position: 'absolute',
-                content: '""',
-                display: 'block',
-                height: '28px',
-                width: '6px',
-                top: '10px',
-                left: '-2px',
-                transform: 'skewX(3deg)',
-                borderRadius: '6px 0px 6px 9px',
-                border: '2px solid #0b0c10',
-                background: 'linear-gradient(to bottom, #404040 60%, #5e6474 100%)',
-                boxShadow: 'inset 1px 1px 1px rgba(255, 255, 255, 0.3)'
-              }}
-            />
-            <div 
-              style={{
-                zIndex: 1,
-                position: 'absolute',
-                content: '""',
-                display: 'block',
-                height: '28px',
-                width: '6px',
-                top: '10px',
-                left: 'auto',
-                right: '-1px',
-                transform: 'skewX(-3deg)',
-                borderRadius: '0px 6px 6px 9px',
-                border: '2px solid #0b0c10',
-                background: 'linear-gradient(to bottom, #404040 60%, #5e6474 100%)',
-                boxShadow: 'inset 1px 1px 1px rgba(255, 255, 255, 0.3)'
-              }}
-            />
+            <div className={styles.acDecorativeLeft} />
+            <div className={styles.acDecorativeRight} />
           </>
         )}
         <button
@@ -341,7 +257,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
             }
           }}
           data-is-red={(isRed || false).toString()}
-          style={buttonStyle}
+          className={buttonClasses.join(' ')}
           onClick={() => onKeyClick(keyDef)}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -352,44 +268,20 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
             <img
               src={sqrtIcon}
               alt="sqrt"
-              style={{
-                width: '22px',
-                height: '22px',
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                marginTop: '-1px',
-              }}
+              className={`${styles.icon} ${styles.sqrtIcon}`}
             />
           ) : keyDef.value === 'change_sign' ? (
             <img
               src={changeSignIcon}
               alt="+/-"
-              style={{
-                width: '26px',
-                height: '26px',
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                marginTop: '-1px',
-              }}
+              className={`${styles.icon} ${styles.changeSignIcon}`}
             />
           ) : (
             keyDef.label
           )}
         </button>
         {isACButton && (
-          <div 
-            style={{
-              position: 'absolute',
-              bottom: '-14px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              fontSize: '10px',
-              textAlign: 'center',
-              color: '#404040',
-              textShadow: 'none',
-              whiteSpace: 'nowrap'
-            }}
-          >
+          <div className={styles.acOnLabel}>
             ON
           </div>
         )}
@@ -398,17 +290,9 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
   };
 
   return (
-    <div style={{ padding: '4px 10px 14px' }}>
+    <div className={styles.keypad}>
       {layout.map((row, rowIndex) => (
-        <div 
-          key={rowIndex} 
-          style={{ 
-            width: '100%', 
-            position: 'relative', 
-            display: 'flex', 
-            alignItems: 'center' 
-          }}
-        >
+        <div key={rowIndex} className={styles.row}>
           {row.map((cell, cellIndex) => renderCell(cell, rowIndex, cellIndex))}
         </div>
       ))}

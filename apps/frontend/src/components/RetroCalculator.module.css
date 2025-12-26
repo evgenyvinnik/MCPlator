@@ -1,0 +1,103 @@
+/* Main calculator body */
+.calculator {
+  position: relative;
+  background:
+    linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%),
+    repeating-linear-gradient(
+      90deg,
+      #c8cad0 0px,
+      #d0d2d8 0.5px,
+      #c8cad0 1px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      #c8cad0 0px,
+      #cccdd3 0.5px,
+      #c8cad0 1px
+    );
+  background-color: #cfd1d7;
+  background-blend-mode: overlay, multiply, multiply;
+  padding: 14px 6px;
+  width: 320px;
+  max-width: 100%;
+  margin: 0 auto;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow:
+    0 15px 30px -5px rgba(0, 0, 0, 0.5),
+    0 0px 1px 2px rgba(0, 0, 0, 0.25),
+    0 2px 3px 1px rgba(0, 0, 0, 0.5),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 2px 5px 0 rgba(255, 255, 255, 0.3),
+    inset 0 2px 15px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0px 40px 10px rgba(0, 0, 0, 0.25),
+    inset 0 -2px 1px 0 rgba(0, 0, 0, 0.5),
+    inset 0 -15px 15px -15px rgba(0, 0, 0, 0.4);
+}
+
+/* Header section */
+.header {
+  padding: 0px 24px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.logo {
+  width: 80px;
+  margin-top: 14px;
+  float: left;
+}
+
+.powerIndicatorContainer {
+  float: right;
+  width: 140px;
+}
+
+.powerIndicatorPanel {
+  background: #111;
+  border: 4px ridge #706F71;
+  box-shadow: inset 0px 5px 5px #000;
+  border-radius: 6px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.powerIndicatorBars {
+  display: flex;
+  height: 32px;
+}
+
+.powerIndicatorBar {
+  flex: 1;
+  border-right: 1px solid rgba(255, 0, 0, 0.4);
+}
+
+.powerIndicatorBar:last-child {
+  border-right: none;
+}
+
+.powerIndicatorLabel {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+  line-height: 2;
+  font-size: 10px;
+  text-align: center;
+  color: #000;
+  transform: scaleY(0.8);
+}
+
+/* Model label */
+.modelLabelContainer {
+  position: relative;
+}
+
+.modelLabel {
+  position: absolute;
+  font-size: 10px;
+  font-weight: bold;
+  top: 20px;
+  left: 34px;
+  color: #000;
+}

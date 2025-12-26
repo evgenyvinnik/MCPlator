@@ -4,6 +4,7 @@ import { useAnimationRunner } from './hooks/useAnimationRunner';
 import RetroCalculator from './components/RetroCalculator';
 import { useCalculatorStore } from './state/useCalculatorStore';
 import { useChatStore } from './state/useChatStore';
+import styles from './App.module.css';
 
 function App() {
   useAnimationRunner();
@@ -48,7 +49,7 @@ function App() {
               <div className="relative flex items-center justify-center">
                 <div className="absolute -inset-8 rounded-[32px] bg-gradient-to-br from-purple-500/20 via-blue-500/15 to-pink-500/10 blur-3xl opacity-80" />
                 <div className="absolute -inset-4 rounded-[30px] bg-gradient-to-br from-[#007acc]/10 via-purple-500/10 to-emerald-500/10 blur-2xl" />
-                <div className="retro-calculator-container relative isolate z-10">
+                <div className={`${styles.retroCalculatorContainer} relative isolate z-10`}>
                   <RetroCalculator />
                 </div>
               </div>
