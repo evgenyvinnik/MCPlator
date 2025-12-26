@@ -60,7 +60,7 @@ export function AIChatPanel({
           <div>
             <h2 className="text-white">AI Assistant</h2>
             <p className="text-cyan-300 text-xs">
-              Always here to help
+              Let me calculate it for you
             </p>
           </div>
         </div>
