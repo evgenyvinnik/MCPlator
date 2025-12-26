@@ -25,7 +25,6 @@ Available keys:
 - Clear: ac (all clear - USE THIS FIRST), c (clear entry)
 - Memory: mc (clear), mr (recall), m_plus (add to memory), m_minus (subtract from memory)
 - Percent: percent
-- Currency: rate, euro, local
 
 Example: To calculate 2 + 3, use keys: ["ac", "digit_2", "add", "digit_3", "equals"]
 `;

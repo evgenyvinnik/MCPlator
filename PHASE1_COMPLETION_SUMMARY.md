@@ -21,7 +21,6 @@ All essential priorities from NEXT_STEPS.md have been successfully implemented.
 - ✅ Percentage calculations (context-aware based on operation)
 - ✅ Memory operations (M+, M-, MR, MC) with accumulation
 - ✅ Error handling (division by zero shows "E", overflow detection)
-- ✅ Currency conversion support (rate, euro, local keys)
 - ✅ Display formatting (max 8 digits, scientific notation for large numbers)
 
 **Key Implementation Details:**

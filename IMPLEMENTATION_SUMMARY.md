@@ -6,9 +6,6 @@ This document summarizes the implementation of the updated spec as described in 
 
 ### Phase 1: Core Infrastructure Updates
 - ✅ Added SSE event types (`packages/shared-types/src/sse.ts`)
-- ✅ Updated calculator types to include `rate`, `euro`, `local` keys
-- ✅ Added `euro`, `local`, `rate` indicators to calculator display
-- ✅ Updated calculator engine state to include `euroRate`, `isEuroMode`, `isLocalMode`
 - ✅ Added build scripts to all packages
 
 ### Phase 2: Storage Migration (localStorage → IndexedDB)
@@ -127,9 +124,7 @@ npm run build
 - `vercel.json`
 
 ## Files Modified
-- `packages/shared-types/src/calculator.ts` (added currency keys/indicators)
 - `packages/shared-types/src/index.ts` (exported SSE types)
-- `packages/calculator-engine/src/types.ts` (added euro rate state)
 - `packages/calculator-engine/src/index.ts` (initialized new state fields)
 - `apps/frontend/src/state/useCalculatorStore.ts` (IndexedDB persistence)
 - `apps/frontend/src/state/useChatStore.ts` (IndexedDB + streaming)

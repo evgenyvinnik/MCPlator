@@ -31,7 +31,7 @@ const RetroCalculator: React.FC = () => {
   const { display, pressKey, shouldFlash } = useCalculatorStore();
   const [isOn, setIsOn] = useState(true);
 
-  const handleClick = (key: { value: string }) => {
+  const handleClick = (key: { type?: string; value: string }) => {
     // Handle power buttons
     if (key.value === 'off') {
       setIsOn(false);
@@ -46,6 +46,21 @@ const RetroCalculator: React.FC = () => {
 
     // Ignore other keys when calculator is off
     if (!isOn) {
+      return;
+    }
+
+    // Handle memory operations separately (they have type === 'MEMORY')
+    if (key.type === 'MEMORY') {
+      const memoryKeyMap: Record<string, KeyId> = {
+        'clear': 'mc',
+        'recall': 'mr',
+        'plus': 'm_plus',
+        'minus': 'm_minus',
+      };
+      const keyId = memoryKeyMap[key.value];
+      if (keyId) {
+        pressKey(keyId);
+      }
       return;
     }
 

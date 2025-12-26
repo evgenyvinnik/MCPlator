@@ -31,7 +31,7 @@ const keyIdToRetroKey: Partial<Record<KeyId, string>> = {
   'm_plus': 'm+',
   'm_minus': 'm-',
   'plus_minus': 'change_sign',
-  // 'rate', 'euro', 'local', 'sqrt' are not available in RetroKeypad
+  // 'sqrt' is not available in RetroKeypad
 };
 
 // Define the layout matching original - 6 rows x 5 columns

@@ -25,7 +25,6 @@ Available keys:
 - Clear: ac (all clear), c (clear entry)
 - Memory: mc (clear), mr (recall), m_plus (add to memory), m_minus (subtract from memory)
 - Percent: percent
-- Currency: rate, euro, local
 `;
 
 function sseEvent(event: string, data: object): string {

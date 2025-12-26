@@ -11,9 +11,6 @@ export type CalculatorInternalState = {
   lastOperator: 'add' | 'sub' | 'mul' | 'div' | null;
   lastOperand: number | null;
   isError: boolean;
-  euroRate: number | null;
-  isEuroMode: boolean;
-  isLocalMode: boolean;
   shouldStartNewNumber: boolean; // Flag to indicate next digit should start a new number
 };
 

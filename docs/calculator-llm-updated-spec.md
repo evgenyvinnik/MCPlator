@@ -37,7 +37,7 @@ No MCP server, no Redis, no DB, no user registration.
 - **Styling:** Tailwind CSS
 - **Storage:**
   - `IndexedDB` (via `idb` library) for:
-    - Calculator engine state (including memory, rate).
+    - Calculator engine state (including memory).
     - Chat history.
     - Simple per-browser LLM quota.
 - **Streaming:** Native `EventSource` API for SSE
@@ -168,16 +168,12 @@ export type KeyId =
   | 'percent'
   | 'equals'
   | 'ac' | 'c'
-  | 'mc' | 'mr' | 'm_plus' | 'm_minus'
-  | 'rate' | 'euro' | 'local';
+  | 'mc' | 'mr' | 'm_plus' | 'm_minus';
 
 export type CalculatorIndicators = {
   error: boolean;           // E
   memory: boolean;          // M
   constant: boolean;        // K
-  euro: boolean;
-  local: boolean;
-  rate: boolean;
   op: null | 'add' | 'sub' | 'mul' | 'div';
 };
 
@@ -291,9 +287,6 @@ export type CalculatorInternalState = {
   lastOperator: 'add' | 'sub' | 'mul' | 'div' | null;
   lastOperand: number | null;
   isError: boolean;
-  euroRate: number | null;
-  isEuroMode: boolean;
-  isLocalMode: boolean;
 };
 
 export type CalculatorEngine = {
@@ -322,13 +315,10 @@ export const calculatorEngine: CalculatorEngine = {
     lastOperator: null,
     lastOperand: null,
     isError: false,
-    euroRate: null,
-    isEuroMode: false,
-    isLocalMode: true,
   }),
 
   pressKey: (state, key) => {
-    // TODO: implement full Casio logic here (AC/C, %, memory keys, constants, Euro/Local)
+    // TODO: implement full Casio logic here (AC/C, %, memory keys, constants)
     return state;
   },
 
@@ -338,9 +328,6 @@ export const calculatorEngine: CalculatorEngine = {
       error: state.isError,
       memory: state.hasMemory,
       constant: !!state.constant,
-      euro: state.isEuroMode,
-      local: state.isLocalMode,
-      rate: state.euroRate != null,
       op: state.lastOperator,
     },
   }),
@@ -941,7 +928,6 @@ export const calculatorPressKeysTool: Tool = {
             'equals',
             'ac', 'c',
             'mc', 'mr', 'm_plus', 'm_minus',
-            'rate', 'euro', 'local',
           ],
         },
         description: 'Array of calculator keys to press in sequence',
@@ -991,7 +977,6 @@ Available keys:
 - Clear: ac (all clear), c (clear entry)
 - Memory: mc (clear), mr (recall), m_plus (add to memory), m_minus (subtract from memory)
 - Percent: percent
-- Currency: rate, euro, local
 `;
 
 // Helper to format SSE events
@@ -1151,7 +1136,6 @@ Available keys:
 - Clear: ac (all clear), c (clear entry)
 - Memory: mc (clear), mr (recall), m_plus (add to memory), m_minus (subtract from memory)
 - Percent: percent
-- Currency: rate, euro, local
 `;
 
 function sseEvent(event: string, data: object): string {

@@ -15,7 +15,6 @@ This package contains the core calculator logic for the MCPlator application. It
 - **Percentage Calculations**: Context-aware percentage calculations
 - **Clear Operations**: AC (All Clear), C (Clear entry)
 - **Error Handling**: Division by zero, overflow detection
-- **Currency Conversion**: Rate setting, Euro/Local conversion
 
 ### Operation Behavior
 
@@ -84,7 +83,6 @@ const newState = calculatorEngine.pressKey(state, 'digit_5');
 - Operations: `'add'`, `'sub'`, `'mul'`, `'div'`
 - Control: `'equals'`, `'ac'`, `'c'`, `'decimal'`, `'percent'`
 - Memory: `'mc'`, `'mr'`, `'m_plus'`, `'m_minus'`
-- Currency: `'rate'`, `'euro'`, `'local'`
 
 ### calculatorEngine.toDisplay(state)
 Converts the internal state to a display representation.
@@ -111,9 +109,6 @@ type CalculatorInternalState = {
   lastOperator: 'add' | 'sub' | 'mul' | 'div' | null;
   lastOperand: number | null;        // Left operand of pending operation
   isError: boolean;                  // Error state (division by zero, etc.)
-  euroRate: number | null;           // Exchange rate for currency conversion
-  isEuroMode: boolean;               // Currency display mode
-  isLocalMode: boolean;              // Currency display mode
   shouldStartNewNumber: boolean;     // Whether next digit starts a new number
 };
 ```

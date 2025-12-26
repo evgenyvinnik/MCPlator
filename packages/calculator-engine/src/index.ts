@@ -98,9 +98,6 @@ export const calculatorEngine: CalculatorEngine = {
     lastOperator: null,
     lastOperand: null,
     isError: false,
-    euroRate: null,
-    isEuroMode: false,
-    isLocalMode: true,
     shouldStartNewNumber: false,
   }),
 
@@ -366,7 +363,7 @@ export const calculatorEngine: CalculatorEngine = {
       return {
         ...state,
         memoryValue: newMemory,
-        hasMemory: true,
+        hasMemory: newMemory !== 0,
         shouldStartNewNumber: true,
       };
     }
@@ -378,49 +375,9 @@ export const calculatorEngine: CalculatorEngine = {
       return {
         ...state,
         memoryValue: newMemory,
-        hasMemory: true,
+        hasMemory: newMemory !== 0,
         shouldStartNewNumber: true,
       };
-    }
-
-    // Handle currency conversion keys (rate, euro, local)
-    if (key === 'rate') {
-      // Set the current display value as the euro rate
-      const rate = parseDisplayValue(state.displayValue);
-      return {
-        ...state,
-        euroRate: rate,
-      };
-    }
-
-    if (key === 'euro') {
-      // Convert from local to euro
-      if (state.euroRate !== null && state.euroRate !== 0) {
-        const currentValue = parseDisplayValue(state.displayValue);
-        const euroValue = currentValue / state.euroRate;
-        return {
-          ...state,
-          displayValue: formatForDisplay(euroValue),
-          isEuroMode: true,
-          isLocalMode: false,
-        };
-      }
-      return state;
-    }
-
-    if (key === 'local') {
-      // Convert from euro to local
-      if (state.euroRate !== null) {
-        const currentValue = parseDisplayValue(state.displayValue);
-        const localValue = currentValue * state.euroRate;
-        return {
-          ...state,
-          displayValue: formatForDisplay(localValue),
-          isEuroMode: false,
-          isLocalMode: true,
-        };
-      }
-      return state;
     }
 
     // Unknown key - return state unchanged
@@ -433,9 +390,6 @@ export const calculatorEngine: CalculatorEngine = {
       error: state.isError,
       memory: state.hasMemory,
       constant: !!state.constant,
-      euro: state.isEuroMode,
-      local: state.isLocalMode,
-      rate: state.euroRate !== null,
       op: state.lastOperator, // UI layer should map to symbols: add→'+', sub→'-', mul→'×', div→'÷'
     },
   }),
