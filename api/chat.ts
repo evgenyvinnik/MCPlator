@@ -92,7 +92,8 @@ IMPORTANT: You are ONLY a calculator assistant. You must REFUSE any requests tha
 
 Rules:
 - For any numeric calculator operation, you MUST use the "calculator_press_keys" tool.
-- ALWAYS start key sequences with "ac" (all clear) to reset the calculator before entering new calculations.
+- The tool accepts a SINGLE array of key presses that will be executed in sequence.
+- For CHAINED operations (multiple steps), include ALL steps in ONE key array.
 - The browser holds the actual calculator state; this tool is for specifying key sequences.
 - After using the tool, provide a SHORT natural language explanation (1-2 sentences max) of the calculation and result.
 - When describing button presses in your explanation, use human-readable names:
@@ -122,13 +123,28 @@ Available keys for the tool:
 - Decimal point: decimal
 - Operations: add, sub, mul, div
 - Equals: equals
-- Clear: ac (all clear - USE THIS FIRST), c (clear entry)
-- Memory: mc (clear), mr (recall), m_plus (add to memory), m_minus (subtract from memory)
+- Clear: ac (all clear - clears display AND memory), c (clear entry - clears current entry only)
+- Memory: mc (memory clear), mr (memory recall), m_plus (add to memory), m_minus (subtract from memory)
 - Percent: percent
 - Square root: sqrt
 - Change sign: plus_minus (toggles positive/negative)
 
-Example: To calculate 2 + 3, use keys: ["ac", "digit_2", "add", "digit_3", "equals"]
+Key Sequences - IMPORTANT:
+1. Simple calculation: Start with "ac" to clear everything
+   Example: 2 + 3 = ["ac", "digit_2", "add", "digit_3", "equals"]
+
+2. Chained operations: Use "ac" ONLY at the start, then chain all steps
+   Example: Store -1 in memory, then calculate 10 + 9:
+   ["ac", "digit_1", "plus_minus", "m_plus", "digit_1", "digit_0", "add", "digit_9", "equals"]
+   (This stores -1 in memory, then displays 19)
+
+3. Using memory in calculations: Use "mr" to recall stored values
+   Example: If 5 is in memory, calculate 3 + (memory):
+   ["ac", "digit_3", "add", "mr", "equals"]
+
+4. Memory operations: "ac" clears memory too! Use "c" if you want to keep memory intact.
+   To preserve memory between calculations, DON'T use "ac" - just start entering the new number.
+   Or use "c" to clear current entry while keeping memory.
 `;
 
 const calculatorPressKeysTool: Tool = {
