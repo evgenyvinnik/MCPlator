@@ -4,7 +4,7 @@ import type { Tool } from '@anthropic-ai/sdk/resources/messages';
  * The Claude model to use for chat interactions.
  * Using Haiku 4.5 for fast, cost-effective responses.
  */
-export const MODEL = 'claude-haiku-4-5-20250514';
+export const MODEL = 'claude-haiku-4-5-20251001';
 
 /**
  * Temperature setting for AI responses (0-1 scale).
