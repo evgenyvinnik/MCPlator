@@ -32,10 +32,10 @@ For detailed, step-by-step deployment instructions, please refer to [BUILD.md](.
 - **Storage:** IndexedDB (via `idb` library)
 - **Streaming:** Native `fetch` API for SSE
 
-### Backend (`apps/backend`)
-- **Platform:** Vercel Edge Functions (for SSE support)
-- **Runtime:** Edge Runtime (production) / Bun (local dev)
-- **AI:** Anthropic Claude API (Claude 3.5 Haiku model)
+### Backend (`/api`)
+- **Platform:** Vercel Serverless Functions (for SSE support)
+- **Runtime:** Edge Runtime
+- **AI:** Anthropic Claude API (Claude Haiku 4.5 model)
 - **Streaming:** Server-Sent Events (SSE) for real-time token streaming
 
 ### Shared (`packages/`)
@@ -52,7 +52,8 @@ calculator-casio-llm/
     calculator-engine/  # Canonical calculator logic
   apps/
     frontend/           # React application
-    backend/            # Vercel API routes
+  api/
+    chat.ts            # Vercel serverless function for AI chat
 ```
 
 ## Getting Started
@@ -69,50 +70,23 @@ npm install
 
 ### Development
 
-**Quick Start - Test Locally Without API Key:**
-
-For detailed local testing instructions including mock mode, see [LOCAL_TESTING.md](./LOCAL_TESTING.md).
-
-**Frontend only:**
 ```bash
 npm run dev
 ```
 
-**Backend only:**
-```bash
-npm run dev:backend
-```
-
-**Both frontend and backend:**
-```bash
-npm run dev:all
-```
-
-The frontend runs on `http://localhost:5173` and the backend dev server on `http://localhost:3001`.
+The frontend runs on `http://localhost:5173`. The API endpoint (`/api/chat`) is handled by Vercel in production and proxied during local development.
 
 ### Environment Variables
 
-For the backend to work (LLM features), you need to set up your Anthropic API key.
+For the AI chat features to work, you need to set up your Anthropic API key.
 
 **For detailed instructions on getting an Anthropic API key, see [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md).**
 
-Create a `.env` file in `apps/backend` (or set in Vercel dashboard):
+Create a `.env` file in the project root (or set in Vercel dashboard):
 
 ```
 ANTHROPIC_API_KEY=sk-ant-...
 ```
-
-#### Local Testing Without API Key
-
-You can test the UI locally without an Anthropic API key by using mock mode:
-
-```
-USE_MOCK_LLM=true
-```
-
-This simulates LLM responses for basic calculator operations (addition, subtraction, multiplication, division) without calling the Anthropic API. See [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md) for more details.
-
-See `.env.example` files in `apps/backend` and `apps/frontend` for more details.
 
 ## Scripts
 
