@@ -1,13 +1,12 @@
-name: E2E Tests
+name: E2E Tests on Preview Deployment
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  deployment_status:
 
 jobs:
   test:
+    # Only run if deployment was successful and it's a preview deployment
+    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'Preview'
     timeout-minutes: 15
     runs-on: ubuntu-latest
 
@@ -23,19 +22,14 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Build packages
-        run: bun run build:packages
-
-      - name: Build frontend
-        run: bun run build:apps
-
       - name: Install Playwright browsers
         run: cd apps/frontend && bunx playwright install --with-deps chromium
 
-      - name: Run E2E tests
+      - name: Run E2E tests against Vercel preview deployment
         run: cd apps/frontend && bun run test
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Use the actual Vercel preview URL
+          PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
           CI: true
 
       - name: Upload Playwright report

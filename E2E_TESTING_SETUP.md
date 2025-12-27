@@ -6,23 +6,30 @@ This guide explains how to set up end-to-end testing with Vercel deployment prot
 
 The E2E testing workflow ensures that your app works correctly before deploying to production:
 
-1. When you push code to GitHub, GitHub Actions runs E2E tests
-2. Tests verify that the chat functionality works with real LLM calls
-3. Vercel waits for these tests to pass before deploying to production
-4. If tests fail, deployment is blocked
+1. You push code to GitHub
+2. Vercel automatically creates a preview deployment
+3. When the deployment succeeds, GitHub Actions runs E2E tests against the live preview URL
+4. Tests verify that the chat functionality works with real LLM calls
+5. If tests pass, the deployment can be promoted to production
+6. If tests fail, you get immediate feedback and the broken deployment won't go live
+
+This approach tests your **actual deployed code** on Vercel's infrastructure, not a local simulation.
 
 ## Setup Steps
 
-### 1. Add ANTHROPIC_API_KEY to GitHub Secrets
+### 1. Verify ANTHROPIC_API_KEY in Vercel
 
-The E2E tests need to make real API calls to Anthropic, so you need to add your API key to GitHub:
+Since the tests run against the Vercel preview deployment, the API key needs to be in Vercel's environment variables (not GitHub):
 
-1. Go to your GitHub repository
-2. Click **Settings** → **Secrets and variables** → **Actions**
-3. Click **New repository secret**
-4. Name: `ANTHROPIC_API_KEY`
-5. Value: Your Anthropic API key (same one you have in Vercel)
-6. Click **Add secret**
+1. Go to your Vercel project dashboard
+2. Click **Settings** → **Environment Variables**
+3. Verify `ANTHROPIC_API_KEY` exists and is set for **Preview** environments (not just Production)
+4. If not present, add it:
+   - Name: `ANTHROPIC_API_KEY`
+   - Value: Your Anthropic API key
+   - Environments: Check **Preview** and **Production**
+
+**Note:** You already have this configured since your app is deployed, but make sure it's enabled for Preview environments!
 
 ### 2. Configure Vercel Deployment Protection
 
@@ -57,25 +64,21 @@ Add this to your `vercel.json`:
 
 ### 3. Test the Setup
 
-1. Create a new branch:
-   ```bash
-   git checkout -b test-e2e-setup
-   ```
+1. Make sure `ANTHROPIC_API_KEY` is set in Vercel for Preview environments (check step 1)
 
-2. Make a small change (e.g., add a comment to a file)
-
-3. Commit and push:
+2. Push your changes:
    ```bash
    git add .
-   git commit -m "Test E2E workflow"
-   git push origin test-e2e-setup
+   git commit -m "Add E2E testing for Vercel deployments"
+   git push
    ```
 
-4. Create a Pull Request on GitHub
+3. Watch what happens:
+   - Vercel creates a preview deployment
+   - Once deployment succeeds, GitHub Actions automatically runs E2E tests
+   - Check the **Actions** tab on GitHub to see test results
 
-5. Watch the **Actions** tab to see the E2E tests run
-
-6. Vercel will create a preview deployment but won't deploy to production until tests pass
+4. If tests pass, you're all set! If they fail, check the troubleshooting section below.
 
 ## What Gets Tested
 
@@ -85,26 +88,23 @@ The E2E tests verify:
 2. **Multiple Messages**: Handling sequential chat messages correctly
 3. **LLM Integration**: Real API calls to Anthropic (not mocked)
 4. **Calculator Integration**: AI can trigger calculator operations
+5. **Full Deployment Stack**: Tests run against the actual Vercel deployment, including edge functions, routing, and environment variables
 
 ## Test Details
 
 - **Location**: `apps/frontend/tests/chat-e2e.spec.ts`
 - **Timeout**: 60 seconds per test (allows for LLM response time)
 - **Browser**: Chromium only (in CI for speed)
-- **Environment**: Uses production build with Vite preview server
+- **Environment**: Actual Vercel preview deployment (tests real production build)
 
 ## Troubleshooting
 
-### Tests fail with "ANTHROPIC_API_KEY is not set"
-
-- Make sure you added the secret to GitHub (Step 1)
-- Check the secret name is exactly `ANTHROPIC_API_KEY` (case-sensitive)
-
 ### Tests timeout waiting for AI response
 
-- Check your Anthropic API key is valid
+- Check your Anthropic API key is valid in Vercel settings
 - Ensure you have sufficient API credits
 - LLM calls can be slow; 60 second timeout should be enough
+- Verify the API key is enabled for Preview environments in Vercel
 
 ### Vercel deploys without waiting for tests
 
@@ -114,22 +114,57 @@ The E2E tests verify:
 
 ### Tests pass locally but fail in CI
 
-- Check that `ANTHROPIC_API_KEY` is set in GitHub secrets
+- Verify the Vercel preview deployment succeeded before tests ran
+- Check that the preview URL is accessible
 - Look at the Playwright report artifact uploaded to the GitHub Actions run
-- Ensure the API endpoint `/api/chat` is accessible in the preview build
+- Ensure `ANTHROPIC_API_KEY` is set in Vercel for Preview environments
+
+### Workflow doesn't trigger after deployment
+
+- Verify that GitHub has permission to receive deployment events from Vercel
+- Check that your repo is properly connected to Vercel
+- Look for the `deployment_status` event in the GitHub Actions tab
+- Ensure the workflow file is on the `main` branch
+
+### Tests fail with API errors (401, 403, or LLM errors)
+
+- **Primary cause:** `ANTHROPIC_API_KEY` not set correctly in Vercel
+- Go to Vercel project → **Settings** → **Environment Variables**
+- Verify `ANTHROPIC_API_KEY` is enabled for **Preview** environments (not just Production)
+- After adding/updating, you need to redeploy for changes to take effect
 
 ## Running Tests Locally
 
+### Option 1: Against Local Dev Server (Fast, no API calls)
+
 ```bash
-# Run all tests with UI
 cd apps/frontend
 bun run test:ui
+```
 
-# Run tests headlessly
-bun run test
+This runs tests against `localhost:5173` (Vite dev server). Note: The `/api/chat` endpoint won't work unless you have a backend running.
 
-# Run tests in headed mode (see browser)
-bun run test:headed
+### Option 2: Against Vercel Dev (Full stack with API)
+
+For true E2E testing with API calls locally:
+
+```bash
+# Terminal 1: Start Vercel dev (runs frontend + API functions)
+export ANTHROPIC_API_KEY=your_key_here
+vercel dev
+
+# Terminal 2: Run tests against Vercel dev
+cd apps/frontend
+PLAYWRIGHT_TEST_BASE_URL=http://localhost:3000 bun run test
+```
+
+### Option 3: Against Live Preview Deployment
+
+Test against an actual Vercel preview URL:
+
+```bash
+cd apps/frontend
+PLAYWRIGHT_TEST_BASE_URL=https://your-preview.vercel.app bun run test
 ```
 
 ## Cost Considerations
@@ -153,13 +188,17 @@ on:
 
 The GitHub Actions workflow (`.github/workflows/e2e-tests.yml`) does:
 
-1. Checks out your code
-2. Sets up Bun
-3. Installs dependencies
-4. Builds packages and frontend
-5. Installs Playwright browsers
-6. Runs E2E tests with `ANTHROPIC_API_KEY` from secrets
-7. Uploads test reports if tests fail
+1. **Triggers** when Vercel deployment succeeds (`deployment_status` event)
+2. **Checks** that it's a preview deployment (not production)
+3. **Checks out** your code
+4. **Sets up** Bun runtime
+5. **Installs** dependencies and Playwright browsers
+6. **Runs E2E tests** against the Vercel preview URL (passed via `PLAYWRIGHT_TEST_BASE_URL`)
+7. **Uploads** test reports if tests fail
+
+The key difference from standard CI: Tests run **after** Vercel creates the preview deployment, testing the actual deployed code on Vercel's infrastructure.
+
+**Important:** The tests make HTTP requests to the Vercel preview deployment, which uses Vercel's environment variables (including `ANTHROPIC_API_KEY`). No secrets need to be configured in GitHub for the API calls to work.
 
 ## Next Steps
 
@@ -175,3 +214,8 @@ After setup is complete:
 - Check GitHub Actions logs for detailed test output
 - Review Playwright reports (uploaded as artifacts when tests fail)
 - Test locally first before pushing to catch issues early
+
+## References
+
+This setup follows Vercel's official recommendations:
+- [How can I run end-to-end tests after my Vercel Preview Deployment?](https://vercel.com/kb/guide/how-can-i-run-end-to-end-tests-after-my-vercel-preview-deployment)
