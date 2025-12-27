@@ -30,6 +30,8 @@ jobs:
         env:
           # Use the actual Vercel preview URL
           PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
+          # Pass Vercel automation bypass secret for deployment protection
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
           CI: true
 
       - name: Upload Playwright report

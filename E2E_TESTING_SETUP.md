@@ -40,7 +40,29 @@ Since the tests run against the Vercel preview deployment, the API key needs to 
 
 **Note:** You already have this configured since your app is deployed, but make sure it's enabled for Preview environments!
 
-### 2. Configure Vercel Deployment Protection
+### 2. Configure Vercel Protection Bypass for Automation
+
+If your preview deployments have Vercel Authentication or Deployment Protection enabled, E2E tests will fail because they can't access the login-protected preview URLs. You need to configure the "Protection Bypass for Automation" feature.
+
+1. Go to your Vercel project dashboard
+2. Click **Settings** → **Deployment Protection**
+3. Find **"Protection Bypass for Automation"**
+4. **Enable** the toggle
+5. **Copy the secret token** that appears (looks like: `x-vercel-protection-bypass: your-secret-here`)
+6. Click **Save**
+
+Now add this secret to GitHub:
+
+1. Go to your GitHub repository
+2. Navigate to **Settings** → **Secrets and variables** → **Actions**
+3. Click **"New repository secret"**
+4. Name: `VERCEL_AUTOMATION_BYPASS_SECRET`
+5. Value: Paste the token from Vercel (just the token value, not the header name)
+6. Click **Add secret**
+
+This allows GitHub Actions to bypass Vercel's authentication and run E2E tests against protected preview deployments.
+
+### 3. Configure Vercel Deployment Protection (Optional)
 
 Configure Vercel to wait for GitHub Actions checks before deploying:
 
@@ -71,23 +93,24 @@ Add this to your `vercel.json`:
 }
 ```
 
-### 3. Test the Setup
+### 4. Test the Setup
 
 1. Make sure `ANTHROPIC_API_KEY` is set in Vercel for Preview environments (check step 1)
+2. Make sure `VERCEL_AUTOMATION_BYPASS_SECRET` is set in GitHub Actions secrets (check step 2)
 
-2. Push your changes:
+3. Push your changes:
    ```bash
    git add .
    git commit -m "Add E2E testing for Vercel deployments"
    git push
    ```
 
-3. Watch what happens:
+4. Watch what happens:
    - Vercel creates a preview deployment
    - Once deployment succeeds, GitHub Actions automatically runs E2E tests
    - Check the **Actions** tab on GitHub to see test results
 
-4. If tests pass, you're all set! If they fail, check the troubleshooting section below.
+5. If tests pass, you're all set! If they fail, check the troubleshooting section below.
 
 ## What Gets Tested
 
