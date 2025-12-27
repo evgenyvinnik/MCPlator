@@ -16,7 +16,7 @@ interface CasioDBSchema extends DBSchema {
     value: import('@calculator/shared-types').ChatMessage;
     indexes: { 'by-created': string };
   };
-  'quota': {
+  quota: {
     key: 'daily';
     value: {
       id: 'daily';
@@ -37,7 +37,9 @@ export const getDB = () => {
         db.createObjectStore('calculator-state', { keyPath: 'id' });
 
         // Chat messages store
-        const chatStore = db.createObjectStore('chat-messages', { keyPath: 'id' });
+        const chatStore = db.createObjectStore('chat-messages', {
+          keyPath: 'id',
+        });
         chatStore.createIndex('by-created', 'createdAt');
 
         // Quota store

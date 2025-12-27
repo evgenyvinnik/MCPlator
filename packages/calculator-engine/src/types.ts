@@ -16,6 +16,9 @@ export type CalculatorInternalState = {
 
 export type CalculatorEngine = {
   initialState: () => CalculatorInternalState;
-  pressKey: (state: CalculatorInternalState, key: KeyId) => CalculatorInternalState;
+  pressKey: (
+    state: CalculatorInternalState,
+    key: KeyId
+  ) => CalculatorInternalState;
   toDisplay: (state: CalculatorInternalState) => CalculatorDisplay;
 };

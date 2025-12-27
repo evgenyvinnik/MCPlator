@@ -39,11 +39,13 @@ npm run dev:all
 Or start them separately in different terminals:
 
 **Terminal 1 - Backend:**
+
 ```bash
 npm run dev:backend
 ```
 
 **Terminal 2 - Frontend:**
+
 ```bash
 npm run dev
 ```
@@ -67,6 +69,7 @@ To test with the real AI functionality:
 ### Step 1: Get an Anthropic API Key
 
 Follow the instructions in [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md) to:
+
 1. Create an Anthropic account
 2. Add payment information
 3. Generate an API key
@@ -97,8 +100,9 @@ npm run dev:all
 ### Step 4: Test with Real AI
 
 The AI can handle more complex requests like:
+
 - "What is 15% of 200?"
-- "Calculate the square of 12" (12 * 12)
+- "Calculate the square of 12" (12 \* 12)
 - "I need to add these numbers: 45, 23, and 17"
 - Natural language math queries
 
@@ -107,6 +111,7 @@ The AI can handle more complex requests like:
 ### Mock Mode (USE_MOCK_LLM=true)
 
 **Pros:**
+
 - ✓ No API key required
 - ✓ No costs
 - ✓ Fast responses
@@ -114,12 +119,14 @@ The AI can handle more complex requests like:
 - ✓ Perfect for UI testing
 
 **Cons:**
+
 - ✗ Limited pattern matching (only recognizes basic operations)
 - ✗ Cannot handle complex queries
 - ✗ No natural language understanding beyond simple patterns
 - ✗ Cannot handle word numbers (though basic ones are supported)
 
 **Supported Operations:**
+
 - Addition: "add X and Y", "X plus Y", "sum of X and Y"
 - Subtraction: "subtract Y from X", "X minus Y"
 - Multiplication: "multiply X by Y", "X times Y"
@@ -130,6 +137,7 @@ The AI can handle more complex requests like:
 ### Full Mode (USE_MOCK_LLM=false)
 
 **Pros:**
+
 - ✓ Full AI understanding
 - ✓ Handles complex queries
 - ✓ Natural language processing
@@ -137,6 +145,7 @@ The AI can handle more complex requests like:
 - ✓ Better error handling
 
 **Cons:**
+
 - ✗ Requires API key setup
 - ✗ Costs money (pay per use)
 - ✗ Requires internet connection
@@ -196,12 +205,14 @@ See [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md) for detailed troubleshoot
 Create two `.env` files:
 
 **.env.mock**
+
 ```
 USE_MOCK_LLM=true
 PORT=3001
 ```
 
 **.env.production**
+
 ```
 ANTHROPIC_API_KEY=sk-ant-xxx
 USE_MOCK_LLM=false
@@ -209,6 +220,7 @@ PORT=3001
 ```
 
 Switch between them:
+
 ```bash
 cd apps/backend
 cp .env.mock .env    # Use mock mode

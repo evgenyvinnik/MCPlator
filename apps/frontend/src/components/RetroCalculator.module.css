@@ -2,19 +2,14 @@
 .calculator {
   position: relative;
   background:
-    linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%),
-    repeating-linear-gradient(
-      90deg,
-      #c8cad0 0px,
-      #d0d2d8 0.5px,
-      #c8cad0 1px
+    linear-gradient(
+      135deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      transparent 100%
     ),
-    repeating-linear-gradient(
-      0deg,
-      #c8cad0 0px,
-      #cccdd3 0.5px,
-      #c8cad0 1px
-    );
+    repeating-linear-gradient(90deg, #c8cad0 0px, #d0d2d8 0.5px, #c8cad0 1px),
+    repeating-linear-gradient(0deg, #c8cad0 0px, #cccdd3 0.5px, #c8cad0 1px);
   background-color: #cfd1d7;
   background-blend-mode: overlay, multiply, multiply;
   padding: 14px 6px;
@@ -57,7 +52,7 @@
 
 .powerIndicatorPanel {
   background: #111;
-  border: 4px ridge #706F71;
+  border: 4px ridge #706f71;
   box-shadow: inset 0px 5px 5px #000;
   border-radius: 6px;
   width: 100%;
@@ -79,7 +74,9 @@
 }
 
 .powerIndicatorLabel {
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family:
+    'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans',
+    Arial, sans-serif;
   font-weight: bold;
   line-height: 2;
   font-size: 10px;

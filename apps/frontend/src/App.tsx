@@ -11,8 +11,8 @@ function App() {
   useAnimationRunner();
   const [isChatOpen, setIsChatOpen] = useState(false);
   // Initialize isMobile based on window width to avoid flash
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' && window.innerWidth < 1024
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth < 1024
   );
 
   // Detect mobile viewport
@@ -61,9 +61,10 @@ function App() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+            boxShadow:
+              '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
             border: 'none',
-            cursor: 'pointer'
+            cursor: 'pointer',
           }}
           aria-label="Open chat"
         >
@@ -77,24 +78,38 @@ function App() {
           {!isMobile && (
             <header className="flex items-center justify-between px-10 py-8">
               <div className="hidden items-center gap-3 text-xs font-mono text-slate-300 md:flex">
-                <span className="rounded-full border border-[#007acc]/30 bg-gradient-to-r from-[#007acc]/10 to-[#005a9e]/10 px-3 py-1.5 shadow-lg shadow-[#007acc]/10">Realtime math</span>
-                <span className="rounded-full border border-purple-500/30 bg-gradient-to-r from-purple-500/10 to-pink-500/10 px-3 py-1.5 shadow-lg shadow-purple-500/10">LLM guidance</span>
-                <span className="rounded-full border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 px-3 py-1.5 shadow-lg shadow-emerald-500/10">Glass UI</span>
+                <span className="rounded-full border border-[#007acc]/30 bg-gradient-to-r from-[#007acc]/10 to-[#005a9e]/10 px-3 py-1.5 shadow-lg shadow-[#007acc]/10">
+                  Realtime math
+                </span>
+                <span className="rounded-full border border-purple-500/30 bg-gradient-to-r from-purple-500/10 to-pink-500/10 px-3 py-1.5 shadow-lg shadow-purple-500/10">
+                  LLM guidance
+                </span>
+                <span className="rounded-full border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 px-3 py-1.5 shadow-lg shadow-emerald-500/10">
+                  Glass UI
+                </span>
               </div>
             </header>
           )}
 
-          <main className={`flex-1 flex items-center ${isMobile ? 'justify-center px-4' : 'px-8'} pb-8`}
-            style={isMobile && isChatOpen ? { paddingTop: 8, alignItems: 'flex-start' } : undefined}
+          <main
+            className={`flex-1 flex items-center ${isMobile ? 'justify-center px-4' : 'px-8'} pb-8`}
+            style={
+              isMobile && isChatOpen
+                ? { paddingTop: 8, alignItems: 'flex-start' }
+                : undefined
+            }
           >
             {isMobile ? (
               // Mobile: Just show centered calculator
-              <div className="relative flex items-center justify-center"
+              <div
+                className="relative flex items-center justify-center"
                 style={isChatOpen ? { marginTop: 8 } : undefined}
               >
                 <div className="absolute -inset-8 rounded-[32px] bg-gradient-to-br from-purple-500/20 via-blue-500/15 to-pink-500/10 blur-3xl opacity-80" />
                 <div className="absolute -inset-4 rounded-[30px] bg-gradient-to-br from-[#007acc]/10 via-purple-500/10 to-emerald-500/10 blur-2xl" />
-                <div className={`${styles.retroCalculatorContainer} relative isolate z-10`}>
+                <div
+                  className={`${styles.retroCalculatorContainer} relative isolate z-10`}
+                >
                   <RetroCalculator />
                 </div>
               </div>
@@ -110,7 +125,9 @@ function App() {
                 <div className="relative flex items-center justify-center">
                   <div className="absolute -inset-8 rounded-[32px] bg-gradient-to-br from-purple-500/20 via-blue-500/15 to-pink-500/10 blur-3xl opacity-80" />
                   <div className="absolute -inset-4 rounded-[30px] bg-gradient-to-br from-[#007acc]/10 via-purple-500/10 to-emerald-500/10 blur-2xl" />
-                  <div className={`${styles.retroCalculatorContainer} relative isolate z-10`}>
+                  <div
+                    className={`${styles.retroCalculatorContainer} relative isolate z-10`}
+                  >
                     <RetroCalculator />
                   </div>
                 </div>
@@ -139,7 +156,7 @@ function App() {
             height: '75vh',
             zIndex: 100,
             transform: isChatOpen ? 'translateY(0)' : 'translateY(100%)',
-            transition: 'transform 300ms ease-in-out'
+            transition: 'transform 300ms ease-in-out',
           }}
         >
           <AIChatPanel

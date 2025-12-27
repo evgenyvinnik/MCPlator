@@ -16,6 +16,7 @@ A web-based emulation of a Casio-style calculator with:
   - Soft usage quotas.
 
 ### Key Changes from v1:
+
 - **LLM**: Claude Haiku (Anthropic) instead of OpenAI
 - **Communication**: Server-Sent Events (SSE) for streaming responses
 - **Runtime**: Bun instead of Node.js
@@ -23,7 +24,6 @@ A web-based emulation of a Casio-style calculator with:
 - **Deployment**: Vercel (SSE-compatible)
 
 No MCP server, no Redis, no DB, no user registration.
-
 
 ---
 
@@ -62,7 +62,6 @@ No MCP server, no Redis, no DB, no user registration.
   - `packages/shared-types`
   - `packages/calculator-engine`
 
-
 ---
 
 ## 2. SSE Communication Flow
@@ -80,15 +79,15 @@ Frontend                          Backend (Vercel Edge)
    │                                     │
 ```
 
-*Note: Event data shown in simplified format for clarity. Actual SSE events follow the structure defined in §4.3.*
+_Note: Event data shown in simplified format for clarity. Actual SSE events follow the structure defined in §4.3._
 
 This diagram shows:
+
 1. Frontend initiates a POST request to `/api/chat`
 2. Backend streams responses from Claude API
 3. `token` events stream text as it's generated
 4. `keys` event is sent when a calculator tool use is detected (allowing animation to start early)
 5. `done` event signals completion with the full response text
-
 
 ---
 
@@ -148,8 +147,7 @@ calculator-casio-llm/
         anthropicClient.ts
         tools.ts
         dev-server.ts     # Bun dev server for local development
-``` 
-
+```
 
 ---
 
@@ -161,24 +159,39 @@ calculator-casio-llm/
 // packages/shared-types/src/calculator.ts
 
 export type KeyId =
-  | 'digit_0' | 'digit_1' | 'digit_2' | 'digit_3' | 'digit_4'
-  | 'digit_5' | 'digit_6' | 'digit_7' | 'digit_8' | 'digit_9'
+  | 'digit_0'
+  | 'digit_1'
+  | 'digit_2'
+  | 'digit_3'
+  | 'digit_4'
+  | 'digit_5'
+  | 'digit_6'
+  | 'digit_7'
+  | 'digit_8'
+  | 'digit_9'
   | 'decimal'
-  | 'add' | 'sub' | 'mul' | 'div'
+  | 'add'
+  | 'sub'
+  | 'mul'
+  | 'div'
   | 'percent'
   | 'equals'
-  | 'ac' | 'c'
-  | 'mc' | 'mr' | 'm_plus' | 'm_minus';
+  | 'ac'
+  | 'c'
+  | 'mc'
+  | 'mr'
+  | 'm_plus'
+  | 'm_minus';
 
 export type CalculatorIndicators = {
-  error: boolean;           // E
-  memory: boolean;          // M
-  constant: boolean;        // K
+  error: boolean; // E
+  memory: boolean; // M
+  constant: boolean; // K
   op: null | 'add' | 'sub' | 'mul' | 'div';
 };
 
 export type CalculatorDisplay = {
-  text: string;             // e.g., "0.", "11.4", "E"
+  text: string; // e.g., "0.", "11.4", "E"
   indicators: CalculatorIndicators;
 };
 
@@ -221,11 +234,11 @@ export type ChatRequestBody = {
 import type { KeyId } from './calculator';
 
 // SSE event types sent from server to client
-export type SSEEventType = 
-  | 'token'      // Streaming text token
-  | 'keys'       // Calculator keys to animate
-  | 'done'       // Stream complete
-  | 'error';     // Error occurred
+export type SSEEventType =
+  | 'token' // Streaming text token
+  | 'keys' // Calculator keys to animate
+  | 'done' // Stream complete
+  | 'error'; // Error occurred
 
 export type SSETokenEvent = {
   type: 'token';
@@ -256,13 +269,12 @@ export type SSEErrorEvent = {
   };
 };
 
-export type SSEEvent = 
-  | SSETokenEvent 
-  | SSEKeysEvent 
-  | SSEDoneEvent 
+export type SSEEvent =
+  | SSETokenEvent
+  | SSEKeysEvent
+  | SSEDoneEvent
   | SSEErrorEvent;
 ```
-
 
 ---
 
@@ -291,7 +303,10 @@ export type CalculatorInternalState = {
 
 export type CalculatorEngine = {
   initialState: () => CalculatorInternalState;
-  pressKey: (state: CalculatorInternalState, key: KeyId) => CalculatorInternalState;
+  pressKey: (
+    state: CalculatorInternalState,
+    key: KeyId
+  ) => CalculatorInternalState;
   toDisplay: (state: CalculatorInternalState) => CalculatorDisplay;
 };
 ```
@@ -300,10 +315,7 @@ export type CalculatorEngine = {
 
 ```ts
 // packages/calculator-engine/src/index.ts
-import type {
-  CalculatorEngine,
-  CalculatorInternalState,
-} from './types';
+import type { CalculatorEngine, CalculatorInternalState } from './types';
 import type { CalculatorDisplay, KeyId } from '@calculator/shared-types';
 
 export const calculatorEngine: CalculatorEngine = {
@@ -334,7 +346,6 @@ export const calculatorEngine: CalculatorEngine = {
 };
 ```
 
-
 ---
 
 ## 6. Frontend State & Behavior (`apps/frontend`)
@@ -360,7 +371,7 @@ interface CasioDBSchema extends DBSchema {
     value: import('@calculator/shared-types').ChatMessage;
     indexes: { 'by-created': string };
   };
-  'quota': {
+  quota: {
     key: 'daily';
     value: {
       id: 'daily';
@@ -381,7 +392,9 @@ export const getDB = () => {
         db.createObjectStore('calculator-state', { keyPath: 'id' });
 
         // Chat messages store
-        const chatStore = db.createObjectStore('chat-messages', { keyPath: 'id' });
+        const chatStore = db.createObjectStore('chat-messages', {
+          keyPath: 'id',
+        });
         chatStore.createIndex('by-created', 'createdAt');
 
         // Quota store
@@ -497,7 +510,7 @@ export async function streamChat(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'text/event-stream',
+      Accept: 'text/event-stream',
     },
     body: JSON.stringify(body),
     signal,
@@ -518,11 +531,11 @@ export async function streamChat(
   try {
     while (true) {
       const { done, value } = await reader.read();
-      
+
       if (done) break;
 
       buffer += decoder.decode(value, { stream: true });
-      
+
       // Parse SSE events from buffer
       const lines = buffer.split('\n');
       buffer = lines.pop() || ''; // Keep incomplete line in buffer
@@ -539,7 +552,7 @@ export async function streamChat(
           // End of event, process it
           try {
             const parsed = JSON.parse(eventData);
-            
+
             switch (eventType) {
               case 'token':
                 callbacks.onToken(parsed.token);
@@ -557,7 +570,7 @@ export async function streamChat(
           } catch (e) {
             console.error('Failed to parse SSE data:', e);
           }
-          
+
           eventType = '';
           eventData = '';
         }
@@ -582,106 +595,117 @@ import type { KeyId } from '@calculator/shared-types';
 import { v4 as uuid } from 'uuid';
 
 export const useStreamingChat = () => {
-  const { messages, addMessage, updateStreamingMessage, setIsThinking } = useChatStore();
+  const { messages, addMessage, updateStreamingMessage, setIsThinking } =
+    useChatStore();
   const enqueueAnimation = useCalculatorStore((s) => s.enqueueAnimation);
   const [isStreaming, setIsStreaming] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const sendChat = useCallback(async (text: string) => {
-    const trimmed = text.trim();
-    if (!trimmed || isStreaming) return;
+  const sendChat = useCallback(
+    async (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed || isStreaming) return;
 
-    const canCall = await quotaDB.canMakeCall();
-    if (!canCall) {
-      await addMessage({
-        id: uuid(),
-        role: 'assistant',
-        text: "You've reached today's calculator brain quota. Try again tomorrow 🙂",
-        createdAt: new Date().toISOString(),
-      });
-      return;
-    }
-
-    // Add user message
-    const userMsg = {
-      id: uuid(),
-      role: 'user' as const,
-      text: trimmed,
-      createdAt: new Date().toISOString(),
-    };
-    await addMessage(userMsg);
-
-    // Record the quota
-    await quotaDB.recordCall();
-
-    // Start streaming
-    setIsStreaming(true);
-    setIsThinking(true);
-
-    // Create placeholder for assistant message
-    const assistantMsgId = uuid();
-    let streamedText = '';
-
-    abortControllerRef.current = new AbortController();
-
-    try {
-      await streamChat(
-        {
-          message: trimmed,
-          history: messages.slice(-6).map((m) => ({
-            role: m.role,
-            text: m.text,
-          })),
-        },
-        {
-          onToken: (token) => {
-            streamedText += token;
-            updateStreamingMessage(assistantMsgId, streamedText);
-          },
-          onKeys: (keys) => {
-            enqueueAnimation({
-              id: uuid(),
-              commands: keys.map((k) => ({
-                type: 'pressKey' as const,
-                key: k as KeyId,
-                delayMs: 180,
-              })),
-            });
-          },
-          onDone: async (messageId, fullText) => {
-            await addMessage({
-              id: assistantMsgId,
-              role: 'assistant',
-              text: fullText,
-              createdAt: new Date().toISOString(),
-            });
-          },
-          onError: async (error) => {
-            await addMessage({
-              id: assistantMsgId,
-              role: 'assistant',
-              text: `Error: ${error}`,
-              createdAt: new Date().toISOString(),
-            });
-          },
-        },
-        abortControllerRef.current.signal
-      );
-    } catch (err) {
-      if ((err as Error).name !== 'AbortError') {
+      const canCall = await quotaDB.canMakeCall();
+      if (!canCall) {
         await addMessage({
-          id: assistantMsgId,
+          id: uuid(),
           role: 'assistant',
-          text: 'Sorry, something went wrong talking to the calculator brain.',
+          text: "You've reached today's calculator brain quota. Try again tomorrow 🙂",
           createdAt: new Date().toISOString(),
         });
+        return;
       }
-    } finally {
-      setIsStreaming(false);
-      setIsThinking(false);
-      abortControllerRef.current = null;
-    }
-  }, [messages, addMessage, updateStreamingMessage, setIsThinking, enqueueAnimation, isStreaming]);
+
+      // Add user message
+      const userMsg = {
+        id: uuid(),
+        role: 'user' as const,
+        text: trimmed,
+        createdAt: new Date().toISOString(),
+      };
+      await addMessage(userMsg);
+
+      // Record the quota
+      await quotaDB.recordCall();
+
+      // Start streaming
+      setIsStreaming(true);
+      setIsThinking(true);
+
+      // Create placeholder for assistant message
+      const assistantMsgId = uuid();
+      let streamedText = '';
+
+      abortControllerRef.current = new AbortController();
+
+      try {
+        await streamChat(
+          {
+            message: trimmed,
+            history: messages.slice(-6).map((m) => ({
+              role: m.role,
+              text: m.text,
+            })),
+          },
+          {
+            onToken: (token) => {
+              streamedText += token;
+              updateStreamingMessage(assistantMsgId, streamedText);
+            },
+            onKeys: (keys) => {
+              enqueueAnimation({
+                id: uuid(),
+                commands: keys.map((k) => ({
+                  type: 'pressKey' as const,
+                  key: k as KeyId,
+                  delayMs: 180,
+                })),
+              });
+            },
+            onDone: async (messageId, fullText) => {
+              await addMessage({
+                id: assistantMsgId,
+                role: 'assistant',
+                text: fullText,
+                createdAt: new Date().toISOString(),
+              });
+            },
+            onError: async (error) => {
+              await addMessage({
+                id: assistantMsgId,
+                role: 'assistant',
+                text: `Error: ${error}`,
+                createdAt: new Date().toISOString(),
+              });
+            },
+          },
+          abortControllerRef.current.signal
+        );
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          await addMessage({
+            id: assistantMsgId,
+            role: 'assistant',
+            text: 'Sorry, something went wrong talking to the calculator brain.',
+            createdAt: new Date().toISOString(),
+          });
+        }
+      } finally {
+        setIsStreaming(false);
+        setIsThinking(false);
+        abortControllerRef.current = null;
+      }
+    },
+    [
+      messages,
+      addMessage,
+      updateStreamingMessage,
+      setIsThinking,
+      enqueueAnimation,
+      isStreaming,
+    ]
+  );
 
   const cancelStream = useCallback(() => {
     abortControllerRef.current?.abort();
@@ -722,55 +746,55 @@ type CalculatorStoreActions = {
   hydrate: () => Promise<void>;
 };
 
-export const useCalculatorStore = create<CalculatorStoreState & CalculatorStoreActions>()(
-  (set, get) => ({
-    internalState: calculatorEngine.initialState(),
-    display: calculatorEngine.toDisplay(calculatorEngine.initialState()),
-    pressedKey: null,
-    isAnimating: false,
-    animationQueue: [],
-    isHydrated: false,
+export const useCalculatorStore = create<
+  CalculatorStoreState & CalculatorStoreActions
+>()((set, get) => ({
+  internalState: calculatorEngine.initialState(),
+  display: calculatorEngine.toDisplay(calculatorEngine.initialState()),
+  pressedKey: null,
+  isAnimating: false,
+  animationQueue: [],
+  isHydrated: false,
 
-    hydrate: async () => {
-      const db = await getDB();
-      const stored = await db.get('calculator-state', 'current');
-      if (stored) {
-        set({
-          internalState: stored.state,
-          display: stored.display,
-          isHydrated: true,
-        });
-      } else {
-        set({ isHydrated: true });
-      }
-    },
-
-    pressKey: async (key) => {
-      const current = get().internalState;
-      const next = calculatorEngine.pressKey(current, key);
-      const display = calculatorEngine.toDisplay(next);
-      set({ internalState: next, display });
-
-      // Persist to IndexedDB
-      const db = await getDB();
-      await db.put('calculator-state', {
-        id: 'current',
-        state: next,
-        display,
-        updatedAt: new Date().toISOString(),
+  hydrate: async () => {
+    const db = await getDB();
+    const stored = await db.get('calculator-state', 'current');
+    if (stored) {
+      set({
+        internalState: stored.state,
+        display: stored.display,
+        isHydrated: true,
       });
-    },
+    } else {
+      set({ isHydrated: true });
+    }
+  },
 
-    enqueueAnimation: (sequence) => {
-      set((state) => ({
-        animationQueue: [...state.animationQueue, sequence],
-      }));
-    },
+  pressKey: async (key) => {
+    const current = get().internalState;
+    const next = calculatorEngine.pressKey(current, key);
+    const display = calculatorEngine.toDisplay(next);
+    set({ internalState: next, display });
 
-    setPressedKey: (key) => set({ pressedKey: key }),
-    setIsAnimating: (val) => set({ isAnimating: val }),
-  }),
-);
+    // Persist to IndexedDB
+    const db = await getDB();
+    await db.put('calculator-state', {
+      id: 'current',
+      state: next,
+      display,
+      updatedAt: new Date().toISOString(),
+    });
+  },
+
+  enqueueAnimation: (sequence) => {
+    set((state) => ({
+      animationQueue: [...state.animationQueue, sequence],
+    }));
+  },
+
+  setPressedKey: (key) => set({ pressedKey: key }),
+  setIsAnimating: (val) => set({ isAnimating: val }),
+}));
 ```
 
 ### 6.7 Chat store (with streaming support)
@@ -797,42 +821,40 @@ type ChatActions = {
   hydrate: () => Promise<void>;
 };
 
-export const useChatStore = create<ChatState & ChatActions>()(
-  (set, get) => ({
-    messages: [],
-    streamingMessage: null,
-    isThinking: false,
-    isHydrated: false,
+export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
+  messages: [],
+  streamingMessage: null,
+  isThinking: false,
+  isHydrated: false,
 
-    hydrate: async () => {
-      const messages = await chatDB.getAllMessages();
-      set({ messages, isHydrated: true });
-    },
+  hydrate: async () => {
+    const messages = await chatDB.getAllMessages();
+    set({ messages, isHydrated: true });
+  },
 
-    addMessage: async (msg) => {
-      await chatDB.addMessage(msg);
-      set((state) => ({
-        messages: [...state.messages, msg],
-        streamingMessage: null,
-      }));
-    },
+  addMessage: async (msg) => {
+    await chatDB.addMessage(msg);
+    set((state) => ({
+      messages: [...state.messages, msg],
+      streamingMessage: null,
+    }));
+  },
 
-    updateStreamingMessage: (id, text) => {
-      set({ streamingMessage: { id, text } });
-    },
+  updateStreamingMessage: (id, text) => {
+    set({ streamingMessage: { id, text } });
+  },
 
-    clearStreamingMessage: () => {
-      set({ streamingMessage: null });
-    },
+  clearStreamingMessage: () => {
+    set({ streamingMessage: null });
+  },
 
-    setIsThinking: (val) => set({ isThinking: val }),
+  setIsThinking: (val) => set({ isThinking: val }),
 
-    clear: async () => {
-      await chatDB.clearMessages();
-      set({ messages: [], streamingMessage: null });
-    },
-  }),
-);
+  clear: async () => {
+    await chatDB.clearMessages();
+    set({ messages: [], streamingMessage: null });
+  },
+}));
 ```
 
 ### 6.8 Animation runner hook
@@ -846,12 +868,8 @@ import type { AnimationCommand } from '@calculator/shared-types';
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export const useAnimationRunner = () => {
-  const {
-    animationQueue,
-    isAnimating,
-    setIsAnimating,
-    setPressedKey,
-  } = useCalculatorStore();
+  const { animationQueue, isAnimating, setIsAnimating, setPressedKey } =
+    useCalculatorStore();
 
   const pressKey = useCalculatorStore((s) => s.pressKey);
 
@@ -911,7 +929,8 @@ import { calculatorEngine } from '@calculator/calculator-engine';
 
 export const calculatorPressKeysTool: Tool = {
   name: 'calculator_press_keys',
-  description: 'Simulate pressing calculator keys in order. Use this tool to perform any calculator operation by specifying the sequence of keys to press.',
+  description:
+    'Simulate pressing calculator keys in order. Use this tool to perform any calculator operation by specifying the sequence of keys to press.',
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -920,14 +939,29 @@ export const calculatorPressKeysTool: Tool = {
         items: {
           type: 'string',
           enum: [
-            'digit_0', 'digit_1', 'digit_2', 'digit_3', 'digit_4',
-            'digit_5', 'digit_6', 'digit_7', 'digit_8', 'digit_9',
+            'digit_0',
+            'digit_1',
+            'digit_2',
+            'digit_3',
+            'digit_4',
+            'digit_5',
+            'digit_6',
+            'digit_7',
+            'digit_8',
+            'digit_9',
             'decimal',
-            'add', 'sub', 'mul', 'div',
+            'add',
+            'sub',
+            'mul',
+            'div',
             'percent',
             'equals',
-            'ac', 'c',
-            'mc', 'mr', 'm_plus', 'm_minus',
+            'ac',
+            'c',
+            'mc',
+            'mr',
+            'm_plus',
+            'm_minus',
           ],
         },
         description: 'Array of calculator keys to press in sequence',
@@ -952,7 +986,10 @@ export const handleCalculatorPressKeys = (keys: KeyId[]) => {
 ```ts
 // apps/backend/api/chat.ts
 import { anthropic, MODEL } from '../src/anthropicClient';
-import { calculatorPressKeysTool, handleCalculatorPressKeys } from '../src/tools';
+import {
+  calculatorPressKeysTool,
+  handleCalculatorPressKeys,
+} from '../src/tools';
 import type { ChatRequestBody, KeyId } from '@calculator/shared-types';
 import { v4 as uuid } from 'uuid';
 
@@ -1032,7 +1069,7 @@ export default async function handler(req: Request): Promise<Response> {
           // Check if we have a tool use
           const message = stream.currentMessage;
           const toolUse = message?.content.find((c) => c.type === 'tool_use');
-          
+
           if (toolUse && toolUse.type === 'tool_use') {
             const toolInput = toolUse.input as { keys: KeyId[] };
             const toolResult = handleCalculatorPressKeys(toolInput.keys);
@@ -1078,7 +1115,9 @@ export default async function handler(req: Request): Promise<Response> {
                 if (finalEvent.delta.type === 'text_delta') {
                   const token = finalEvent.delta.text;
                   fullText += token;
-                  await writer.write(encoder.encode(sseEvent('token', { token })));
+                  await writer.write(
+                    encoder.encode(sseEvent('token', { token }))
+                  );
                 }
               }
             }
@@ -1087,11 +1126,15 @@ export default async function handler(req: Request): Promise<Response> {
       }
 
       // Send done event
-      await writer.write(encoder.encode(sseEvent('done', { messageId, fullText })));
+      await writer.write(
+        encoder.encode(sseEvent('done', { messageId, fullText }))
+      );
     } catch (error) {
       console.error('Stream error:', error);
       await writer.write(
-        encoder.encode(sseEvent('error', { error: 'Failed to process request' }))
+        encoder.encode(
+          sseEvent('error', { error: 'Failed to process request' })
+        )
       );
     } finally {
       await writer.close();
@@ -1102,7 +1145,7 @@ export default async function handler(req: Request): Promise<Response> {
     headers: {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
+      Connection: 'keep-alive',
     },
   });
 }
@@ -1223,7 +1266,9 @@ async function handleChat(req: Request): Promise<Response> {
                 if (finalEvent.delta.type === 'text_delta') {
                   const token = finalEvent.delta.text;
                   fullText += token;
-                  await writer.write(encoder.encode(sseEvent('token', { token })));
+                  await writer.write(
+                    encoder.encode(sseEvent('token', { token }))
+                  );
                 }
               }
             }
@@ -1231,11 +1276,15 @@ async function handleChat(req: Request): Promise<Response> {
         }
       }
 
-      await writer.write(encoder.encode(sseEvent('done', { messageId, fullText })));
+      await writer.write(
+        encoder.encode(sseEvent('done', { messageId, fullText }))
+      );
     } catch (error) {
       console.error('Stream error:', error);
       await writer.write(
-        encoder.encode(sseEvent('error', { error: 'Failed to process request' }))
+        encoder.encode(
+          sseEvent('error', { error: 'Failed to process request' })
+        )
       );
     } finally {
       await writer.close();
@@ -1246,7 +1295,7 @@ async function handleChat(req: Request): Promise<Response> {
     headers: {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
+      Connection: 'keep-alive',
       'Access-Control-Allow-Origin': '*',
     },
   });
@@ -1283,8 +1332,7 @@ const server = Bun.serve({
 });
 
 console.log(`🚀 Dev server running on http://localhost:${PORT}`);
-``` 
-
+```
 
 ---
 
@@ -1327,9 +1375,7 @@ packages = ["packages/*", "apps/*"]
   "buildCommand": "bun run build",
   "outputDirectory": "apps/frontend/dist",
   "framework": "vite",
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" }
-  ],
+  "rewrites": [{ "source": "/api/:path*", "destination": "/api/:path*" }],
   "functions": {
     "apps/backend/api/*.ts": {
       "runtime": "@vercel/node@3"
@@ -1423,16 +1469,17 @@ VITE_API_URL=http://localhost:3001
 
 ## 11. Migration Notes from v1
 
-| Aspect | v1 | v2 |
-|--------|----|----|
-| LLM | OpenAI (gpt-4.1-mini) | Anthropic Claude Haiku |
-| Communication | REST API (fetch) | Server-Sent Events (SSE) |
-| Runtime | Node.js (Vercel) | Bun (local) + Vercel Edge (prod) |
-| Storage | localStorage | IndexedDB |
-| State Persistence | Zustand persist middleware | Manual IndexedDB sync |
-| Response Style | Wait for full response | Stream tokens in real-time |
+| Aspect            | v1                         | v2                               |
+| ----------------- | -------------------------- | -------------------------------- |
+| LLM               | OpenAI (gpt-4.1-mini)      | Anthropic Claude Haiku           |
+| Communication     | REST API (fetch)           | Server-Sent Events (SSE)         |
+| Runtime           | Node.js (Vercel)           | Bun (local) + Vercel Edge (prod) |
+| Storage           | localStorage               | IndexedDB                        |
+| State Persistence | Zustand persist middleware | Manual IndexedDB sync            |
+| Response Style    | Wait for full response     | Stream tokens in real-time       |
 
 ### Benefits of v2 Stack:
+
 1. **SSE Streaming**: Real-time token-by-token display, better UX
 2. **Bun**: Faster local development, native TypeScript
 3. **IndexedDB**: More storage capacity, better for structured data, async API

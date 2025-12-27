@@ -5,12 +5,14 @@ This package contains the core calculator logic for the MCPlator application. It
 ## Features
 
 ### Basic Operations
+
 - **Digit Entry (0-9)**: Enter numbers up to 8 digits
 - **Decimal Point**: Support for decimal numbers
 - **Arithmetic Operations**: Addition (+), Subtraction (-), Multiplication (×), Division (÷)
 - **Equals (=)**: Complete the current operation
 
 ### Advanced Features
+
 - **Memory Operations**: M+, M-, MR, MC
 - **Percentage Calculations**: Context-aware percentage calculations
 - **Clear Operations**: AC (All Clear), C (Clear entry)
@@ -19,9 +21,11 @@ This package contains the core calculator logic for the MCPlator application. It
 ### Operation Behavior
 
 #### Left-to-Right Processing
+
 The calculator processes operations from left to right, similar to many basic calculators. It does **not** follow PEMDAS/BODMAS order of operations.
 
 Example:
+
 ```
 5 + 3 × 2 = ?
 Step 1: 5 + 3 = 8
@@ -30,7 +34,9 @@ Result: 16 (not 11 as PEMDAS would give)
 ```
 
 #### Chained Operations
+
 You can chain multiple operations without pressing equals:
+
 ```
 100 + 2 ÷ 3 = ?
 Step 1: 100 + 2 = 102
@@ -39,6 +45,7 @@ Result: 34
 ```
 
 #### Display Formatting
+
 - Maximum 8 characters including decimal point and sign
 - Scientific notation for very large or very small numbers
 - Trailing zeros removed from decimals
@@ -65,6 +72,7 @@ console.log(display.text); // "8"
 ## API
 
 ### calculatorEngine.initialState()
+
 Returns the initial calculator state.
 
 ```typescript
@@ -72,6 +80,7 @@ const state = calculatorEngine.initialState();
 ```
 
 ### calculatorEngine.pressKey(state, key)
+
 Processes a key press and returns the new state.
 
 ```typescript
@@ -79,12 +88,14 @@ const newState = calculatorEngine.pressKey(state, 'digit_5');
 ```
 
 **Key IDs:**
+
 - Digits: `'digit_0'` through `'digit_9'`
 - Operations: `'add'`, `'sub'`, `'mul'`, `'div'`
 - Control: `'equals'`, `'ac'`, `'c'`, `'decimal'`, `'percent'`
 - Memory: `'mc'`, `'mr'`, `'m_plus'`, `'m_minus'`
 
 ### calculatorEngine.toDisplay(state)
+
 Converts the internal state to a display representation.
 
 ```typescript
@@ -99,17 +110,18 @@ The calculator maintains the following state:
 
 ```typescript
 type CalculatorInternalState = {
-  displayValue: string;              // Current display value
-  memoryValue: number;               // Value stored in memory
-  hasMemory: boolean;                // Whether memory contains a value
-  constant: null | {                 // Constant for repeated equals
+  displayValue: string; // Current display value
+  memoryValue: number; // Value stored in memory
+  hasMemory: boolean; // Whether memory contains a value
+  constant: null | {
+    // Constant for repeated equals
     operator: 'add' | 'sub' | 'mul' | 'div';
     value: number;
   };
   lastOperator: 'add' | 'sub' | 'mul' | 'div' | null;
-  lastOperand: number | null;        // Left operand of pending operation
-  isError: boolean;                  // Error state (division by zero, etc.)
-  shouldStartNewNumber: boolean;     // Whether next digit starts a new number
+  lastOperand: number | null; // Left operand of pending operation
+  isError: boolean; // Error state (division by zero, etc.)
+  shouldStartNewNumber: boolean; // Whether next digit starts a new number
 };
 ```
 
@@ -120,11 +132,13 @@ type CalculatorInternalState = {
 The percentage key (`%`) behaves differently based on context:
 
 1. **Standalone**: Divides by 100
+
    ```
    50 % = 0.5
    ```
 
 2. **With Addition/Subtraction**: Calculates percentage of first operand
+
    ```
    100 + 10 % = displays "10" (10% of 100)
    100 - 20 % = displays "20" (20% of 100)
@@ -143,6 +157,7 @@ The percentage key (`%`) behaves differently based on context:
 - **MC**: Clear memory
 
 Memory accumulates values:
+
 ```
 5 M+    → memory = 5
 3 M+    → memory = 8
@@ -175,6 +190,7 @@ npm test
 ```
 
 The test suite includes 39 comprehensive tests covering:
+
 - Basic arithmetic operations
 - Digit entry and decimal handling
 - Clear operations
@@ -188,6 +204,7 @@ The test suite includes 39 comprehensive tests covering:
 ## Examples
 
 ### Simple Addition
+
 ```typescript
 let state = calculatorEngine.initialState();
 state = pressKeys(state, ['digit_5', 'add', 'digit_3', 'equals']);
@@ -195,13 +212,22 @@ state = pressKeys(state, ['digit_5', 'add', 'digit_3', 'equals']);
 ```
 
 ### Chained Operations
+
 ```typescript
 let state = calculatorEngine.initialState();
-state = pressKeys(state, ['digit_5', 'add', 'digit_3', 'mul', 'digit_2', 'equals']);
+state = pressKeys(state, [
+  'digit_5',
+  'add',
+  'digit_3',
+  'mul',
+  'digit_2',
+  'equals',
+]);
 // Display: "16" (5 + 3 = 8, then 8 × 2 = 16)
 ```
 
 ### Memory Usage
+
 ```typescript
 let state = calculatorEngine.initialState();
 state = pressKeys(state, ['digit_5', 'm_plus', 'digit_3', 'm_plus', 'mr']);
@@ -209,9 +235,18 @@ state = pressKeys(state, ['digit_5', 'm_plus', 'digit_3', 'm_plus', 'mr']);
 ```
 
 ### Percentage Calculation
+
 ```typescript
 let state = calculatorEngine.initialState();
-state = pressKeys(state, ['digit_1', 'digit_0', 'digit_0', 'add', 'digit_1', 'digit_0', 'percent']);
+state = pressKeys(state, [
+  'digit_1',
+  'digit_0',
+  'digit_0',
+  'add',
+  'digit_1',
+  'digit_0',
+  'percent',
+]);
 // Display: "10" (10% of 100)
 ```
 

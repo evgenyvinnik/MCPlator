@@ -6,7 +6,10 @@ import type { KeyId } from '@calculator/shared-types';
 /**
  * Helper function to press a sequence of keys
  */
-function pressKeys(state: CalculatorInternalState, keys: KeyId[]): CalculatorInternalState {
+function pressKeys(
+  state: CalculatorInternalState,
+  keys: KeyId[]
+): CalculatorInternalState {
   let currentState = state;
   for (const key of keys) {
     currentState = calculatorEngine.pressKey(currentState, key);
@@ -51,8 +54,14 @@ describe('Calculator Engine', () => {
     it('should limit entry to 8 digits', () => {
       let state = calculatorEngine.initialState();
       state = pressKeys(state, [
-        'digit_1', 'digit_2', 'digit_3', 'digit_4',
-        'digit_5', 'digit_6', 'digit_7', 'digit_8',
+        'digit_1',
+        'digit_2',
+        'digit_3',
+        'digit_4',
+        'digit_5',
+        'digit_6',
+        'digit_7',
+        'digit_8',
         'digit_9', // Should be ignored
       ]);
       expect(state.displayValue).toBe('12345678');
@@ -81,10 +90,15 @@ describe('Calculator Engine', () => {
     it('should allow decimal point with 8 total digits (decimal does not count toward limit)', () => {
       let state = calculatorEngine.initialState();
       state = pressKeys(state, [
-        'digit_1', 'digit_2', 'digit_3', 'digit_4',
-        'digit_5', 'digit_6',
+        'digit_1',
+        'digit_2',
+        'digit_3',
+        'digit_4',
+        'digit_5',
+        'digit_6',
         'decimal', // Should be allowed (decimal doesn't count)
-        'digit_7', 'digit_8', // Should be allowed (total 8 digits)
+        'digit_7',
+        'digit_8', // Should be allowed (total 8 digits)
         'digit_9', // Should be ignored (would be 9th digit)
       ]);
       expect(state.displayValue).toBe('123456.78');
@@ -100,13 +114,29 @@ describe('Calculator Engine', () => {
 
     it('should add decimals', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'decimal', 'digit_5', 'add', 'digit_2', 'decimal', 'digit_5', 'equals']);
+      state = pressKeys(state, [
+        'digit_1',
+        'decimal',
+        'digit_5',
+        'add',
+        'digit_2',
+        'decimal',
+        'digit_5',
+        'equals',
+      ]);
       expect(state.displayValue).toBe('4');
     });
 
     it('should chain additions', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_5', 'add', 'digit_3', 'add', 'digit_2', 'equals']);
+      state = pressKeys(state, [
+        'digit_5',
+        'add',
+        'digit_3',
+        'add',
+        'digit_2',
+        'equals',
+      ]);
       expect(state.displayValue).toBe('10');
     });
   });
@@ -114,13 +144,25 @@ describe('Calculator Engine', () => {
   describe('Subtraction', () => {
     it('should subtract two numbers', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'digit_0', 'sub', 'digit_3', 'equals']);
+      state = pressKeys(state, [
+        'digit_1',
+        'digit_0',
+        'sub',
+        'digit_3',
+        'equals',
+      ]);
       expect(state.displayValue).toBe('7');
     });
 
     it('should handle negative results', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_3', 'sub', 'digit_1', 'digit_0', 'equals']);
+      state = pressKeys(state, [
+        'digit_3',
+        'sub',
+        'digit_1',
+        'digit_0',
+        'equals',
+      ]);
       expect(state.displayValue).toBe('-7');
     });
   });
@@ -134,7 +176,14 @@ describe('Calculator Engine', () => {
 
     it('should multiply decimals', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_2', 'decimal', 'digit_5', 'mul', 'digit_4', 'equals']);
+      state = pressKeys(state, [
+        'digit_2',
+        'decimal',
+        'digit_5',
+        'mul',
+        'digit_4',
+        'equals',
+      ]);
       expect(state.displayValue).toBe('10');
     });
   });
@@ -142,20 +191,38 @@ describe('Calculator Engine', () => {
   describe('Division', () => {
     it('should divide two numbers', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'digit_0', 'div', 'digit_2', 'equals']);
+      state = pressKeys(state, [
+        'digit_1',
+        'digit_0',
+        'div',
+        'digit_2',
+        'equals',
+      ]);
       expect(state.displayValue).toBe('5');
     });
 
     it('should handle division by zero', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'digit_0', 'div', 'digit_0', 'equals']);
+      state = pressKeys(state, [
+        'digit_1',
+        'digit_0',
+        'div',
+        'digit_0',
+        'equals',
+      ]);
       expect(state.displayValue).toBe('E');
       expect(state.isError).toBe(true);
     });
 
     it('should handle decimal division', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'digit_0', 'div', 'digit_3', 'equals']);
+      state = pressKeys(state, [
+        'digit_1',
+        'digit_0',
+        'div',
+        'digit_3',
+        'equals',
+      ]);
       // 10 / 3 = 3.333...
       expect(state.displayValue).toContain('3.3');
     });
@@ -193,14 +260,30 @@ describe('Calculator Engine', () => {
 
     it('should calculate percentage in addition', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'digit_0', 'digit_0', 'add', 'digit_1', 'digit_0', 'percent']);
+      state = pressKeys(state, [
+        'digit_1',
+        'digit_0',
+        'digit_0',
+        'add',
+        'digit_1',
+        'digit_0',
+        'percent',
+      ]);
       // 10% of 100 = 10
       expect(state.displayValue).toBe('10');
     });
 
     it('should calculate percentage in subtraction', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'digit_0', 'digit_0', 'sub', 'digit_2', 'digit_0', 'percent']);
+      state = pressKeys(state, [
+        'digit_1',
+        'digit_0',
+        'digit_0',
+        'sub',
+        'digit_2',
+        'digit_0',
+        'percent',
+      ]);
       // 20% of 100 = 20
       expect(state.displayValue).toBe('20');
     });
@@ -222,13 +305,26 @@ describe('Calculator Engine', () => {
 
     it('should accumulate in memory with multiple M+', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_5', 'm_plus', 'digit_3', 'm_plus', 'mr']);
+      state = pressKeys(state, [
+        'digit_5',
+        'm_plus',
+        'digit_3',
+        'm_plus',
+        'mr',
+      ]);
       expect(state.displayValue).toBe('8');
     });
 
     it('should subtract from memory with M-', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'digit_0', 'm_plus', 'digit_3', 'm_minus', 'mr']);
+      state = pressKeys(state, [
+        'digit_1',
+        'digit_0',
+        'm_plus',
+        'digit_3',
+        'm_minus',
+        'mr',
+      ]);
       expect(state.displayValue).toBe('7');
     });
 
@@ -243,14 +339,30 @@ describe('Calculator Engine', () => {
   describe('Complex Operations', () => {
     it('should handle compound expression (100 + 2 / 3)', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'digit_0', 'digit_0', 'add', 'digit_2', 'div', 'digit_3', 'equals']);
+      state = pressKeys(state, [
+        'digit_1',
+        'digit_0',
+        'digit_0',
+        'add',
+        'digit_2',
+        'div',
+        'digit_3',
+        'equals',
+      ]);
       // Calculator processes left-to-right: 100 + 2 → 102, then 102 / 3 → 34
       expect(state.displayValue).toBe('34');
     });
 
     it('should handle multiple chained operations', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_5', 'add', 'digit_3', 'mul', 'digit_2', 'equals']);
+      state = pressKeys(state, [
+        'digit_5',
+        'add',
+        'digit_3',
+        'mul',
+        'digit_2',
+        'equals',
+      ]);
       // (5 + 3) * 2 = 16
       expect(state.displayValue).toBe('16');
     });
@@ -296,7 +408,13 @@ describe('Calculator Engine', () => {
 
     it('should calculate square root of decimal', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_2', 'decimal', 'digit_2', 'digit_5', 'sqrt']);
+      state = pressKeys(state, [
+        'digit_2',
+        'decimal',
+        'digit_2',
+        'digit_5',
+        'sqrt',
+      ]);
       expect(state.displayValue).toBe('1.5');
     });
 
@@ -329,7 +447,13 @@ describe('Calculator Engine', () => {
 
     it('should change sign of decimal', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_3', 'decimal', 'digit_1', 'digit_4', 'plus_minus']);
+      state = pressKeys(state, [
+        'digit_3',
+        'decimal',
+        'digit_1',
+        'digit_4',
+        'plus_minus',
+      ]);
       expect(state.displayValue).toBe('-3.14');
     });
 
@@ -349,13 +473,25 @@ describe('Calculator Engine', () => {
 
     it('should not accept digits in error state', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_1', 'div', 'digit_0', 'equals', 'digit_5']);
+      state = pressKeys(state, [
+        'digit_1',
+        'div',
+        'digit_0',
+        'equals',
+        'digit_5',
+      ]);
       expect(state.displayValue).toBe('E');
     });
 
     it('should start new number after equals', () => {
       let state = calculatorEngine.initialState();
-      state = pressKeys(state, ['digit_5', 'add', 'digit_3', 'equals', 'digit_7']);
+      state = pressKeys(state, [
+        'digit_5',
+        'add',
+        'digit_3',
+        'equals',
+        'digit_7',
+      ]);
       expect(state.displayValue).toBe('7');
     });
   });

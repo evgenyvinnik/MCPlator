@@ -5,6 +5,7 @@ This guide will walk you through the process of signing up for an Anthropic API 
 ## Prerequisites
 
 Before you begin, you'll need:
+
 - A valid email address
 - A payment method (credit card) for API usage
 
@@ -160,15 +161,12 @@ If you want to test the UI locally without setting up an Anthropic API key:
 1. **Never commit API keys to Git**
    - Always use `.env` files for local development
    - Use environment variables for deployment
-   
 2. **Rotate keys regularly**
    - Consider rotating your API keys periodically
    - Delete old keys from the Anthropic Console
-   
 3. **Use different keys for different environments**
    - Use separate keys for development, staging, and production
    - This makes it easier to track usage and revoke access if needed
-   
 4. **Monitor usage**
    - Regularly check your API usage in the Anthropic Console
    - Set up billing alerts to catch unexpected usage spikes
@@ -176,6 +174,7 @@ If you want to test the UI locally without setting up an Anthropic API key:
 ## Need Help?
 
 If you encounter issues not covered in this guide:
+
 - Check the [project issues](https://github.com/evgenyvinnik/MCPlator/issues) on GitHub
 - Create a new issue with details about your problem
 - Contact Anthropic support for API-specific issues

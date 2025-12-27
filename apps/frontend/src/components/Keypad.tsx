@@ -24,7 +24,11 @@ const keys: { id: KeyId; label: string; className?: string }[] = [
   { id: 'ac', label: 'AC', className: 'bg-red-400 hover:bg-red-500' },
   { id: 'digit_0', label: '0' },
   { id: 'decimal', label: '.' },
-  { id: 'equals', label: '=', className: 'col-span-1 bg-blue-400 hover:bg-blue-500' },
+  {
+    id: 'equals',
+    label: '=',
+    className: 'col-span-1 bg-blue-400 hover:bg-blue-500',
+  },
 ];
 
 export const Keypad: React.FC = () => {

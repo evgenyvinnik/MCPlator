@@ -24,6 +24,7 @@
 4. **Updated tests** to verify the new behavior
 
 ### Files Modified:
+
 - `apps/backend/src/mockLLM.ts` - Added calculation and result formatting
 - `apps/backend/tests/mockLLM.test.ts` - Updated to check for result in text
 - `apps/backend/tests/manual-test.ts` - Added text verification support
@@ -132,24 +133,22 @@ Based on the current implementation analysis, here are recommendations for next 
 ### Recommended Priority Order:
 
 **Phase 1 (Essential):**
+
 1. Complete calculator engine implementation
 2. Set up test infrastructure
 3. Test with real LLM
 
-**Phase 2 (Important):** ✅ COMPLETED
-4. ✅ Enhanced mock LLM capabilities (square root, sign change, memory operations, clear/AC)
-5. ✅ Improved error handling (input validation, overflow checks, better error messages)
-6. ✅ Better test coverage (expanded from 39 to 86 tests)
+**Phase 2 (Important):** ✅ COMPLETED 4. ✅ Enhanced mock LLM capabilities (square root, sign change, memory operations, clear/AC) 5. ✅ Improved error handling (input validation, overflow checks, better error messages) 6. ✅ Better test coverage (expanded from 39 to 86 tests)
 
-**Phase 3 (Nice to have):**
-7. UI/UX improvements
-   - Dark/light theme toggle
-   - Improved responsive design for mobile
-   - Better loading states and transitions
-   - Accessibility improvements (ARIA labels, keyboard shortcuts)
-   - Animation polish
-   - Show calculation history in chat
-   - Allow editing previous calculations
+**Phase 3 (Nice to have):** 7. UI/UX improvements
+
+- Dark/light theme toggle
+- Improved responsive design for mobile
+- Better loading states and transitions
+- Accessibility improvements (ARIA labels, keyboard shortcuts)
+- Animation polish
+- Show calculation history in chat
+- Allow editing previous calculations
 
 8. Chat features
    - Conversation history with scrollback
@@ -167,14 +166,7 @@ Based on the current implementation analysis, here are recommendations for next 
    - User guide with examples
    - Architecture decision records (ADRs)
 
-**Phase 4 (Future):**
-10. Performance optimization
-    - Implement caching for common calculations
-    - Optimize streaming performance
-    - Reduce bundle size through code splitting
-    - Add service worker for offline support
-    - Lazy load non-critical features
-    - Optimize re-renders in React components
+**Phase 4 (Future):** 10. Performance optimization - Implement caching for common calculations - Optimize streaming performance - Reduce bundle size through code splitting - Add service worker for offline support - Lazy load non-critical features - Optimize re-renders in React components
 
 11. Monitoring & analytics
     - Error tracking (Sentry or similar)

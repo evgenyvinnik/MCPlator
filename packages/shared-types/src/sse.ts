@@ -3,11 +3,11 @@ import type { KeyId } from './calculator';
 /**
  * SSE event types sent from server to client during streaming responses
  */
-export type SSEEventType = 
-  | 'token'      // Streaming text token
-  | 'keys'       // Calculator keys to animate
-  | 'done'       // Stream complete
-  | 'error';     // Error occurred
+export type SSEEventType =
+  | 'token' // Streaming text token
+  | 'keys' // Calculator keys to animate
+  | 'done' // Stream complete
+  | 'error'; // Error occurred
 
 /**
  * Event sent for each token streamed from the LLM
@@ -53,8 +53,8 @@ export type SSEErrorEvent = {
 /**
  * Union of all possible SSE event types
  */
-export type SSEEvent = 
-  | SSETokenEvent 
-  | SSEKeysEvent 
-  | SSEDoneEvent 
+export type SSEEvent =
+  | SSETokenEvent
+  | SSEKeysEvent
+  | SSEDoneEvent
   | SSEErrorEvent;

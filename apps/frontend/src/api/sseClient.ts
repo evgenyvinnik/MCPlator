@@ -1,8 +1,8 @@
 import type { ChatRequestBody } from '@calculator/shared-types';
 
 // SSE prefix lengths
-const SSE_EVENT_PREFIX_LENGTH = 7;  // "event: ".length
-const SSE_DATA_PREFIX_LENGTH = 6;   // "data: ".length
+const SSE_EVENT_PREFIX_LENGTH = 7; // "event: ".length
+const SSE_DATA_PREFIX_LENGTH = 6; // "data: ".length
 
 export type SSECallbacks = {
   onToken: (token: string) => void;
@@ -20,7 +20,7 @@ export async function streamChat(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'text/event-stream',
+      Accept: 'text/event-stream',
     },
     body: JSON.stringify(body),
     signal,
@@ -41,11 +41,11 @@ export async function streamChat(
   try {
     while (true) {
       const { done, value } = await reader.read();
-      
+
       if (done) break;
 
       buffer += decoder.decode(value, { stream: true });
-      
+
       // Parse SSE events from buffer
       const lines = buffer.split('\n');
       buffer = lines.pop() || ''; // Keep incomplete line in buffer
@@ -62,7 +62,7 @@ export async function streamChat(
           // End of event, process it
           try {
             const parsed = JSON.parse(eventData);
-            
+
             switch (eventType) {
               case 'token':
                 callbacks.onToken(parsed.token);
@@ -81,7 +81,7 @@ export async function streamChat(
             console.error('Failed to parse SSE data:', e);
             callbacks.onError('Failed to parse server response');
           }
-          
+
           eventType = '';
           eventData = '';
         }

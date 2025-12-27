@@ -1,0 +1,32 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+dist
+build
+.next
+out
+.vercel
+.netlify
+
+# Cache
+.cache
+.parcel-cache
+.turbo
+.vite
+
+# Testing
+coverage
+
+# Misc
+.DS_Store
+*.log
+*.tsbuildinfo
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb

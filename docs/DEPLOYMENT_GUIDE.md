@@ -27,9 +27,7 @@ The repository already includes a `vercel.json` file with the correct configurat
   "buildCommand": "npm run build",
   "outputDirectory": "apps/frontend/dist",
   "framework": "vite",
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" }
-  ],
+  "rewrites": [{ "source": "/api/:path*", "destination": "/api/:path*" }],
   "functions": {
     "apps/backend/api/*.ts": {
       "runtime": "@vercel/node@3"
@@ -39,6 +37,7 @@ The repository already includes a `vercel.json` file with the correct configurat
 ```
 
 This configuration:
+
 - Builds the monorepo correctly
 - Serves the frontend from the correct directory
 - Routes API calls to the backend
@@ -103,12 +102,14 @@ npm run dev
 ## Environment Setup for Local Development
 
 ### Backend (`apps/backend/.env`)
+
 ```bash
 ANTHROPIC_API_KEY=sk-ant-your-key-here
 PORT=3001
 ```
 
 ### Frontend (`apps/frontend/.env`)
+
 ```bash
 # Only needed if backend is running on a different port
 VITE_API_URL=http://localhost:3001
@@ -121,6 +122,7 @@ VITE_API_URL=http://localhost:3001
 Monitor your Anthropic API usage at https://console.anthropic.com
 
 The application uses:
+
 - Model: `claude-3-5-haiku-20241022`
 - Max tokens: 1024 per request
 - Pricing: ~$0.25 per 1M input tokens, ~$1.25 per 1M output tokens
@@ -128,6 +130,7 @@ The application uses:
 ### Quota System
 
 The app includes a client-side quota system (IndexedDB):
+
 - Default limit: 100 calls per day per browser
 - Resets daily at midnight (user's local time)
 - Adjust in `apps/frontend/src/db/quotaDB.ts` if needed
@@ -139,6 +142,7 @@ The app includes a client-side quota system (IndexedDB):
 **Symptoms**: No streaming, messages appear all at once
 
 **Solutions**:
+
 1. Verify Edge runtime is configured in `vercel.json`
 2. Check browser console for errors
 3. Verify `ANTHROPIC_API_KEY` is set in Vercel environment
@@ -148,6 +152,7 @@ The app includes a client-side quota system (IndexedDB):
 **Symptoms**: Settings/history not persisting
 
 **Solutions**:
+
 1. IndexedDB not available in private/incognito mode
 2. Check browser console for quota exceeded errors
 3. Clear browser data and try again
@@ -157,6 +162,7 @@ The app includes a client-side quota system (IndexedDB):
 **Symptoms**: Deployment fails during build
 
 **Solutions**:
+
 1. Verify all workspaces have build scripts
 2. Check TypeScript compilation: `npm run build`
 3. Review Vercel build logs for specific errors
@@ -166,6 +172,7 @@ The app includes a client-side quota system (IndexedDB):
 **Symptoms**: "Reached quota" message too frequently
 
 **Solutions**:
+
 1. Adjust `DEFAULT_LIMIT` in `apps/frontend/src/db/quotaDB.ts`
 2. Implement server-side rate limiting
 3. Add authentication for user-specific quotas
@@ -181,6 +188,7 @@ The app includes a client-side quota system (IndexedDB):
 ### Estimated Costs
 
 Based on typical usage:
+
 - ~1,000 tokens per conversation (prompt + response)
 - ~$0.001 per conversation
 - 100 conversations per day = ~$3/month
@@ -211,6 +219,7 @@ Based on typical usage:
 If issues occur after deployment:
 
 1. Revert to previous commit:
+
    ```bash
    git revert HEAD
    git push
@@ -226,11 +235,13 @@ If issues occur after deployment:
 ## Support
 
 For issues specific to this implementation:
+
 1. Check `IMPLEMENTATION_SUMMARY.md`
 2. Review Vercel deployment logs
 3. Check browser console for client-side errors
 4. Review Anthropic API logs
 
 For general deployment issues:
+
 - Vercel Documentation: https://vercel.com/docs
 - Anthropic Documentation: https://docs.anthropic.com

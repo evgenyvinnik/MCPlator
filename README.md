@@ -14,18 +14,18 @@ A fully functional retro Casio-style calculator with an LLM-powered AI assistant
 
 ## Project Stats
 
-**Total SLOC:** 8,715 lines (non-empty, excluding dependencies)
+**Total SLOC:** 8,896 lines (non-empty, excluding dependencies)
 
-| Extension | Lines |
-|-----------|-------|
-| Markdown (.md) | 3,478 |
-| TypeScript (.ts) | 1,924 |
-| CSS (.css) | 1,808 |
-| TSX (.tsx) | 1,058 |
-| JSON (.json) | 209 |
-| JavaScript (.mjs) | 98 |
-| HTML (.html) | 95 |
-| JavaScript (.js) | 45 |
+| Extension         | Lines |
+| ----------------- | ----- |
+| TypeScript (.ts)  | 2,106 |
+| CSS (.css)        | 1,808 |
+| TSX (.tsx)        | 1,058 |
+| Markdown (.md)    | 3,477 |
+| JSON (.json)      | 209   |
+| JavaScript (.mjs) | 98    |
+| HTML (.html)      | 95    |
+| JavaScript (.js)  | 45    |
 
 ### Deployment
 
@@ -40,6 +40,7 @@ For detailed, step-by-step deployment instructions, please refer to [BUILD.md](.
 ## Tech Stack
 
 ### Frontend (`apps/frontend`)
+
 - **Framework:** React 19 + TypeScript 5.9
 - **Build:** Vite 7.2
 - **State management:** Zustand + IndexedDB (manual persistence)
@@ -48,12 +49,14 @@ For detailed, step-by-step deployment instructions, please refer to [BUILD.md](.
 - **Streaming:** Native `fetch` API for SSE
 
 ### Backend (`/api`)
+
 - **Platform:** Vercel Serverless Functions (for SSE support)
 - **Runtime:** Edge Runtime
 - **AI:** Anthropic Claude API (Claude Haiku 4.5 model)
 - **Streaming:** Server-Sent Events (SSE) for real-time token streaming
 
 ### Shared (`packages/`)
+
 - **Monorepo:** Bun workspaces
 - **shared-types:** Common TypeScript definitions (KeyId, ChatMessage, SSE types)
 - **calculator-engine:** Complete Casio-style calculator logic (86 tests, 100% passing)
@@ -74,6 +77,7 @@ calculator-casio-llm/
 ## Getting Started
 
 ### Prerequisites
+
 - [Bun](https://bun.sh/) 1.0+
 
 ### Installation

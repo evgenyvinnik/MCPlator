@@ -7,30 +7,30 @@ import styles from './RetroKeypad.module.css';
 
 // Mapping from KeyId (animation system) to RetroKeypad button identifier
 const keyIdToRetroKey: Partial<Record<KeyId, string>> = {
-  'digit_0': '0',
-  'digit_1': '1',
-  'digit_2': '2',
-  'digit_3': '3',
-  'digit_4': '4',
-  'digit_5': '5',
-  'digit_6': '6',
-  'digit_7': '7',
-  'digit_8': '8',
-  'digit_9': '9',
-  'decimal': 'float',
-  'add': 'plus',
-  'sub': 'minus',
-  'mul': 'multiply',
-  'div': 'divide',
-  'percent': 'percentage',
-  'equals': 'perform',
-  'ac': 'on',
-  'c': 'clear',
-  'mc': 'mc',
-  'mr': 'mr',
-  'm_plus': 'm+',
-  'm_minus': 'm-',
-  'plus_minus': 'change_sign',
+  digit_0: '0',
+  digit_1: '1',
+  digit_2: '2',
+  digit_3: '3',
+  digit_4: '4',
+  digit_5: '5',
+  digit_6: '6',
+  digit_7: '7',
+  digit_8: '8',
+  digit_9: '9',
+  decimal: 'float',
+  add: 'plus',
+  sub: 'minus',
+  mul: 'multiply',
+  div: 'divide',
+  percent: 'percentage',
+  equals: 'perform',
+  ac: 'on',
+  c: 'clear',
+  mc: 'mc',
+  mr: 'mr',
+  m_plus: 'm+',
+  m_minus: 'm-',
+  plus_minus: 'change_sign',
   // 'sqrt' is not available in RetroKeypad
 };
 
@@ -52,22 +52,22 @@ type KeyDef = {
 };
 
 const keyDefinitions: Record<string, KeyDef> = {
-  'off': { type: 'MAIN', value: 'off', label: 'OFF', extraClass: '-small' },
-  'clear': { type: 'MAIN', value: 'clear', label: 'C', extraClass: '-red' },
-  'on': { type: 'MAIN', value: 'on', label: 'AC', extraClass: '-red --acbutton' },
-  'perform': { type: 'BASIC', value: 'perform', label: '=' },
-  'divide': { type: 'BASIC', value: 'divide', label: '÷' },
-  'percentage': { type: 'BASIC', value: 'percentage', label: '%' },
-  'multiply': { type: 'BASIC', value: 'multiply', label: '✕' },
-  'minus': { type: 'BASIC', value: 'minus', label: '−' },
-  'plus': { type: 'BASIC', value: 'plus', label: '+', extraClass: '-large' },
-  'mc': { type: 'MEMORY', value: 'clear', label: 'MC' },
-  'mr': { type: 'MEMORY', value: 'recall', label: 'MR' },
+  off: { type: 'MAIN', value: 'off', label: 'OFF', extraClass: '-small' },
+  clear: { type: 'MAIN', value: 'clear', label: 'C', extraClass: '-red' },
+  on: { type: 'MAIN', value: 'on', label: 'AC', extraClass: '-red --acbutton' },
+  perform: { type: 'BASIC', value: 'perform', label: '=' },
+  divide: { type: 'BASIC', value: 'divide', label: '÷' },
+  percentage: { type: 'BASIC', value: 'percentage', label: '%' },
+  multiply: { type: 'BASIC', value: 'multiply', label: '✕' },
+  minus: { type: 'BASIC', value: 'minus', label: '−' },
+  plus: { type: 'BASIC', value: 'plus', label: '+', extraClass: '-large' },
+  mc: { type: 'MEMORY', value: 'clear', label: 'MC' },
+  mr: { type: 'MEMORY', value: 'recall', label: 'MR' },
   'm-': { type: 'MEMORY', value: 'minus', label: 'M-' },
   'm+': { type: 'MEMORY', value: 'plus', label: 'M+' },
-  'float': { type: 'MATH', value: 'float', label: '⋅' },
-  'change_sign': { type: 'MATH', value: 'change_sign', label: '+/-' },
-  'sqrt': { type: 'MATH', value: 'sqrt', label: '√', extraClass: '-small' },
+  float: { type: 'MATH', value: 'float', label: '⋅' },
+  change_sign: { type: 'MATH', value: 'change_sign', label: '+/-' },
+  sqrt: { type: 'MATH', value: 'sqrt', label: '√', extraClass: '-small' },
   '0': { type: 'NUMBER', value: '0', label: '0' },
   '1': { type: 'NUMBER', value: '1', label: '1' },
   '2': { type: 'NUMBER', value: '2', label: '2' },
@@ -87,10 +87,12 @@ type RetroKeypadProps = {
 const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
   const pressedKey = useCalculatorStore((state) => state.pressedKey);
   const buttonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
-  
+
   // Get the RetroKeypad key identifier from the current pressedKey (KeyId)
-  const activeRetroKey = pressedKey ? (keyIdToRetroKey[pressedKey] || null) : null;
-  
+  const activeRetroKey = pressedKey
+    ? keyIdToRetroKey[pressedKey] || null
+    : null;
+
   // Helper function to simulate button press visually
   const triggerButtonPress = React.useCallback((button: HTMLButtonElement) => {
     const isRed = button.dataset.isRed === 'true';
@@ -103,9 +105,11 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
     // Apply pressed state - more pronounced effect
     button.style.color = '#aaa';
     if (isRed) {
-      button.style.background = 'linear-gradient(to bottom, #4a2430 0%, #3a1d26 50%, #2a1520 100%)';
+      button.style.background =
+        'linear-gradient(to bottom, #4a2430 0%, #3a1d26 50%, #2a1520 100%)';
     } else {
-      button.style.background = 'linear-gradient(to bottom, #1a1a1a 0%, #151515 50%, #101010 100%)';
+      button.style.background =
+        'linear-gradient(to bottom, #1a1a1a 0%, #151515 50%, #101010 100%)';
     }
     button.style.transform = 'translateY(3px) scale(0.98)';
     button.style.filter = 'brightness(0.85)';
@@ -127,7 +131,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
       button.style.filter = originalFilter;
     }, 300);
   }, []);
-  
+
   // Trigger visual animation when pressedKey changes
   useEffect(() => {
     if (activeRetroKey && buttonRefs.current.has(activeRetroKey)) {
@@ -138,8 +142,12 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
       }
     }
   }, [activeRetroKey, triggerButtonPress]);
-  
-  const renderCell = (cellKey: string | null, rowIndex: number, cellIndex: number) => {
+
+  const renderCell = (
+    cellKey: string | null,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
     // Skip null cells (where large button extends)
     if (cellKey === null) {
       return null;
@@ -169,9 +177,13 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
 
     // Font size classes
     if (keyDef.value === 'divide' || (keyDef.value === 'plus' && isLarge)) {
-      buttonClasses.push(keyDef.value === 'divide' ? styles.fontSizeDivide : styles.fontSizePlus);
+      buttonClasses.push(
+        keyDef.value === 'divide' ? styles.fontSizeDivide : styles.fontSizePlus
+      );
     } else if (isNumber || isFloat) {
-      buttonClasses.push(isNumber ? styles.fontSizeNumber : styles.fontSizeFloat);
+      buttonClasses.push(
+        isNumber ? styles.fontSizeNumber : styles.fontSizeFloat
+      );
     } else if (isRed) {
       buttonClasses.push(styles.fontSizeRed);
     } else if (isSmall) {
@@ -195,9 +207,11 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
 
     const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (isRed) {
-        e.currentTarget.style.background = 'linear-gradient(to bottom, #b66575 0%, #8d4a56 50%, #6d3b45 100%)';
+        e.currentTarget.style.background =
+          'linear-gradient(to bottom, #b66575 0%, #8d4a56 50%, #6d3b45 100%)';
       } else {
-        e.currentTarget.style.background = 'linear-gradient(to bottom, #646464 0%, #4a4a4a 50%, #353535 100%)';
+        e.currentTarget.style.background =
+          'linear-gradient(to bottom, #646464 0%, #4a4a4a 50%, #353535 100%)';
       }
       e.currentTarget.style.boxShadow = `3px 3px 5px 0px rgba(0, 0, 0, 0.3),
         0px 0px 0px 1px rgba(0, 0, 0, 0.9),
@@ -218,9 +232,11 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
     const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.currentTarget.style.color = 'lightgray';
       if (isRed) {
-        e.currentTarget.style.background = 'linear-gradient(to bottom, #5d2f39 0%, #4a2430 50%, #3a1d26 100%)';
+        e.currentTarget.style.background =
+          'linear-gradient(to bottom, #5d2f39 0%, #4a2430 50%, #3a1d26 100%)';
       } else {
-        e.currentTarget.style.background = 'linear-gradient(to bottom, #2a2a2a 0%, #252525 50%, #202020 100%)';
+        e.currentTarget.style.background =
+          'linear-gradient(to bottom, #2a2a2a 0%, #252525 50%, #202020 100%)';
       }
       e.currentTarget.style.transform = 'translateY(1px)';
       e.currentTarget.style.boxShadow = `1px 1px 1px 1px rgba(0, 0, 0, 0.1),
@@ -280,11 +296,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
             keyDef.label
           )}
         </button>
-        {isACButton && (
-          <div className={styles.acOnLabel}>
-            ON
-          </div>
-        )}
+        {isACButton && <div className={styles.acOnLabel}>ON</div>}
       </div>
     );
   };

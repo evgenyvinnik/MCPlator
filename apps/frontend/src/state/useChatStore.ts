@@ -18,39 +18,37 @@ type ChatActions = {
   hydrate: () => Promise<void>;
 };
 
-export const useChatStore = create<ChatState & ChatActions>()(
-  (set) => ({
-    messages: [],
-    streamingMessage: null,
-    isThinking: false,
-    isHydrated: false,
+export const useChatStore = create<ChatState & ChatActions>()((set) => ({
+  messages: [],
+  streamingMessage: null,
+  isThinking: false,
+  isHydrated: false,
 
-    hydrate: async () => {
-      const messages = await chatDB.getAllMessages();
-      set({ messages, isHydrated: true });
-    },
+  hydrate: async () => {
+    const messages = await chatDB.getAllMessages();
+    set({ messages, isHydrated: true });
+  },
 
-    addMessage: async (msg) => {
-      await chatDB.addMessage(msg);
-      set((state) => ({
-        messages: [...state.messages, msg],
-        streamingMessage: null,
-      }));
-    },
+  addMessage: async (msg) => {
+    await chatDB.addMessage(msg);
+    set((state) => ({
+      messages: [...state.messages, msg],
+      streamingMessage: null,
+    }));
+  },
 
-    updateStreamingMessage: (id, text) => {
-      set({ streamingMessage: { id, text } });
-    },
+  updateStreamingMessage: (id, text) => {
+    set({ streamingMessage: { id, text } });
+  },
 
-    clearStreamingMessage: () => {
-      set({ streamingMessage: null });
-    },
+  clearStreamingMessage: () => {
+    set({ streamingMessage: null });
+  },
 
-    setIsThinking: (val) => set({ isThinking: val }),
+  setIsThinking: (val) => set({ isThinking: val }),
 
-    clear: async () => {
-      await chatDB.clearMessages();
-      set({ messages: [], streamingMessage: null });
-    },
-  }),
-);
+  clear: async () => {
+    await chatDB.clearMessages();
+    set({ messages: [], streamingMessage: null });
+  },
+}));

@@ -1,8 +1,9 @@
 @font-face {
   font-family: 'digit';
-  src: url('/fonts/digit/digit.woff2') format('woff2'),
-       url('/fonts/digit/digit.woff') format('woff'),
-       url('/fonts/digit/digit.ttf') format('truetype');
+  src:
+    url('/fonts/digit/digit.woff2') format('woff2'),
+    url('/fonts/digit/digit.woff') format('woff'),
+    url('/fonts/digit/digit.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

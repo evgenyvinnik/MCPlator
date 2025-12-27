@@ -22,7 +22,6 @@ Backend is **minimal**:
 
 No MCP server, no Redis, no DB.
 
-
 ---
 
 ## 1. Tech Stack
@@ -53,7 +52,6 @@ No MCP server, no Redis, no DB.
 - **Monorepo (pnpm/yarn workspace)** with shared packages:
   - `packages/shared-types`
   - `packages/calculator-engine`
-
 
 ---
 
@@ -105,7 +103,6 @@ calculator-casio-llm/
         (optional) other helpers
 ```
 
-
 ---
 
 ## 3. Shared Types (`packages/shared-types`)
@@ -116,24 +113,39 @@ calculator-casio-llm/
 // packages/shared-types/src/calculator.ts
 
 export type KeyId =
-  | 'digit_0' | 'digit_1' | 'digit_2' | 'digit_3' | 'digit_4'
-  | 'digit_5' | 'digit_6' | 'digit_7' | 'digit_8' | 'digit_9'
+  | 'digit_0'
+  | 'digit_1'
+  | 'digit_2'
+  | 'digit_3'
+  | 'digit_4'
+  | 'digit_5'
+  | 'digit_6'
+  | 'digit_7'
+  | 'digit_8'
+  | 'digit_9'
   | 'decimal'
-  | 'add' | 'sub' | 'mul' | 'div'
+  | 'add'
+  | 'sub'
+  | 'mul'
+  | 'div'
   | 'percent'
   | 'equals'
-  | 'ac' | 'c'
-  | 'mc' | 'mr' | 'm_plus' | 'm_minus';
+  | 'ac'
+  | 'c'
+  | 'mc'
+  | 'mr'
+  | 'm_plus'
+  | 'm_minus';
 
 export type CalculatorIndicators = {
-  error: boolean;           // E
-  memory: boolean;          // M
-  constant: boolean;        // K
+  error: boolean; // E
+  memory: boolean; // M
+  constant: boolean; // K
   op: null | 'add' | 'sub' | 'mul' | 'div';
 };
 
 export type CalculatorDisplay = {
-  text: string;             // e.g., "0.", "11.4", "E"
+  text: string; // e.g., "0.", "11.4", "E"
   indicators: CalculatorIndicators;
 };
 
@@ -173,7 +185,6 @@ export type ChatResponseBody = {
 };
 ```
 
-
 ---
 
 ## 4. Calculator Engine (`packages/calculator-engine`)
@@ -201,7 +212,10 @@ export type CalculatorInternalState = {
 
 export type CalculatorEngine = {
   initialState: () => CalculatorInternalState;
-  pressKey: (state: CalculatorInternalState, key: KeyId) => CalculatorInternalState;
+  pressKey: (
+    state: CalculatorInternalState,
+    key: KeyId
+  ) => CalculatorInternalState;
   toDisplay: (state: CalculatorInternalState) => CalculatorDisplay;
 };
 ```
@@ -210,10 +224,7 @@ export type CalculatorEngine = {
 
 ```ts
 // packages/calculator-engine/src/index.ts
-import type {
-  CalculatorEngine,
-  CalculatorInternalState,
-} from './types';
+import type { CalculatorEngine, CalculatorInternalState } from './types';
 import type { CalculatorDisplay, KeyId } from '@calculator/shared-types';
 
 export const calculatorEngine: CalculatorEngine = {
@@ -243,7 +254,6 @@ export const calculatorEngine: CalculatorEngine = {
   }),
 };
 ```
-
 
 ---
 
@@ -282,7 +292,9 @@ type CalculatorStoreActions = {
 
 const STORAGE_KEY = 'casio_calculator_state_v1';
 
-export const useCalculatorStore = create<CalculatorStoreState & CalculatorStoreActions>()(
+export const useCalculatorStore = create<
+  CalculatorStoreState & CalculatorStoreActions
+>()(
   persist(
     (set, get) => ({
       internalState: calculatorEngine.initialState(),
@@ -313,8 +325,8 @@ export const useCalculatorStore = create<CalculatorStoreState & CalculatorStoreA
         internalState: state.internalState,
         display: state.display,
       }),
-    },
-  ),
+    }
+  )
 );
 ```
 
@@ -349,8 +361,8 @@ export const useChatStore = create<ChatState & ChatActions>()(
     }),
     {
       name: 'casio_chat_history_v1',
-    },
-  ),
+    }
+  )
 );
 ```
 
@@ -365,12 +377,8 @@ import type { AnimationCommand } from '@calculator/shared-types';
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export const useAnimationRunner = () => {
-  const {
-    animationQueue,
-    isAnimating,
-    setIsAnimating,
-    setPressedKey,
-  } = useCalculatorStore();
+  const { animationQueue, isAnimating, setIsAnimating, setPressedKey } =
+    useCalculatorStore();
 
   const pressKey = useCalculatorStore((s) => s.pressKey);
 
@@ -416,7 +424,7 @@ const STORAGE_KEY = 'casio_llm_quota_v1';
 const DEFAULT_LIMIT = 100;
 
 type QuotaState = {
-  date: string;       // YYYY-MM-DD
+  date: string; // YYYY-MM-DD
   callsUsed: number;
   dailyLimit: number;
 };
@@ -465,7 +473,10 @@ export const recordCall = () => {
 // apps/frontend/src/hooks/useSendChat.ts
 import { useChatStore } from '../state/useChatStore';
 import { useCalculatorStore } from '../state/useCalculatorStore';
-import type { ChatRequestBody, ChatResponseBody } from '@calculator/shared-types';
+import type {
+  ChatRequestBody,
+  ChatResponseBody,
+} from '@calculator/shared-types';
 import { canMakeCall, recordCall } from '../quota';
 import { v4 as uuid } from 'uuid';
 
@@ -538,7 +549,6 @@ export const useSendChat = () => {
 };
 ```
 
-
 ---
 
 ## 6. Backend Vercel Function (`apps/backend/api/chat.ts`)
@@ -555,7 +565,10 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { OpenAI } from 'openai';
 import { calculatorEngine } from '@calculator/calculator-engine';
 import type { KeyId } from '@calculator/calculator-engine';
-import type { ChatRequestBody, ChatResponseBody } from '@calculator/shared-types';
+import type {
+  ChatRequestBody,
+  ChatResponseBody,
+} from '@calculator/shared-types';
 import { v4 as uuid } from 'uuid';
 
 const openai = new OpenAI({
@@ -573,14 +586,29 @@ const calculatorPressKeysTool = {
         items: {
           type: 'string',
           enum: [
-            'digit_0', 'digit_1', 'digit_2', 'digit_3', 'digit_4',
-            'digit_5', 'digit_6', 'digit_7', 'digit_8', 'digit_9',
+            'digit_0',
+            'digit_1',
+            'digit_2',
+            'digit_3',
+            'digit_4',
+            'digit_5',
+            'digit_6',
+            'digit_7',
+            'digit_8',
+            'digit_9',
             'decimal',
-            'add', 'sub', 'mul', 'div',
+            'add',
+            'sub',
+            'mul',
+            'div',
             'percent',
             'equals',
-            'ac', 'c',
-            'mc', 'mr', 'm_plus', 'm_minus',
+            'ac',
+            'c',
+            'mc',
+            'mr',
+            'm_plus',
+            'm_minus',
           ],
         },
       },
@@ -674,7 +702,6 @@ If the user request is not a calculator operation, do NOT call the tool and answ
   res.status(200).json(payload);
 }
 ```
-
 
 ---
 

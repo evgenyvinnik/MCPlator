@@ -53,5 +53,13 @@ export const useAnimationRunner = () => {
         isAnimating: false,
       });
     });
-  }, [animationQueue, isAnimating, pressKey, setIsAnimating, setPressedKey, getAnimationCallback, removeAnimationCallback]);
+  }, [
+    animationQueue,
+    isAnimating,
+    pressKey,
+    setIsAnimating,
+    setPressedKey,
+    getAnimationCallback,
+    removeAnimationCallback,
+  ]);
 };

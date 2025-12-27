@@ -9,22 +9,34 @@ import styles from './RetroCalculator.module.css';
 // Map RetroKeypad key values to KeyId
 const retroKeyToKeyId: Record<string, KeyId> = {
   // Numbers
-  '0': 'digit_0', '1': 'digit_1', '2': 'digit_2', '3': 'digit_3', '4': 'digit_4',
-  '5': 'digit_5', '6': 'digit_6', '7': 'digit_7', '8': 'digit_8', '9': 'digit_9',
+  '0': 'digit_0',
+  '1': 'digit_1',
+  '2': 'digit_2',
+  '3': 'digit_3',
+  '4': 'digit_4',
+  '5': 'digit_5',
+  '6': 'digit_6',
+  '7': 'digit_7',
+  '8': 'digit_8',
+  '9': 'digit_9',
   // Decimal
-  'float': 'decimal',
+  float: 'decimal',
   // Operations
-  'plus': 'add', 'minus': 'sub', 'multiply': 'mul', 'divide': 'div',
+  plus: 'add',
+  minus: 'sub',
+  multiply: 'mul',
+  divide: 'div',
   // Equals
-  'perform': 'equals',
+  perform: 'equals',
   // Clear
-  'on': 'ac', 'clear': 'c',
+  on: 'ac',
+  clear: 'c',
   // Percent
-  'percentage': 'percent',
+  percentage: 'percent',
   // Plus/Minus (change sign)
-  'change_sign': 'plus_minus',
+  change_sign: 'plus_minus',
   // Square root
-  'sqrt': 'sqrt',
+  sqrt: 'sqrt',
 };
 
 const RetroCalculator: React.FC = () => {
@@ -52,10 +64,10 @@ const RetroCalculator: React.FC = () => {
     // Handle memory operations separately (they have type === 'MEMORY')
     if (key.type === 'MEMORY') {
       const memoryKeyMap: Record<string, KeyId> = {
-        'clear': 'mc',
-        'recall': 'mr',
-        'plus': 'm_plus',
-        'minus': 'm_minus',
+        clear: 'mc',
+        recall: 'mr',
+        plus: 'm_plus',
+        minus: 'm_minus',
       };
       const keyId = memoryKeyMap[key.value];
       if (keyId) {
@@ -94,9 +106,7 @@ const RetroCalculator: React.FC = () => {
               <div className={styles.powerIndicatorBar}></div>
             </div>
           </div>
-          <div className={styles.powerIndicatorLabel}>
-            TWO WAY POWER
-          </div>
+          <div className={styles.powerIndicatorLabel}>TWO WAY POWER</div>
         </div>
       </header>
 
@@ -110,9 +120,7 @@ const RetroCalculator: React.FC = () => {
           shouldFlash={shouldFlash}
         />
         <div className={styles.modelLabelContainer}>
-          <h2 className={styles.modelLabel}>
-            SL-300SV
-          </h2>
+          <h2 className={styles.modelLabel}>SL-300SV</h2>
           <RetroKeypad onKeyClick={handleClick} />
         </div>
       </main>

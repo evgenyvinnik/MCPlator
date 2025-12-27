@@ -1,7 +1,4 @@
-import type {
-  CalculatorEngine,
-  CalculatorInternalState,
-} from './types';
+import type { CalculatorEngine, CalculatorInternalState } from './types';
 import type { CalculatorDisplay } from '@calculator/shared-types';
 
 export * from './types';
@@ -110,7 +107,7 @@ export const calculatorEngine: CalculatorEngine = {
     // Handle digit keys (0-9)
     if (key.startsWith('digit_')) {
       const digit = key.replace('digit_', '');
-      
+
       // If we should start a new number, replace display
       if (state.shouldStartNewNumber || state.displayValue === '0') {
         return {
@@ -120,16 +117,18 @@ export const calculatorEngine: CalculatorEngine = {
           isError: false,
         };
       }
-      
+
       // Append digit (max 8 digits, excluding decimal point and minus sign)
-      const digitCount = state.displayValue.replace('.', '').replace('-', '').length;
+      const digitCount = state.displayValue
+        .replace('.', '')
+        .replace('-', '').length;
       if (digitCount < 8) {
         return {
           ...state,
           displayValue: state.displayValue + digit,
         };
       }
-      
+
       return state;
     }
 
@@ -143,7 +142,7 @@ export const calculatorEngine: CalculatorEngine = {
           shouldStartNewNumber: false,
         };
       }
-      
+
       // Only add decimal if not already present and we have room (8 digits max, decimal doesn't count)
       if (!state.displayValue.includes('.')) {
         const digitCount = state.displayValue.replace('-', '').length;
@@ -155,7 +154,7 @@ export const calculatorEngine: CalculatorEngine = {
           };
         }
       }
-      
+
       return state;
     }
 
@@ -184,11 +183,19 @@ export const calculatorEngine: CalculatorEngine = {
     // Handle operation keys (+, -, *, /)
     if (key === 'add' || key === 'sub' || key === 'mul' || key === 'div') {
       const currentValue = parseDisplayValue(state.displayValue);
-      
+
       // If there's a pending operation and we've entered a new number, complete it first
-      if (state.lastOperator !== null && state.lastOperand !== null && !state.shouldStartNewNumber) {
+      if (
+        state.lastOperator !== null &&
+        state.lastOperand !== null &&
+        !state.shouldStartNewNumber
+      ) {
         // Chain operations: execute the pending operation
-        const result = performOperation(state.lastOperand, state.lastOperator, currentValue);
+        const result = performOperation(
+          state.lastOperand,
+          state.lastOperator,
+          currentValue
+        );
 
         if (!isFinite(result)) {
           return {
@@ -221,7 +228,7 @@ export const calculatorEngine: CalculatorEngine = {
           shouldStartNewNumber: true,
         };
       }
-      
+
       // Store the operation and mark that next digit should start a new number
       return {
         ...state,
@@ -238,10 +245,17 @@ export const calculatorEngine: CalculatorEngine = {
         return state;
       }
 
-      const leftOperand = state.lastOperand !== null ? state.lastOperand : parseDisplayValue(state.displayValue);
+      const leftOperand =
+        state.lastOperand !== null
+          ? state.lastOperand
+          : parseDisplayValue(state.displayValue);
       const rightOperand = parseDisplayValue(state.displayValue);
 
-      const result = performOperation(leftOperand, state.lastOperator, rightOperand);
+      const result = performOperation(
+        leftOperand,
+        state.lastOperator,
+        rightOperand
+      );
 
       if (!isFinite(result)) {
         return {
@@ -284,24 +298,24 @@ export const calculatorEngine: CalculatorEngine = {
     if (key === 'percent') {
       const currentValue = parseDisplayValue(state.displayValue);
       const percentValue = currentValue / 100;
-      
+
       // If there's a pending operation, apply percentage relative to it
       if (state.lastOperator !== null && state.lastOperand !== null) {
         let result: number;
         if (state.lastOperator === 'add' || state.lastOperator === 'sub') {
           // For add/sub: calculate percentage of the first operand
-          result = (state.lastOperand * percentValue);
+          result = state.lastOperand * percentValue;
         } else {
           // For mul/div: just convert to percentage
           result = percentValue;
         }
-        
+
         return {
           ...state,
           displayValue: formatForDisplay(result),
         };
       }
-      
+
       // Otherwise, just divide by 100
       return {
         ...state,
