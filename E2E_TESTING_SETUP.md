@@ -1,19 +1,28 @@
 # E2E Testing Setup Guide
 
-This guide explains how to set up end-to-end testing with Vercel deployment protection for MCPlator.
+This guide explains how to set up end-to-end testing for MCPlator deployments on Vercel.
 
 ## Overview
 
-The E2E testing workflow ensures that your app works correctly before deploying to production:
+The E2E testing workflow ensures that your app works correctly after each deployment:
 
 1. You push code to GitHub
-2. Vercel automatically creates a preview deployment
-3. When the deployment succeeds, GitHub Actions runs E2E tests against the live preview URL
+2. Vercel automatically creates a deployment
+3. When the deployment succeeds, GitHub Actions runs E2E tests against the live deployment URL
 4. Tests verify that the chat functionality works with real LLM calls
-5. If tests pass, the deployment can be promoted to production
-6. If tests fail, you get immediate feedback and the broken deployment won't go live
+5. You check the GitHub Actions tab to see if tests passed
+6. If tests are green ✅ → Safe to use/promote
+7. If tests are red ❌ → Check the logs to see what broke
 
 This approach tests your **actual deployed code** on Vercel's infrastructure, not a local simulation.
+
+## Important: Vercel Hobby Plan Limitation
+
+**Automatic deployment blocking** (where Vercel waits for tests before deploying) requires a **Vercel Pro plan** ($20/month).
+
+On the **Hobby (free) plan**, tests run automatically after each deployment, but you need to **manually check** the GitHub Actions tab to verify tests passed before promoting deployments to production.
+
+This setup still provides excellent protection - you just need to check the test results yourself rather than having Vercel block deployments automatically.
 
 ## Setup Steps
 
