@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Chat E2E Tests', () => {
+  // Use desktop viewport to ensure chat panel is visible (not hidden like on mobile)
+  test.use({ viewport: { width: 1280, height: 720 } });
+
   test('should respond to "2 plus 2" calculation request', async ({ page }) => {
     // Navigate to the app
     await page.goto('/');
