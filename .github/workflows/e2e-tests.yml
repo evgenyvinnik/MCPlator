@@ -4,22 +4,9 @@ on:
   deployment_status:
 
 jobs:
-  # Debug job to see what events we're receiving
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        run: |
-          echo "Event name: ${{ github.event_name }}"
-          echo "Deployment state: ${{ github.event.deployment_status.state }}"
-          echo "Deployment environment: ${{ github.event.deployment_status.environment }}"
-          echo "Target URL: ${{ github.event.deployment_status.target_url }}"
-          echo "Full event:"
-          echo '${{ toJson(github.event) }}'
-
   test:
-    # Only run if deployment was successful and it's a preview deployment
-    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'Preview'
+    # Only run if deployment was successful
+    if: github.event.deployment_status.state == 'success'
     timeout-minutes: 15
     runs-on: ubuntu-latest
 
