@@ -20,7 +20,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.3",
     "@vercel/analytics": "^1.6.1",
-    "uuid": "^9.0.1"
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@types/uuid": "^9.0.8",
