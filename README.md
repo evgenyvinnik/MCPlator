@@ -12,6 +12,21 @@ A fully functional retro Casio-style calculator with an LLM-powered AI assistant
   - Animates key presses on the calculator display in real-time
 - **Persistent state** stored in IndexedDB (calculator memory, chat history, daily quota)
 
+## Project Stats
+
+**Total SLOC:** 8,715 lines (non-empty, excluding dependencies)
+
+| Extension | Lines |
+|-----------|-------|
+| Markdown (.md) | 3,478 |
+| TypeScript (.ts) | 1,924 |
+| CSS (.css) | 1,808 |
+| TSX (.tsx) | 1,058 |
+| JSON (.json) | 209 |
+| JavaScript (.mjs) | 98 |
+| HTML (.html) | 95 |
+| JavaScript (.js) | 45 |
+
 ### Deployment
 
 For detailed, step-by-step deployment instructions, please refer to [BUILD.md](./BUILD.md).
@@ -59,19 +74,18 @@ calculator-casio-llm/
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- npm
+- [Bun](https://bun.sh/) 1.0+
 
 ### Installation
 
 ```bash
-npm install
+bun install
 ```
 
 ### Development
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 The frontend runs on `http://localhost:5173`. The API endpoint (`/api/chat`) is handled by Vercel in production and proxied during local development.
@@ -90,6 +104,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 ## Scripts
 
-- `npm run dev` - Start frontend dev server
-- `npm run build` - Build all workspaces
-- `npm run test` - Run tests across workspaces
+- `bun run dev` - Start frontend dev server
+- `bun run build` - Build all workspaces
+- `bun run test` - Run tests across workspaces
+- `bun run sloc` - Calculate source lines of code

@@ -10,7 +10,8 @@
     "build": "bun run --filter '*' build",
     "build:packages": "bun run --filter '@calculator/shared-types' build && bun run --filter '@calculator/calculator-engine' build",
     "build:apps": "bun run --filter 'mc-plator' build",
-    "test": "bun run --filter '*' test"
+    "test": "bun run --filter '*' test",
+    "sloc": "node scripts/calc-sloc.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.3",
