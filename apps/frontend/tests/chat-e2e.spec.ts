@@ -5,8 +5,26 @@ test.describe('Chat E2E Tests', () => {
   test.use({ viewport: { width: 1280, height: 720 } });
 
   test('should respond to "2 plus 2" calculation request', async ({ page }) => {
-    // Navigate to the app
-    await page.goto('/');
+    // Navigate to the app and wait for it to fully load
+    await page.goto('/', { waitUntil: 'networkidle' });
+
+    // Debug: Take a screenshot to see what's rendered
+    await page.screenshot({ path: 'test-results/debug-page-load.png', fullPage: true });
+
+    // Debug: Log page info
+    console.log('Page title:', await page.title());
+    console.log('Page URL:', page.url());
+    console.log('Viewport size:', await page.viewportSize());
+
+    // Debug: Check if main heading is visible (should be on desktop)
+    const mainHeading = page.getByText(/retro calculator.*neural co-pilot/i);
+    const headingVisible = await mainHeading.isVisible().catch(() => false);
+    console.log('Main heading visible:', headingVisible);
+
+    // Debug: Check body HTML to see what's actually rendered
+    const bodyHTML = await page.locator('body').innerHTML();
+    console.log('Body contains "AI Assistant":', bodyHTML.includes('AI Assistant'));
+    console.log('Body first 500 chars:', bodyHTML.substring(0, 500));
 
     // Wait for the chat interface to be ready
     await expect(page.getByText('AI Assistant')).toBeVisible({ timeout: 10000 });
@@ -42,7 +60,7 @@ test.describe('Chat E2E Tests', () => {
   });
 
   test('should handle multiple chat messages', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'networkidle' });
 
     // Wait for chat to be ready
     await expect(page.getByText('AI Assistant')).toBeVisible({ timeout: 10000 });
