@@ -23,7 +23,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^11.0.0",
     "eslint": "^9.39.2",
     "prettier": "^3.7.4",
     "typescript": "^5.0.0"
