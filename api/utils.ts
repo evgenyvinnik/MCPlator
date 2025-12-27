@@ -26,6 +26,9 @@ export function sseEvent(event: string, data: object): string {
  * This function runs BEFORE sending the message to the LLM, saving API costs
  * by rejecting obviously non-calculator queries early.
  *
+ * The filter is intentionally permissive - it's better to let the LLM handle
+ * edge cases than to block legitimate math questions.
+ *
  * The filter uses:
  * 1. Calculator-related patterns (math operations, numbers, calc keywords)
  * 2. Non-calculator patterns (coding, writing, general questions)
@@ -38,23 +41,24 @@ export function sseEvent(event: string, data: object): string {
  * isCalculatorRelated("what is 2 + 3") // true
  * isCalculatorRelated("write me a poem") // false
  * isCalculatorRelated("calculate 15% of 80") // true
+ * isCalculatorRelated("what is earth's gravity multiplied by 10") // true
  */
 export function isCalculatorRelated(message: string): boolean {
   const lowerMessage = message.toLowerCase();
 
   // Patterns that indicate calculator usage
   const calculatorPatterns = [
-    // Math operations
-    /\b(add|plus|sum|subtract|minus|multiply|times|divide|divided by)\b/,
+    // Math operations (including variations)
+    /\b(add|plus|sum|subtract|minus|multiply|multiplied|times|divide|divided)\b/,
     /\b(calculate|compute|what is|what's|how much|equals?)\b/,
     /\b(percent|percentage|%)\b/,
     /\b(square root|sqrt)\b/,
-    /\b(memory|store|recall|clear)\b/,
-    // Numbers with operators
-    /\d+\s*[\+\-\*\/\%]\s*\d+/,
-    /\d+\s*(plus|minus|times|divided|multiplied)\s*\d+/i,
-    // Asking about calculator
+    // Numbers with operators (any format)
+    /\d+\s*[\+\-\*×÷\/\%]\s*\d+/,
+    /\d+\s*(plus|minus|times|divided|multiplied|by)\s*\d+/i,
+    // Asking about calculator or entering numbers
     /\b(calculator|calc)\b/,
+    /^\d+$/, // Just typing a number
   ];
 
   // Check if message matches any calculator pattern
@@ -63,16 +67,18 @@ export function isCalculatorRelated(message: string): boolean {
   );
 
   // Patterns that indicate NON-calculator usage
-  // These help filter out requests for code, writing, general knowledge, etc.
+  // Only block obvious non-math requests to save API costs
   const nonCalculatorPatterns = [
-    /\b(write|code|script|program|application|app)\b/,
+    // Code/programming requests
+    /\b(write|code|script|program|application|app)\b(?!.*(calculate|math))/,
+    // Creative writing
     /\b(article|essay|story|poem|song|letter)\b/,
-    /\b(explain|describe|tell me about|what is a)\b(?!.*\d)/,
-    /\b(python|javascript|java|html|css|sql|rust|go|ruby|c\+\+)\b/,
-    /\b(weather|news|recipe|joke|riddle)\b/,
-    /\b(translate|summarize|rewrite)\b/,
-    /\b(help me with|how to|how do i)\b(?!.*(calculate|add|subtract|multiply|divide))/,
-    /\b(create|generate|make me|build)\b(?!.*(calculation|sum|total))/,
+    // Programming languages
+    /\b(python|javascript|java|html|css|sql|rust|go|ruby|c\+\+)\b(?!.*(calculate|math))/,
+    // General non-math requests
+    /\b(weather|news|recipe)\b(?!.*(\d|calculate|math))/,
+    // Text manipulation
+    /\b(translate|summarize|rewrite)\b(?!.*(\d|calculate|math))/,
   ];
 
   const isNonCalculator = nonCalculatorPatterns.some((pattern) =>
@@ -89,9 +95,9 @@ export function isCalculatorRelated(message: string): boolean {
     return true;
   }
 
-  // Fallback heuristic: short messages with numbers are likely calculations
+  // More lenient fallback: messages with numbers are probably calculations
   const hasNumbers = /\d/.test(message);
-  const isShort = message.split(' ').length <= 10;
+  const isShort = message.split(' ').length <= 15; // Increased from 10
 
   return hasNumbers && isShort;
 }
