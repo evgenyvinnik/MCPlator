@@ -1,16 +1,72 @@
+/**
+ * @fileoverview Server-Sent Events (SSE) client for chat streaming.
+ *
+ * Handles real-time streaming of AI responses using the SSE protocol.
+ * Parses the text/event-stream format and dispatches events to callbacks.
+ *
+ * @module api/sseClient
+ */
+
 import type { ChatRequestBody } from '@calculator/shared-types';
 
-// SSE prefix lengths
-const SSE_EVENT_PREFIX_LENGTH = 7; // "event: ".length
-const SSE_DATA_PREFIX_LENGTH = 6; // "data: ".length
+/** Length of "event: " prefix in SSE format */
+const SSE_EVENT_PREFIX_LENGTH = 7;
 
+/** Length of "data: " prefix in SSE format */
+const SSE_DATA_PREFIX_LENGTH = 6;
+
+/**
+ * Callbacks for handling different SSE event types.
+ */
 export type SSECallbacks = {
+  /** Called for each text token as it streams in */
   onToken: (token: string) => void;
+  /** Called when the AI returns calculator key sequences to execute */
   onKeys: (keys: string[]) => void;
+  /** Called when the response is complete with final message */
   onDone: (messageId: string, fullText: string) => void;
+  /** Called when an error occurs */
   onError: (error: string) => void;
 };
 
+/**
+ * Streams a chat message to the backend and processes SSE responses.
+ *
+ * Makes a POST request to /api/chat with the message and history,
+ * then processes the streaming response using the SSE protocol.
+ *
+ * SSE Event Format:
+ * ```
+ * event: <event-type>
+ * data: <json-payload>
+ *
+ * ```
+ *
+ * Supported event types:
+ * - `token`: Partial text chunk `{ token: string }`
+ * - `keys`: Calculator key sequence `{ keys: string[] }`
+ * - `done`: Final message `{ messageId: string, fullText: string }`
+ * - `error`: Error message `{ error: string }`
+ *
+ * @param body - The chat request body with message and history
+ * @param callbacks - Event handlers for different SSE event types
+ * @param signal - Optional AbortSignal for cancellation
+ * @throws Error if the HTTP response is not OK or no response body
+ *
+ * @example
+ * ```ts
+ * await streamChat(
+ *   { message: "Calculate 5 + 3", history: [] },
+ *   {
+ *     onToken: (token) => console.log('Token:', token),
+ *     onKeys: (keys) => console.log('Keys to press:', keys),
+ *     onDone: (id, text) => console.log('Complete:', text),
+ *     onError: (err) => console.error('Error:', err),
+ *   },
+ *   abortController.signal
+ * );
+ * ```
+ */
 export async function streamChat(
   body: ChatRequestBody,
   callbacks: SSECallbacks,
@@ -44,6 +100,7 @@ export async function streamChat(
 
       if (done) break;
 
+      // Append decoded chunk to buffer (stream: true handles partial UTF-8)
       buffer += decoder.decode(value, { stream: true });
 
       // Parse SSE events from buffer
@@ -59,7 +116,7 @@ export async function streamChat(
         } else if (line.startsWith('data: ')) {
           eventData = line.slice(SSE_DATA_PREFIX_LENGTH);
         } else if (line === '' && eventType && eventData) {
-          // End of event, process it
+          // End of event (blank line), process it
           try {
             const parsed = JSON.parse(eventData);
 
@@ -82,6 +139,7 @@ export async function streamChat(
             callbacks.onError('Failed to parse server response');
           }
 
+          // Reset for next event
           eventType = '';
           eventData = '';
         }

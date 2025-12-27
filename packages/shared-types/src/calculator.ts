@@ -28,7 +28,6 @@ export type KeyId =
 export type CalculatorIndicators = {
   error: boolean; // E
   memory: boolean; // M
-  constant: boolean; // K
   op: null | 'add' | 'sub' | 'mul' | 'div';
 };
 

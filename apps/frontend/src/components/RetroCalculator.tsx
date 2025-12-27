@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Main retro calculator component styled after Casio SL-300SV.
+ *
+ * This is the primary calculator UI component that combines:
+ * - RetroScreen for LCD display
+ * - RetroKeypad for button input
+ * - Power on/off functionality
+ *
+ * @module components/RetroCalculator
+ */
+
 import React, { useState } from 'react';
 import RetroScreen from './RetroScreen';
 import RetroKeypad from './RetroKeypad';
@@ -6,9 +17,14 @@ import logo from '../assets/casio_logo.svg';
 import type { KeyId } from '@calculator/shared-types';
 import styles from './RetroCalculator.module.css';
 
-// Map RetroKeypad key values to KeyId
+/**
+ * Maps RetroKeypad button values to calculator engine KeyId values.
+ *
+ * The keypad uses human-readable values (e.g., 'plus', 'multiply')
+ * while the calculator engine uses normalized KeyIds (e.g., 'add', 'mul').
+ */
 const retroKeyToKeyId: Record<string, KeyId> = {
-  // Numbers
+  // Number keys
   '0': 'digit_0',
   '1': 'digit_1',
   '2': 'digit_2',
@@ -19,30 +35,61 @@ const retroKeyToKeyId: Record<string, KeyId> = {
   '7': 'digit_7',
   '8': 'digit_8',
   '9': 'digit_9',
-  // Decimal
+  // Decimal point
   float: 'decimal',
-  // Operations
+  // Arithmetic operations
   plus: 'add',
   minus: 'sub',
   multiply: 'mul',
   divide: 'div',
   // Equals
   perform: 'equals',
-  // Clear
+  // Clear functions
   on: 'ac',
   clear: 'c',
-  // Percent
+  // Special functions
   percentage: 'percent',
-  // Plus/Minus (change sign)
   change_sign: 'plus_minus',
-  // Square root
   sqrt: 'sqrt',
 };
 
+/**
+ * Main calculator component that renders the complete Casio SL-300SV replica.
+ *
+ * Features:
+ * - Retro LCD display with 7-segment-style digits
+ * - Full keypad with number, operation, and memory buttons
+ * - Power on/off toggle with AC reset on power-on
+ * - Visual flash effect when digit limit is exceeded
+ * - Casio logo and "TWO WAY POWER" indicator
+ *
+ * @returns The rendered calculator component
+ *
+ * @example
+ * ```tsx
+ * function App() {
+ *   return (
+ *     <div className="calculator-container">
+ *       <RetroCalculator />
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 const RetroCalculator: React.FC = () => {
   const { display, pressKey, shouldFlash } = useCalculatorStore();
   const [isOn, setIsOn] = useState(true);
 
+  /**
+   * Handles key press events from the RetroKeypad.
+   *
+   * Routes key presses to appropriate handlers:
+   * - Power buttons (on/off) control calculator state
+   * - Memory buttons map to memory KeyIds
+   * - Other buttons map via retroKeyToKeyId
+   *
+   * @param key - The key definition with type and value
+   */
   const handleClick = (key: { type?: string; value: string }) => {
     // Handle power buttons
     if (key.value === 'off') {
@@ -76,13 +123,18 @@ const RetroCalculator: React.FC = () => {
       return;
     }
 
+    // Map standard keys
     const keyId = retroKeyToKeyId[key.value];
     if (keyId) {
       pressKey(keyId);
     }
   };
 
-  // Format display value to fit in 8 digits
+  /**
+   * Formats the display value, defaulting empty string to '0'.
+   * @param val - The raw display value
+   * @returns Formatted display string
+   */
   const formatDisplayValue = (val: string): string => {
     if (val === '') return '0';
     return val;

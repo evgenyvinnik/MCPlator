@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Physical keypad component for the retro calculator.
+ *
+ * Renders a 6x5 grid of calculator buttons matching the Casio SL-300SV layout.
+ * Features realistic 3D button effects with hover, press, and release animations.
+ * Supports programmatic button presses for AI-driven animations.
+ *
+ * @module components/RetroKeypad
+ */
+
 import React, { useRef, useEffect } from 'react';
 import sqrtIcon from '../assets/icons/sqrt.svg';
 import changeSignIcon from '../assets/icons/change-sign.svg';
@@ -5,7 +15,10 @@ import { useCalculatorStore } from '../state/useCalculatorStore';
 import type { KeyId } from '@calculator/shared-types';
 import styles from './RetroKeypad.module.css';
 
-// Mapping from KeyId (animation system) to RetroKeypad button identifier
+/**
+ * Maps calculator engine KeyIds to RetroKeypad button identifiers.
+ * Used to trigger visual button presses during AI-driven animations.
+ */
 const keyIdToRetroKey: Partial<Record<KeyId, string>> = {
   digit_0: '0',
   digit_1: '1',
@@ -31,10 +44,14 @@ const keyIdToRetroKey: Partial<Record<KeyId, string>> = {
   m_plus: 'm+',
   m_minus: 'm-',
   plus_minus: 'change_sign',
-  // 'sqrt' is not available in RetroKeypad
+  // Note: 'sqrt' maps to itself
 };
 
-// Define the layout matching original - 6 rows x 5 columns
+/**
+ * Physical button layout matching Casio SL-300SV.
+ * 6 rows x 5 columns grid. Empty strings create spacers.
+ * null indicates where the tall '+' button extends.
+ */
 const layout = [
   ['', '', '', 'sqrt', 'off'],
   ['mc', 'mr', 'm-', 'm+', 'divide'],
@@ -44,30 +61,46 @@ const layout = [
   ['on', '0', 'float', 'perform', null], // null = plus continues here
 ];
 
+/**
+ * Definition for a calculator key button.
+ */
 type KeyDef = {
+  /** Button category: MAIN, BASIC, MEMORY, MATH, NUMBER */
   type: string;
+  /** Internal value used for key mapping */
   value: string;
+  /** Display label shown on the button */
   label: string;
+  /** Optional CSS modifier classes (-red, -small, -large, --acbutton) */
   extraClass?: string;
 };
 
+/**
+ * Complete button definitions for all calculator keys.
+ * Maps layout keys to their display and behavior properties.
+ */
 const keyDefinitions: Record<string, KeyDef> = {
+  // Power/Clear buttons (red)
   off: { type: 'MAIN', value: 'off', label: 'OFF', extraClass: '-small' },
   clear: { type: 'MAIN', value: 'clear', label: 'C', extraClass: '-red' },
   on: { type: 'MAIN', value: 'on', label: 'AC', extraClass: '-red --acbutton' },
+  // Operation buttons
   perform: { type: 'BASIC', value: 'perform', label: '=' },
   divide: { type: 'BASIC', value: 'divide', label: '÷' },
   percentage: { type: 'BASIC', value: 'percentage', label: '%' },
   multiply: { type: 'BASIC', value: 'multiply', label: '✕' },
   minus: { type: 'BASIC', value: 'minus', label: '−' },
   plus: { type: 'BASIC', value: 'plus', label: '+', extraClass: '-large' },
+  // Memory buttons
   mc: { type: 'MEMORY', value: 'clear', label: 'MC' },
   mr: { type: 'MEMORY', value: 'recall', label: 'MR' },
   'm-': { type: 'MEMORY', value: 'minus', label: 'M-' },
   'm+': { type: 'MEMORY', value: 'plus', label: 'M+' },
+  // Math function buttons
   float: { type: 'MATH', value: 'float', label: '⋅' },
   change_sign: { type: 'MATH', value: 'change_sign', label: '+/-' },
   sqrt: { type: 'MATH', value: 'sqrt', label: '√', extraClass: '-small' },
+  // Number buttons
   '0': { type: 'NUMBER', value: '0', label: '0' },
   '1': { type: 'NUMBER', value: '1', label: '1' },
   '2': { type: 'NUMBER', value: '2', label: '2' },
@@ -80,20 +113,48 @@ const keyDefinitions: Record<string, KeyDef> = {
   '9': { type: 'NUMBER', value: '9', label: '9' },
 };
 
+/**
+ * Props for the RetroKeypad component.
+ */
 type RetroKeypadProps = {
+  /** Callback when a key is clicked */
   onKeyClick: (key: KeyDef) => void;
 };
 
+/**
+ * Physical keypad component with realistic 3D button effects.
+ *
+ * Features:
+ * - 6x5 grid layout matching Casio SL-300SV
+ * - Realistic hover, press, and release animations
+ * - Programmatic button press animations (for AI sequences)
+ * - Red buttons for AC/C/OFF
+ * - Tall '+' button spanning two rows
+ * - SVG icons for sqrt and +/- buttons
+ *
+ * @param props - Component props
+ * @returns The rendered keypad grid
+ *
+ * @example
+ * ```tsx
+ * <RetroKeypad onKeyClick={(key) => console.log('Pressed:', key.value)} />
+ * ```
+ */
 const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
   const pressedKey = useCalculatorStore((state) => state.pressedKey);
   const buttonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
-  // Get the RetroKeypad key identifier from the current pressedKey (KeyId)
+  // Map animation system KeyId to our button identifier
   const activeRetroKey = pressedKey
     ? keyIdToRetroKey[pressedKey] || null
     : null;
 
-  // Helper function to simulate button press visually
+  /**
+   * Programmatically triggers a visual button press animation.
+   * Used when the animation runner presses keys from AI sequences.
+   *
+   * @param button - The button element to animate
+   */
   const triggerButtonPress = React.useCallback((button: HTMLButtonElement) => {
     const isRed = button.dataset.isRed === 'true';
     const originalBackground = button.style.background;

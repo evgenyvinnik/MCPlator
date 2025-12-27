@@ -6,6 +6,7 @@ import { useCalculatorStore } from './state/useCalculatorStore';
 import { useChatStore } from './state/useChatStore';
 import styles from './App.module.css';
 import { MessageSquare } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   useAnimationRunner();
@@ -34,8 +35,10 @@ function App() {
   }, []);
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-[#0a0e1a] via-[#1a1f35] to-[#0f1629] text-slate-100">
-      <div className="pointer-events-none absolute inset-0">
+    <>
+      <Analytics />
+      <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-[#0a0e1a] via-[#1a1f35] to-[#0f1629] text-slate-100">
+        <div className="pointer-events-none absolute inset-0">
         <div className="absolute -left-32 top-0 h-[32rem] w-[32rem] animate-pulse rounded-full bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.4),transparent_60%)] blur-3xl [animation-duration:8s]" />
         <div className="absolute right-[-10%] -top-16 h-[36rem] w-[36rem] animate-pulse rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.35),transparent_60%)] blur-3xl [animation-delay:2s] [animation-duration:10s]" />
         <div className="absolute left-[30%] bottom-[-16rem] h-[32rem] w-[32rem] animate-pulse rounded-full bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.3),transparent_65%)] blur-3xl [animation-delay:4s] [animation-duration:12s]" />
@@ -45,8 +48,8 @@ function App() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e1a]/50 via-transparent to-transparent" />
       </div>
 
-      {/* Mobile Chat Toggle Button - needs higher z-index than everything else */}
-      {isMobile && !isChatOpen && (
+        {/* Mobile Chat Toggle Button - needs higher z-index than everything else */}
+        {isMobile && !isChatOpen && (
         <button
           onClick={() => setIsChatOpen(true)}
           style={{
@@ -70,9 +73,9 @@ function App() {
         >
           <MessageSquare className="w-5 h-5 text-white" />
         </button>
-      )}
+        )}
 
-      <div className="relative z-10 flex h-full">
+        <div className="relative z-10 flex h-full">
         {/* Main content area */}
         <div className="flex-1 flex flex-col">
           {!isMobile && (
@@ -136,37 +139,38 @@ function App() {
           </main>
         </div>
 
-        {/* Chat panel - Desktop: sidebar (unchanged), Mobile: overlay */}
-        {!isMobile && (
-          // Desktop: Original sidebar layout
-          <div className="h-full w-[400px] flex-shrink-0">
-            <AIChatPanel />
+          {/* Chat panel - Desktop: sidebar (unchanged), Mobile: overlay */}
+          {!isMobile && (
+            // Desktop: Original sidebar layout
+            <div className="h-full w-[400px] flex-shrink-0">
+              <AIChatPanel />
+            </div>
+          )}
+        </div>
+
+        {/* Mobile: Bottom sheet overlay covering 75% of screen */}
+        {isMobile && (
+          <div
+            style={{
+              position: 'fixed',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: '75vh',
+              zIndex: 100,
+              transform: isChatOpen ? 'translateY(0)' : 'translateY(100%)',
+              transition: 'transform 300ms ease-in-out',
+            }}
+          >
+            <AIChatPanel
+              isMobile={true}
+              onToggle={() => setIsChatOpen(false)}
+              onOpen={() => setIsChatOpen(true)}
+            />
           </div>
         )}
       </div>
-
-      {/* Mobile: Bottom sheet overlay covering 75% of screen */}
-      {isMobile && (
-        <div
-          style={{
-            position: 'fixed',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: '75vh',
-            zIndex: 100,
-            transform: isChatOpen ? 'translateY(0)' : 'translateY(100%)',
-            transition: 'transform 300ms ease-in-out',
-          }}
-        >
-          <AIChatPanel
-            isMobile={true}
-            onToggle={() => setIsChatOpen(false)}
-            onOpen={() => setIsChatOpen(true)}
-          />
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 

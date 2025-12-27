@@ -1,7 +1,42 @@
+/**
+ * @fileoverview Reusable Input component with consistent styling.
+ *
+ * Provides a styled input field with focus ring, placeholder,
+ * disabled states, and file input support.
+ *
+ * @module components/ui/input
+ */
+
 import * as React from 'react';
 
 import { cn } from './utils';
 
+/**
+ * Styled input component with dark theme support.
+ *
+ * Features:
+ * - Focus ring with primary color
+ * - Placeholder text styling
+ * - Disabled state styling
+ * - File input support
+ * - ARIA invalid state styling
+ * - Responsive text sizing (md:text-sm)
+ *
+ * @param props - Standard input props plus className
+ * @returns Rendered input element
+ *
+ * @example
+ * ```tsx
+ * // Text input
+ * <Input type="text" placeholder="Enter name" />
+ *
+ * // Email with validation
+ * <Input type="email" aria-invalid={!isValid} />
+ *
+ * // File input
+ * <Input type="file" accept="image/*" />
+ * ```
+ */
 function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
   return (
     <input

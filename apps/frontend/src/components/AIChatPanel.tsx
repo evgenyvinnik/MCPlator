@@ -1,3 +1,13 @@
+/**
+ * @fileoverview AI Chat panel component for calculator interaction.
+ *
+ * Provides a chat interface for users to interact with the AI assistant.
+ * Supports both desktop sidebar and mobile bottom sheet layouts.
+ * Features real-time streaming responses and calculator result display.
+ *
+ * @module components/AIChatPanel
+ */
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -5,13 +15,50 @@ import { Send, MessageSquare, ChevronDown } from 'lucide-react';
 import { useChatStore } from '../state/useChatStore';
 import { useStreamingChat } from '../api/useStreamingChat';
 
+/**
+ * Props for the AIChatPanel component.
+ */
 interface AIChatPanelProps {
+  /** Additional CSS classes */
   className?: string;
+  /** Whether to render in mobile layout mode */
   isMobile?: boolean;
+  /** Callback to close/toggle the chat panel (mobile) */
   onToggle?: () => void;
+  /** Callback to open the chat panel (mobile) */
   onOpen?: () => void;
 }
 
+/**
+ * AI Chat panel for interacting with the calculator assistant.
+ *
+ * Features:
+ * - Message history with user and assistant bubbles
+ * - Real-time streaming response display
+ * - Thinking indicator with pulsing dots
+ * - Special "result" message styling for calculator outputs
+ * - Auto-scrolling to latest message
+ * - Auto-resizing textarea input (max 120px)
+ * - Enter to send, Shift+Enter for newline
+ * - Mobile bottom sheet layout with minimize/close
+ * - Glassmorphism styling with backdrop blur
+ *
+ * @param props - Component props
+ * @returns The rendered chat panel
+ *
+ * @example
+ * ```tsx
+ * // Desktop sidebar
+ * <AIChatPanel />
+ *
+ * // Mobile bottom sheet
+ * <AIChatPanel
+ *   isMobile={true}
+ *   onToggle={() => setIsChatOpen(false)}
+ *   onOpen={() => setIsChatOpen(true)}
+ * />
+ * ```
+ */
 export function AIChatPanel({
   className = '',
   isMobile = false,
@@ -26,7 +73,7 @@ export function AIChatPanel({
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-resize textarea as content changes
+  // Auto-resize textarea as content changes (capped at 120px)
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -35,14 +82,19 @@ export function AIChatPanel({
     }
   }, [inputText]);
 
+  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    // Only scroll if there are messages (not on initial load)
     if ((messages.length > 0 || streamingMessage) && chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
   }, [messages, streamingMessage]);
 
+  /**
+   * Sends the current input message to the AI.
+   * Clears input, closes mobile sheet during processing,
+   * and reopens when response arrives.
+   */
   const handleSendMessage = async () => {
     if (!inputText.trim() || isStreaming) return;
 
@@ -62,6 +114,10 @@ export function AIChatPanel({
     }
   };
 
+  /**
+   * Handles keyboard events on the textarea.
+   * Enter sends message, Shift+Enter adds newline.
+   */
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();

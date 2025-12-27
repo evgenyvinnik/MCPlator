@@ -91,7 +91,6 @@ export const calculatorEngine: CalculatorEngine = {
     displayValue: '0',
     memoryValue: 0,
     hasMemory: false,
-    constant: null,
     lastOperator: null,
     lastOperand: null,
     isError: false,
@@ -165,7 +164,6 @@ export const calculatorEngine: CalculatorEngine = {
         displayValue: '0',
         lastOperator: null,
         lastOperand: null,
-        constant: null,
         isError: false,
         shouldStartNewNumber: false,
       };
@@ -280,14 +278,9 @@ export const calculatorEngine: CalculatorEngine = {
         };
       }
 
-      // Enable constant mode for repeated equals presses
       return {
         ...state,
         displayValue: formattedResult,
-        constant: {
-          operator: state.lastOperator,
-          value: rightOperand,
-        },
         lastOperator: null,
         lastOperand: result,
         shouldStartNewNumber: true,
@@ -403,7 +396,6 @@ export const calculatorEngine: CalculatorEngine = {
     indicators: {
       error: state.isError,
       memory: state.hasMemory,
-      constant: !!state.constant,
       op: state.lastOperator, // UI layer should map to symbols: add→'+', sub→'-', mul→'×', div→'÷'
     },
   }),

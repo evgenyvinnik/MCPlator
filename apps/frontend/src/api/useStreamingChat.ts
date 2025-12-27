@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Hook for managing streaming chat with the AI backend.
+ *
+ * Orchestrates the entire chat flow including:
+ * - Quota validation
+ * - SSE streaming
+ * - Animation queue management
+ * - Message persistence
+ *
+ * @module api/useStreamingChat
+ */
+
 import { useCallback, useRef, useState } from 'react';
 import { useChatStore } from '../state/useChatStore';
 import { useCalculatorStore } from '../state/useCalculatorStore';
@@ -6,6 +18,39 @@ import { streamChat } from './sseClient';
 import type { KeyId } from '@calculator/shared-types';
 import { v4 as uuid } from 'uuid';
 
+/**
+ * Hook for sending chat messages with SSE streaming support.
+ *
+ * Provides the complete chat interaction flow:
+ * 1. Validates daily quota (100 API calls/day)
+ * 2. Adds user message to store and IndexedDB
+ * 3. Streams response via SSE, showing tokens in real-time
+ * 4. Queues calculator key animations when AI returns keys
+ * 5. Adds result message after animation completes
+ *
+ * @returns Object containing:
+ * - `sendChat`: Function to send a chat message
+ * - `cancelStream`: Function to abort the current stream
+ * - `isStreaming`: Boolean indicating if currently streaming
+ *
+ * @example
+ * ```tsx
+ * function ChatInput() {
+ *   const { sendChat, isStreaming, cancelStream } = useStreamingChat();
+ *
+ *   const handleSubmit = async (text: string) => {
+ *     await sendChat(text);
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       <input disabled={isStreaming} />
+ *       {isStreaming && <button onClick={cancelStream}>Cancel</button>}
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export const useStreamingChat = () => {
   const { messages, addMessage, updateStreamingMessage, setIsThinking } =
     useChatStore();
@@ -13,11 +58,24 @@ export const useStreamingChat = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  /**
+   * Sends a chat message to the AI backend with streaming response.
+   *
+   * Flow:
+   * 1. Validates input and checks quota
+   * 2. Adds user message to chat
+   * 3. Streams AI response, updating UI in real-time
+   * 4. Queues button animations when AI returns key sequences
+   * 5. Adds result message when animation completes
+   *
+   * @param text - The message text to send
+   */
   const sendChat = useCallback(
     async (text: string) => {
       const trimmed = text.trim();
       if (!trimmed || isStreaming) return;
 
+      // Check daily quota
       const canCall = await quotaDB.canMakeCall();
       if (!canCall) {
         await addMessage({
@@ -29,7 +87,7 @@ export const useStreamingChat = () => {
         return;
       }
 
-      // Add user message
+      // Add user message to store
       const userMsg = {
         id: uuid(),
         role: 'user' as const,
@@ -38,10 +96,10 @@ export const useStreamingChat = () => {
       };
       await addMessage(userMsg);
 
-      // Record the quota
+      // Record quota usage
       await quotaDB.recordCall();
 
-      // Start streaming
+      // Start streaming state
       setIsStreaming(true);
       setIsThinking(true);
 
@@ -55,16 +113,19 @@ export const useStreamingChat = () => {
         await streamChat(
           {
             message: trimmed,
+            // Send last 6 messages as context
             history: messages.slice(-6).map((m) => ({
               role: m.role,
               text: m.text,
             })),
           },
           {
+            // Handle streaming tokens
             onToken: (token) => {
               streamedText += token;
               updateStreamingMessage(assistantMsgId, streamedText);
             },
+            // Handle calculator key sequences from AI
             onKeys: (keys) => {
               const animationId = uuid();
               enqueueAnimation(
@@ -88,6 +149,7 @@ export const useStreamingChat = () => {
                 }
               );
             },
+            // Handle completion
             onDone: async (_messageId, fullText) => {
               await addMessage({
                 id: assistantMsgId,
@@ -96,6 +158,7 @@ export const useStreamingChat = () => {
                 createdAt: new Date().toISOString(),
               });
             },
+            // Handle errors from backend
             onError: async (error) => {
               await addMessage({
                 id: assistantMsgId,
@@ -108,6 +171,7 @@ export const useStreamingChat = () => {
           abortControllerRef.current.signal
         );
       } catch (err) {
+        // Only show error if not user-initiated abort
         if ((err as Error).name !== 'AbortError') {
           await addMessage({
             id: assistantMsgId,
@@ -132,6 +196,10 @@ export const useStreamingChat = () => {
     ]
   );
 
+  /**
+   * Cancels the current streaming request.
+   * Aborts the fetch request, stopping any ongoing response.
+   */
   const cancelStream = useCallback(() => {
     abortControllerRef.current?.abort();
   }, []);

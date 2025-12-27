@@ -1,15 +1,64 @@
+/**
+ * @fileoverview LCD screen component for the retro calculator.
+ *
+ * Renders a realistic LCD display with:
+ * - Individual digit rendering with retro font
+ * - Thousand separators (')
+ * - Decimal point placement
+ * - Status indicators (Memory, Negative, Error)
+ * - On/off visual states
+ * - Flash animation for digit limit exceeded
+ *
+ * @module components/RetroScreen
+ */
+
 import React from 'react';
 import styles from './RetroScreen.module.css';
 
+/**
+ * Props for the RetroScreen component.
+ */
 type RetroScreenProps = {
+  /** The value to display (number or string) */
   value: string | number;
+  /** Whether memory contains a value */
   memory: boolean;
+  /** Whether an error occurred (e.g., division by zero) */
   error: boolean;
+  /** Whether the displayed value is negative */
   negative: boolean;
+  /** Whether the calculator is powered on */
   isOn: boolean;
+  /** Triggers flash animation when digit limit is exceeded */
   shouldFlash: boolean;
 };
 
+/**
+ * LCD screen component that displays the calculator value and indicators.
+ *
+ * Features:
+ * - Parses numeric values into individual digit elements
+ * - Adds thousand separators (') every 3 digits in integer part
+ * - Handles decimal points correctly
+ * - Shows indicators: M (memory), hexagon (negative), E (error)
+ * - Dims display when calculator is off
+ * - Flashes when digit limit is exceeded
+ *
+ * @param props - Component props
+ * @returns The rendered LCD screen
+ *
+ * @example
+ * ```tsx
+ * <RetroScreen
+ *   value="1234567"
+ *   memory={false}
+ *   error={false}
+ *   negative={false}
+ *   isOn={true}
+ *   shouldFlash={false}
+ * />
+ * ```
+ */
 const RetroScreen: React.FC<RetroScreenProps> = ({
   value,
   memory,
@@ -28,7 +77,8 @@ const RetroScreen: React.FC<RetroScreenProps> = ({
         >
           {(() => {
             // Parse value into digits and decimal points
-            const str = String(value).replace('-', ''); // Remove minus sign as it's handled by indicator
+            // Remove minus sign as it's displayed via the hexagon indicator
+            const str = String(value).replace('-', '');
             const [integerPart, fractionPart] = str.split('.');
 
             const digits: {

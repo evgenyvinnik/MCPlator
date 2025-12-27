@@ -15,9 +15,6 @@ export const LCDDisplay: React.FC = () => {
         <span className={indicators.memory ? 'font-bold' : 'opacity-20'}>
           M
         </span>
-        <span className={indicators.constant ? 'font-bold' : 'opacity-20'}>
-          K
-        </span>
         <span className={indicators.op ? 'font-bold' : 'opacity-20'}>
           {indicators.op === 'add' && '+'}
           {indicators.op === 'sub' && '-'}
