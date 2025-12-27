@@ -18,7 +18,7 @@
     "lint:fix": "bun run --filter 'mc-plator' lint:fix"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.24.3",
+    "@anthropic-ai/sdk": "^0.71.2",
     "@vercel/analytics": "^1.6.1",
     "uuid": "^9.0.1"
   },
