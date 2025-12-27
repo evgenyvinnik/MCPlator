@@ -225,6 +225,7 @@ export default async function handler(req: Request): Promise<Response> {
         const stream = await anthropic.messages.stream({
           model: MODEL,
           max_tokens: 1024,
+          temperature: 0.3, // Lower temperature for more deterministic responses
           system: SYSTEM_PROMPT,
           tools: [calculatorPressKeysTool],
           messages,
@@ -245,9 +246,6 @@ export default async function handler(req: Request): Promise<Response> {
             if (toolUse && toolUse.type === 'tool_use') {
               const toolInput = toolUse.input as { keys: KeyId[] };
               keys = toolInput.keys;
-
-              // Send keys event immediately
-              await writer.write(encoder.encode(sseEvent('keys', { keys })));
 
               // Continue conversation with tool result for final response
               const finalMessages = [
@@ -275,10 +273,14 @@ export default async function handler(req: Request): Promise<Response> {
               const finalStream = await anthropic.messages.stream({
                 model: MODEL,
                 max_tokens: 1024,
+                temperature: 0.3, // Lower temperature for more deterministic responses
                 system: SYSTEM_PROMPT,
                 tools: [calculatorPressKeysTool],
                 messages: finalMessages,
               });
+
+              let keysSent = false;
+              let tokenCount = 0;
 
               for await (const finalEvent of finalStream) {
                 if (finalEvent.type === 'content_block_delta') {
@@ -286,8 +288,20 @@ export default async function handler(req: Request): Promise<Response> {
                     const token = finalEvent.delta.text;
                     fullText += token;
                     await writer.write(encoder.encode(sseEvent('token', { token })));
+
+                    // Send keys after first few tokens of explanation (creates better UX timing)
+                    tokenCount++;
+                    if (!keysSent && tokenCount >= 3) {
+                      await writer.write(encoder.encode(sseEvent('keys', { keys })));
+                      keysSent = true;
+                    }
                   }
                 }
+              }
+
+              // Fallback: if keys weren't sent (very short response), send them now
+              if (!keysSent) {
+                await writer.write(encoder.encode(sseEvent('keys', { keys })));
               }
             }
           }
