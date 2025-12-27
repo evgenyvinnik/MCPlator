@@ -5,6 +5,27 @@ test.describe('Chat E2E Tests', () => {
   test.use({ viewport: { width: 1280, height: 720 } });
 
   test('should respond to "2 plus 2" calculation request', async ({ page }) => {
+    // Debug: Log all API network requests and responses
+    page.on('request', (request) => {
+      if (request.url().includes('/api/')) {
+        console.log('>> API Request:', request.method(), request.url());
+      }
+    });
+    page.on('response', async (response) => {
+      if (response.url().includes('/api/')) {
+        console.log('<< API Response:', response.status(), response.url());
+        if (response.status() >= 400) {
+          const body = await response.text().catch(() => 'Unable to read body');
+          console.log('<< API Error Body:', body.substring(0, 500));
+        }
+      }
+    });
+    page.on('requestfailed', (request) => {
+      if (request.url().includes('/api/')) {
+        console.log('!! API Request FAILED:', request.url(), request.failure()?.errorText);
+      }
+    });
+
     // Navigate to the app and wait for it to fully load
     await page.goto('/', { waitUntil: 'networkidle' });
 
@@ -41,6 +62,10 @@ test.describe('Chat E2E Tests', () => {
 
     // Wait for the user message to appear in the chat
     await expect(page.locator('text="2 plus 2"')).toBeVisible({ timeout: 5000 });
+
+    // Debug: Screenshot after sending message
+    await page.screenshot({ path: 'test-results/debug-after-send.png', fullPage: true });
+    console.log('Message sent, waiting for API response...');
 
     // Wait for AI response - look for either:
     // 1. Assistant message (bg-white/10 class)
