@@ -87,7 +87,7 @@ export function AIChatPanel({
           </div>
           <div>
             <h2 className={`text-white ${isMobile ? 'text-lg font-semibold' : ''}`}>AI Assistant</h2>
-            <p className={`text-cyan-300 ${isMobile ? 'text-sm' : 'text-xs'}`}>
+            <p className={`text-cyan-300 ${isMobile ? 'text-base' : 'text-xs'}`}>
               Let me calculate it for you
             </p>
           </div>
@@ -121,8 +121,8 @@ export function AIChatPanel({
                   <MessageSquare className={`${isMobile ? 'w-10 h-10' : 'w-8 h-8'} text-cyan-300`} />
                 </div>
                 <div>
-                  <p className={`text-white ${isMobile ? 'text-lg font-medium' : ''}`}>Start a conversation</p>
-                  <p className={`text-cyan-300 ${isMobile ? 'text-base' : 'text-sm'} mt-2`}>
+                  <p className={`text-white ${isMobile ? 'text-xl font-medium' : ''}`}>Start a conversation</p>
+                  <p className={`text-cyan-300 ${isMobile ? 'text-lg' : 'text-sm'} mt-2`}>
                     Ask me to perform calculator operations!
                   </p>
                 </div>
@@ -139,7 +139,7 @@ export function AIChatPanel({
                   <Card
                     className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl bg-gradient-to-r from-emerald-500/30 to-cyan-500/30 border border-emerald-400/40`}
                   >
-                    <p className={`${isMobile ? 'text-xs' : 'text-xs'} text-emerald-300 uppercase tracking-wider mb-1`}>Result</p>
+                    <p className={`${isMobile ? 'text-base' : 'text-xs'} text-emerald-300 uppercase tracking-wider mb-1`}>Result</p>
                     <p className={`${isMobile ? 'text-2xl' : 'text-xl'} font-bold text-white font-mono`}>{message.text}</p>
                   </Card>
                 ) : (
@@ -152,7 +152,7 @@ export function AIChatPanel({
                     }`}
                   >
                     <p className={isMobile ? 'text-base' : 'text-sm'}>{message.text}</p>
-                    <p className={`${isMobile ? 'text-sm' : 'text-xs'} opacity-70 mt-1`}>
+                    <p className={`${isMobile ? 'text-base' : 'text-xs'} opacity-70 mt-1`}>
                       {new Date(message.createdAt).toLocaleTimeString()}
                     </p>
                   </Card>
@@ -189,7 +189,7 @@ export function AIChatPanel({
                   onKeyDown={handleKeyPress}
                   placeholder="Type your message..."
                   rows={1}
-                  className={`flex-1 bg-white/10 border border-white/20 text-white placeholder:text-white/60 rounded-full focus:ring-2 focus:ring-cyan-400 focus:border-transparent focus:outline-none resize-none px-4 scrollbar-hide ${isMobile ? 'text-base py-3' : 'text-sm py-2'}`}
+                  className={`flex-1 bg-white/10 border border-white/20 text-white placeholder:text-white/60 rounded-full focus:ring-2 focus:ring-cyan-400 focus:border-transparent focus:outline-none resize-none px-4 scrollbar-hide ${isMobile ? 'text-lg py-3' : 'text-sm py-2'}`}
                   style={{ maxHeight: '120px', lineHeight: '1.5' }}
                 />
                 <Button
