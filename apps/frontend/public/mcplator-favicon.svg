@@ -74,7 +74,7 @@
 
   <!-- Key helper: draws one key at (x,y) with a chosen fill -->
   <!-- Top-left: C (red) -->
-  <g transform="translate(3,3)" filter="url(#keyShadow)">
+  <g transform="translate(2,3)" filter="url(#keyShadow)">
     <!-- outer ring (0 0 0 3px rgba(0,0,0,0.1) + border) -->
     <!-- <use href="#bezelPath" fill="rgba(0,0,0,0.10)"/>
     <use href="#bezelPath" fill="url(#bezelGrad)" transform="translate(1,1)"/>
@@ -100,10 +100,10 @@
       <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/> -->
     </g>
   </g>
-  <text x="17" y="18.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">C</text>
+  <text x="16" y="18.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">C</text>
 
   <!-- Top-right: 1 (dark) -->
-  <g transform="translate(34,3)" filter="url(#keyShadow)">
+  <g transform="translate(33,3)" filter="url(#keyShadow)">
     <!-- <use href="#bezelPath" fill="rgba(0,0,0,0.10)"/>
     <use href="#bezelPath" fill="url(#bezelGrad)" transform="translate(1,1)"/>
     <use href="#bezelPath" fill="none" stroke="rgba(0,0,0,0.8)" stroke-width="1" transform="translate(1,1)"/> -->
@@ -119,10 +119,10 @@
       <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/> -->
     </g>
   </g>
-  <text x="48" y="18.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">1</text>
+  <text x="47" y="18.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">1</text>
 
   <!-- Bottom-left: AC (red) -->
-  <g transform="translate(3,34)" filter="url(#keyShadow)">
+  <g transform="translate(2,34)" filter="url(#keyShadow)">
     <!-- <use href="#bezelPath" fill="rgba(0,0,0,0.10)"/>
     <use href="#bezelPath" fill="url(#bezelGrad)" transform="translate(1,1)"/>
     <use href="#bezelPath" fill="none" stroke="rgba(0,0,0,0.8)" stroke-width="1" transform="translate(1,1)"/> -->
@@ -138,10 +138,10 @@
       <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/> -->
     </g>
   </g>
-  <text x="17.5" y="49.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">AC</text>
+  <text x="16.5" y="49.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">AC</text>
 
   <!-- Bottom-right: 0 (dark) -->
-  <g transform="translate(34,34)" filter="url(#keyShadow)">
+  <g transform="translate(33,34)" filter="url(#keyShadow)">
     <!-- <use href="#bezelPath" fill="rgba(0,0,0,0.10)"/>
     <use href="#bezelPath" fill="url(#bezelGrad)" transform="translate(1,1)"/>
     <use href="#bezelPath" fill="none" stroke="rgba(0,0,0,0.8)" stroke-width="1" transform="translate(1,1)"/> -->
@@ -157,5 +157,5 @@
       <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/> -->
     </g>
   </g>
-  <text x="48.5" y="49.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">0</text>
+  <text x="47.5" y="49.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">0</text>
 </svg>
