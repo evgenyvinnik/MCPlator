@@ -226,7 +226,7 @@ export function AIChatPanel({
                     style={{
                       padding: '2px',
                       borderRadius: '1rem',
-                      background: 'linear-gradient(135deg, #5254e0ff, #6e38eaff, #0c97b0ff)',
+                      background: 'linear-gradient(135deg, #222370ff, #391885ff, #066475ff)',
                     }}
                   >
                     <Card
@@ -239,7 +239,7 @@ export function AIChatPanel({
                         Result
                       </p>
                       <p
-                        className={`${isMobile ? 'text-3xl' : 'text-2xl'} font-bold text-white font-mono`}
+                        className={`${isMobile ? 'text-3xl' : 'text-2xl'} font-bold text-white font-mono break-words overflow-hidden`}
                       >
                         {message.text}
                       </p>
@@ -254,7 +254,7 @@ export function AIChatPanel({
                         : 'bg-white/10 text-white border border-white/20'
                     }`}
                   >
-                    <p className={isMobile ? 'text-lg' : 'text-base'}>
+                    <p className={`${isMobile ? 'text-lg' : 'text-base'} break-words overflow-hidden`}>
                       {message.text}
                     </p>
                     <p
@@ -273,7 +273,7 @@ export function AIChatPanel({
                 <Card
                   className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl bg-white/10 text-white border border-white/20`}
                 >
-                  <p className={isMobile ? 'text-lg' : 'text-base'}>
+                  <p className={`${isMobile ? 'text-lg' : 'text-base'} break-words overflow-hidden`}>
                     {streamingMessage.text}
                   </p>
                   {isThinking && (
