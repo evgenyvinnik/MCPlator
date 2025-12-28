@@ -8,13 +8,15 @@
  * @module components/AIChatPanel
  */
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Button } from './ui/button';
-import { Card } from './ui/card';
-import { Textarea } from './ui/textarea';
-import { Send, MessageSquare, ChevronDown } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 import { useChatStore } from '../state/useChatStore';
 import { useStreamingChat } from '../api/useStreamingChat';
+import { ChatEmptyState } from './chat/ChatEmptyState';
+import { ChatHeader } from './chat/ChatHeader';
+import { ChatInput } from './chat/ChatInput';
+import { ChatMessageBubble } from './chat/ChatMessageBubble';
+import { ResultCard } from './chat/ResultCard';
+import { StreamingMessage } from './chat/StreamingMessage';
 
 /**
  * Props for the AIChatPanel component.
@@ -39,7 +41,6 @@ interface AIChatPanelProps {
  * - Thinking indicator with pulsing dots
  * - Special "result" message styling for calculator outputs
  * - Auto-scrolling to latest message
- * - Auto-resizing textarea input (max 120px)
  * - Enter to send, Shift+Enter for newline
  * - Mobile bottom sheet layout with minimize/close
  * - Glassmorphism styling with backdrop blur
@@ -70,18 +71,8 @@ export function AIChatPanel({
   const { sendChat, isStreaming } = useStreamingChat();
   const [inputText, setInputText] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Auto-resize textarea as content changes (capped at 120px)
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
-    }
-  }, [inputText]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -116,13 +107,15 @@ export function AIChatPanel({
   };
 
   /**
-   * Handles keyboard events on the textarea.
-   * Enter sends message, Shift+Enter adds newline.
+   * Handles minimize/close toggle for mobile layout.
    */
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
+  const handleMinimizeToggle = () => {
+    if (isMinimized) {
+      setIsMinimized(false);
+    } else if (onToggle) {
+      onToggle();
+    } else {
+      setIsMinimized(true);
     }
   };
 
@@ -139,49 +132,11 @@ export function AIChatPanel({
       <div className="absolute top-20 left-10 w-32 h-32 bg-cyan-400/10 rounded-full blur-xl"></div>
       <div className="absolute bottom-20 right-10 w-40 h-40 bg-blue-400/10 rounded-full blur-xl"></div>
 
-      {/* Header */}
-      <div className="relative z-20 flex items-center justify-between p-4 border-b border-white/10 backdrop-blur-lg bg-white/5">
-        <div className="flex items-center gap-3">
-          <div
-            className={`${isMobile ? 'w-16 h-16' : 'w-10 h-10'} rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shrink-0`}
-          >
-            <MessageSquare
-              className={`${isMobile ? 'w-7 h-7' : 'w-5 h-5'} text-white`}
-            />
-          </div>
-          <div>
-            <h2
-              className={`text-white ${isMobile ? 'text-xl font-semibold' : 'text-lg'}`}
-            >
-              AI Assistant
-            </h2>
-            <p
-              className={`text-cyan-300 ${isMobile ? 'text-lg' : 'text-sm'}`}
-            >
-              Let me calculate it for you
-            </p>
-          </div>
-        </div>
-        {isMobile && (
-          <button
-            onClick={() => {
-              if (isMinimized) {
-                setIsMinimized(false);
-              } else if (onToggle) {
-                onToggle();
-              } else {
-                setIsMinimized(true);
-              }
-            }}
-            className="p-2 hover:bg-white/10 rounded-full transition-colors"
-            aria-label={isMinimized ? 'Maximize chat' : 'Close chat'}
-          >
-            <ChevronDown
-              className={`w-5 h-5 text-white transition-transform ${isMinimized ? 'rotate-180' : ''}`}
-            />
-          </button>
-        )}
-      </div>
+      <ChatHeader
+        isMobile={isMobile}
+        isMinimized={isMinimized}
+        onMinimizeToggle={handleMinimizeToggle}
+      />
 
       {/* Chat Messages - Hidden when minimized */}
       {!isMinimized && (
@@ -191,27 +146,7 @@ export function AIChatPanel({
             className="flex-1 overflow-y-auto p-4 space-y-4 relative z-10"
           >
             {messages.length === 0 && !streamingMessage && (
-              <div className="text-center py-12 space-y-4">
-                <div
-                  className={`${isMobile ? 'w-20 h-20' : 'w-16 h-16'} mx-auto rounded-full bg-gradient-to-br from-cyan-400/20 to-blue-500/20 flex items-center justify-center backdrop-blur-lg`}
-                >
-                  <MessageSquare
-                    className={`${isMobile ? 'w-10 h-10' : 'w-8 h-8'} text-cyan-300`}
-                  />
-                </div>
-                <div>
-                  <p
-                    className={`text-white ${isMobile ? 'text-2xl font-medium' : 'text-lg'}`}
-                  >
-                    Start a conversation
-                  </p>
-                  <p
-                    className={`text-cyan-300 ${isMobile ? 'text-xl' : 'text-base'} mt-2`}
-                  >
-                    Ask me to perform calculator operations!
-                  </p>
-                </div>
-              </div>
+              <ChatEmptyState isMobile={isMobile} />
             )}
 
             {messages.map((message) => (
@@ -220,98 +155,39 @@ export function AIChatPanel({
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {message.type === 'result' ? (
-                  // Result message - special styling with gradient border
-                  <div
-                    className="max-w-[85%]"
-                    style={{
-                      padding: '2px',
-                      borderRadius: '1rem',
-                      background: 'linear-gradient(135deg, #222370ff, #391885ff, #066475ff)',
-                    }}
-                  >
-                    <Card
-                      className={`${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl bg-gradient-to-r from-indigo-950 via-purple-950 to-blue-950`}
-                      style={{ borderRadius: 'calc(1rem - 2px)' }}
-                    >
-                      <p
-                        className={`${isMobile ? 'text-lg' : 'text-sm'} text-indigo-300 uppercase tracking-wider mb-1`}
-                      >
-                        Result
-                      </p>
-                      <p
-                        className={`${isMobile ? 'text-3xl' : 'text-2xl'} font-bold text-white font-mono break-words overflow-hidden`}
-                      >
-                        {message.text}
-                      </p>
-                    </Card>
-                  </div>
+                  <ResultCard
+                    text={message.text}
+                    keys={message.keys}
+                    isMobile={isMobile}
+                  />
                 ) : (
-                  // Regular message
-                  <Card
-                    className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl ${
-                      message.role === 'user'
-                        ? 'bg-cyan-600/80 text-white'
-                        : 'bg-white/10 text-white border border-white/20'
-                    }`}
-                  >
-                    <p className={`${isMobile ? 'text-lg' : 'text-base'} break-words overflow-hidden`}>
-                      {message.text}
-                    </p>
-                    <p
-                      className={`${isMobile ? 'text-base' : 'text-sm'} opacity-70 mt-1`}
-                    >
-                      {new Date(message.createdAt).toLocaleTimeString()}
-                    </p>
-                  </Card>
+                  <ChatMessageBubble
+                    text={message.text}
+                    role={message.role}
+                    createdAt={message.createdAt}
+                    isMobile={isMobile}
+                  />
                 )}
               </div>
             ))}
 
-            {/* Streaming message */}
             {streamingMessage && (
-              <div className="flex justify-start">
-                <Card
-                  className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl bg-white/10 text-white border border-white/20`}
-                >
-                  <p className={`${isMobile ? 'text-lg' : 'text-base'} break-words overflow-hidden`}>
-                    {streamingMessage.text}
-                  </p>
-                  {isThinking && (
-                    <div className="flex items-center gap-1 mt-2">
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse [animation-delay:0.2s]"></div>
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse [animation-delay:0.4s]"></div>
-                    </div>
-                  )}
-                </Card>
-              </div>
+              <StreamingMessage
+                text={streamingMessage.text}
+                isThinking={isThinking}
+                isMobile={isMobile}
+              />
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Chat Input */}
-          <div
-            className={`${isMobile ? 'p-4 pb-6' : 'p-4'} relative z-20 border-t border-white/10 backdrop-blur-lg bg-white/5`}
-          >
-            <div className={`flex ${isMobile ? 'gap-3' : 'gap-2'} items-end`}>
-              <Textarea
-                ref={textareaRef}
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyDown={handleKeyPress}
-                placeholder="Type your message..."
-                rows={1}
-                isMobile={isMobile}
-              />
-              <Button
-                onClick={handleSendMessage}
-                disabled={!inputText.trim() || isStreaming}
-                className={`bg-cyan-600 hover:bg-cyan-500 text-white border-0 rounded-full ${isMobile ? 'px-5' : 'px-4'} shadow-lg disabled:opacity-50`}
-              >
-                <Send className={isMobile ? 'h-5 w-5' : 'h-4 w-4'} />
-              </Button>
-            </div>
-          </div>
+          <ChatInput
+            value={inputText}
+            onChange={setInputText}
+            onSend={handleSendMessage}
+            disabled={isStreaming}
+            isMobile={isMobile}
+          />
         </>
       )}
     </div>

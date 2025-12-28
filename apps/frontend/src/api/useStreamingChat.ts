@@ -128,12 +128,13 @@ export const useStreamingChat = () => {
             // Handle calculator key sequences from AI
             onKeys: (keys) => {
               const animationId = uuid();
+              const pressedKeys = keys.map((k) => k as KeyId);
               enqueueAnimation(
                 {
                   id: animationId,
-                  commands: keys.map((k) => ({
+                  commands: pressedKeys.map((k) => ({
                     type: 'pressKey' as const,
-                    key: k as KeyId,
+                    key: k,
                     delayMs: 180,
                   })),
                 },
@@ -144,6 +145,7 @@ export const useStreamingChat = () => {
                     role: 'assistant',
                     text: displayText,
                     type: 'result',
+                    keys: pressedKeys,
                     createdAt: new Date().toISOString(),
                   });
                 }
