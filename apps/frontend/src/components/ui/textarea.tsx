@@ -1,8 +1,8 @@
 /**
- * @fileoverview Chat Textarea component with consistent styling.
+ * @fileoverview Chat Textarea component with AI-themed gradient styling.
  *
  * Provides a styled textarea field for the chat input with
- * auto-resize support and mobile-responsive sizing.
+ * gradient background and border to indicate AI interaction.
  *
  * @module components/ui/textarea
  */
@@ -19,40 +19,52 @@ interface TextareaProps
 }
 
 /**
- * Styled textarea component for chat input.
+ * Styled textarea component for AI chat input.
  *
  * Features:
- * - Glassmorphism styling with backdrop blur
+ * - Gradient background (blue/purple AI theme)
+ * - Gradient border effect
+ * - High contrast placeholder text
  * - Cyan focus ring
  * - Auto-resize support (via external ref)
  * - Mobile-responsive text sizing
- * - Rounded corners (1rem)
- * - Max height of 120px
  *
  * @param props - Textarea props including isMobile flag
- * @returns Rendered textarea element
- *
- * @example
- * ```tsx
- * <Textarea
- *   ref={textareaRef}
- *   value={inputText}
- *   onChange={(e) => setInputText(e.target.value)}
- *   placeholder="Type your message..."
- *   isMobile={false}
- * />
- * ```
+ * @returns Rendered textarea element with gradient wrapper
  */
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ isMobile = false, ...props }, ref) => {
     return (
-      <textarea
-        ref={ref}
-        data-slot="textarea"
-        className={`flex-1 min-h-0 bg-white/10 border border-white/20 text-white placeholder:text-white/60 focus:ring-2 focus:ring-cyan-400 focus:border-transparent focus:outline-none resize-none px-4 scrollbar-hide ${isMobile ? 'text-lg py-3' : 'text-sm py-2'}`}
-        style={{ maxHeight: '120px', lineHeight: '1.5', borderRadius: '1.5 rem' }}
-        {...props}
-      />
+      <div
+        className="flex-1"
+        style={{
+          padding: '2px',
+          borderRadius: '1rem',
+          background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4)',
+        }}
+      >
+        <textarea
+          ref={ref}
+          data-slot="textarea"
+          className={`w-full min-h-0 text-white focus:outline-none resize-none px-4 scrollbar-hide ${isMobile ? 'text-lg py-3' : 'text-sm py-2'}`}
+          style={{
+            display: 'block',
+            margin: 0,
+            border: 'none',
+            maxHeight: '120px',
+            lineHeight: '1.5',
+            borderRadius: 'calc(1rem - 2px)',
+            background: 'linear-gradient(135deg, #282469 0%, #2f2d74 50%, #0b69e4 100%)',
+          }}
+          {...props}
+        />
+        <style>{`
+          [data-slot="textarea"]::placeholder {
+            color: #c7d2fe;
+            opacity: 1;
+          }
+        `}</style>
+      </div>
     );
   }
 );
