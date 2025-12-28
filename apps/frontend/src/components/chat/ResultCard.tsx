@@ -84,7 +84,7 @@ export function ResultCard({ text, keys, isMobile = false }: ResultCardProps) {
           style={{ borderRadius: 'calc(1rem - 2px)' }}
         >
           <p
-            className={`${isMobile ? 'text-lg' : 'text-sm'} text-indigo-300 uppercase tracking-wider mb-1`}
+            className={`${isMobile ? 'text-lg' : 'text-lg'} text-indigo-300 uppercase tracking-wider mb-1`}
           >
             Result
           </p>
@@ -99,7 +99,7 @@ export function ResultCard({ text, keys, isMobile = false }: ResultCardProps) {
             <div className="mt-3 pt-3 border-t border-indigo-500/30 animate-in slide-in-from-top-2 duration-200">
               <div className="flex items-center justify-between mb-2">
                 <p
-                  className={`${isMobile ? 'text-base' : 'text-xs'} text-indigo-400 uppercase tracking-wider`}
+                  className={`${isMobile ? 'text-base' : 'text-base'} text-indigo-400 tracking-wider`}
                 >
                   Keys Pressed
                 </p>
