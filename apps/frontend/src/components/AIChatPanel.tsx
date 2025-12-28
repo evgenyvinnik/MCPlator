@@ -151,12 +151,12 @@ export function AIChatPanel({
           </div>
           <div>
             <h2
-              className={`text-white ${isMobile ? 'text-lg font-semibold' : ''}`}
+              className={`text-white ${isMobile ? 'text-xl font-semibold' : 'text-lg'}`}
             >
               AI Assistant
             </h2>
             <p
-              className={`text-cyan-300 ${isMobile ? 'text-base' : 'text-xs'}`}
+              className={`text-cyan-300 ${isMobile ? 'text-lg' : 'text-sm'}`}
             >
               Let me calculate it for you
             </p>
@@ -201,12 +201,12 @@ export function AIChatPanel({
                 </div>
                 <div>
                   <p
-                    className={`text-white ${isMobile ? 'text-xl font-medium' : ''}`}
+                    className={`text-white ${isMobile ? 'text-2xl font-medium' : 'text-lg'}`}
                   >
                     Start a conversation
                   </p>
                   <p
-                    className={`text-cyan-300 ${isMobile ? 'text-lg' : 'text-sm'} mt-2`}
+                    className={`text-cyan-300 ${isMobile ? 'text-xl' : 'text-base'} mt-2`}
                   >
                     Ask me to perform calculator operations!
                   </p>
@@ -220,21 +220,31 @@ export function AIChatPanel({
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {message.type === 'result' ? (
-                  // Result message - special styling with bold text
-                  <Card
-                    className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl bg-gradient-to-r from-emerald-500/30 to-cyan-500/30 border border-emerald-400/40`}
+                  // Result message - special styling with gradient border
+                  <div
+                    className="max-w-[85%]"
+                    style={{
+                      padding: '2px',
+                      borderRadius: '1rem',
+                      background: 'linear-gradient(135deg, #5254e0ff, #6e38eaff, #0c97b0ff)',
+                    }}
                   >
-                    <p
-                      className={`${isMobile ? 'text-base' : 'text-xs'} text-emerald-300 uppercase tracking-wider mb-1`}
+                    <Card
+                      className={`${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl bg-gradient-to-r from-indigo-950 via-purple-950 to-blue-950`}
+                      style={{ borderRadius: 'calc(1rem - 2px)' }}
                     >
-                      Result
-                    </p>
-                    <p
-                      className={`${isMobile ? 'text-2xl' : 'text-xl'} font-bold text-white font-mono`}
-                    >
-                      {message.text}
-                    </p>
-                  </Card>
+                      <p
+                        className={`${isMobile ? 'text-lg' : 'text-sm'} text-indigo-300 uppercase tracking-wider mb-1`}
+                      >
+                        Result
+                      </p>
+                      <p
+                        className={`${isMobile ? 'text-3xl' : 'text-2xl'} font-bold text-white font-mono`}
+                      >
+                        {message.text}
+                      </p>
+                    </Card>
+                  </div>
                 ) : (
                   // Regular message
                   <Card
@@ -244,11 +254,11 @@ export function AIChatPanel({
                         : 'bg-white/10 text-white border border-white/20'
                     }`}
                   >
-                    <p className={isMobile ? 'text-base' : 'text-sm'}>
+                    <p className={isMobile ? 'text-lg' : 'text-base'}>
                       {message.text}
                     </p>
                     <p
-                      className={`${isMobile ? 'text-base' : 'text-xs'} opacity-70 mt-1`}
+                      className={`${isMobile ? 'text-base' : 'text-sm'} opacity-70 mt-1`}
                     >
                       {new Date(message.createdAt).toLocaleTimeString()}
                     </p>
@@ -263,7 +273,7 @@ export function AIChatPanel({
                 <Card
                   className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl bg-white/10 text-white border border-white/20`}
                 >
-                  <p className={isMobile ? 'text-base' : 'text-sm'}>
+                  <p className={isMobile ? 'text-lg' : 'text-base'}>
                     {streamingMessage.text}
                   </p>
                   {isThinking && (
