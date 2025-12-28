@@ -8,40 +8,10 @@
  */
 
 import { useState } from 'react';
-import { Bug, X } from 'lucide-react';
+import { Bug } from 'lucide-react';
 import { Card } from '../ui/Card';
+import { DebugPanel } from './DebugPanel';
 import type { KeyId } from '@calculator/shared-types';
-
-/**
- * Maps KeyId to a human-readable label for the debug panel.
- */
-const keyIdToLabel: Record<KeyId, string> = {
-  digit_0: '0',
-  digit_1: '1',
-  digit_2: '2',
-  digit_3: '3',
-  digit_4: '4',
-  digit_5: '5',
-  digit_6: '6',
-  digit_7: '7',
-  digit_8: '8',
-  digit_9: '9',
-  decimal: '.',
-  add: '+',
-  sub: '−',
-  mul: '×',
-  div: '÷',
-  percent: '%',
-  sqrt: '√',
-  plus_minus: '±',
-  equals: '=',
-  ac: 'AC',
-  c: 'C',
-  mc: 'MC',
-  mr: 'MR',
-  m_plus: 'M+',
-  m_minus: 'M−',
-};
 
 interface ResultCardProps {
   /** The result text to display */
@@ -94,50 +64,22 @@ export function ResultCard({ text, keys, isMobile = false }: ResultCardProps) {
             {text}
           </p>
 
-          {/* Debug panel - slides out when open */}
           {isDebugOpen && hasKeys && (
-            <div className="mt-3 pt-3 border-t border-indigo-500/30 animate-in slide-in-from-top-2 duration-200">
-              <div className="flex items-center justify-between mb-2">
-                <p
-                  className={`${isMobile ? 'text-base' : 'text-base'} text-indigo-400 tracking-wider`}
-                >
-                  Keys Pressed
-                </p>
-                <button
-                  onClick={() => setIsDebugOpen(false)}
-                  className="p-1 rounded-full hover:bg-indigo-500/30 transition-colors"
-                  aria-label="Close debug panel"
-                >
-                  <X
-                    className={`${isMobile ? 'w-4 h-4' : 'w-3 h-3'} text-indigo-400`}
-                  />
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {keys.map((key, index) => (
-                  <span
-                    key={index}
-                    className={`${isMobile ? 'px-3 py-1.5 text-base' : 'px-2 py-1 text-sm'} bg-indigo-500/20 border border-indigo-500/40 rounded-md text-indigo-200 font-mono`}
-                  >
-                    {keyIdToLabel[key] || key}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <DebugPanel
+              keys={keys}
+              onClose={() => setIsDebugOpen(false)}
+              isMobile={isMobile}
+            />
           )}
         </Card>
       </div>
 
-      {/* Debug icon - appears on hover (desktop) or always visible (mobile) */}
-      {hasKeys && (
+      {/* Debug icon - appears on hover (desktop) or always visible (mobile), hidden when panel is open */}
+      {hasKeys && !isDebugOpen && (
         <button
-          onClick={() => setIsDebugOpen((prev) => !prev)}
-          className={`p-1.5 rounded-full transition-all duration-200 flex-shrink-0 ${
-            isDebugOpen
-              ? 'bg-indigo-500/50 opacity-100'
-              : 'bg-indigo-500/30 hover:bg-indigo-500/50'
-          } ${
-            isMobile || isHovered || isDebugOpen ? 'opacity-100' : 'opacity-0'
+          onClick={() => setIsDebugOpen(true)}
+          className={`mt-px p-1.5 rounded-full transition-all duration-200 flex-shrink-0 bg-indigo-500/30 hover:bg-indigo-500/50 ${
+            isMobile || isHovered ? 'opacity-100' : 'opacity-0'
           }`}
           aria-label="Show debug info"
         >
