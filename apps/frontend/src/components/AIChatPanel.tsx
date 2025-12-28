@@ -11,6 +11,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
+import { Textarea } from './ui/textarea';
 import { Send, MessageSquare, ChevronDown } from 'lucide-react';
 import { useChatStore } from '../state/useChatStore';
 import { useStreamingChat } from '../api/useStreamingChat';
@@ -282,19 +283,18 @@ export function AIChatPanel({
           <div
             className={`${isMobile ? 'p-5' : 'p-4'} relative z-20 border-t border-white/10 backdrop-blur-lg bg-white/5`}
           >
-            <Card
+            {/* <Card
               className={`backdrop-blur-lg bg-white/10 border border-white/20 ${isMobile ? 'p-4' : 'p-3'} shadow-xl`}
-            >
+            > */}
               <div className="flex gap-2 items-end">
-                <textarea
+                <Textarea
                   ref={textareaRef}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyDown={handleKeyPress}
                   placeholder="Type your message..."
                   rows={1}
-                  className={`flex-1 bg-white/10 border border-white/20 text-white placeholder:text-white/60 rounded-full focus:ring-2 focus:ring-cyan-400 focus:border-transparent focus:outline-none resize-none px-4 scrollbar-hide ${isMobile ? 'text-lg py-3' : 'text-sm py-2'}`}
-                  style={{ maxHeight: '120px', lineHeight: '1.5' }}
+                  isMobile={isMobile}
                 />
                 <Button
                   onClick={handleSendMessage}
@@ -304,7 +304,7 @@ export function AIChatPanel({
                   <Send className={isMobile ? 'h-5 w-5' : 'h-4 w-4'} />
                 </Button>
               </div>
-            </Card>
+            {/* </Card> */}
           </div>
         </>
       )}

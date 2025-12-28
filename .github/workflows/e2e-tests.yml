@@ -35,7 +35,7 @@ jobs:
           CI: true
 
       - name: Upload Playwright report
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
