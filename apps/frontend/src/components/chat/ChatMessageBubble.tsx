@@ -7,7 +7,7 @@
  * @module components/chat/ChatMessageBubble
  */
 
-import { Card } from '../ui/card';
+import { Card } from '../ui/Card';
 import type { ChatRole } from '@calculator/shared-types';
 
 interface ChatMessageBubbleProps {

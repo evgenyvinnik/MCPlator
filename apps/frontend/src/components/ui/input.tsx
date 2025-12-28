@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 
-import { cn } from './utils';
+import { cn } from './Utils';
 
 /**
  * Styled input component with dark theme support.

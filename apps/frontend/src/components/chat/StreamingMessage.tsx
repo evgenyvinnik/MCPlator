@@ -7,7 +7,7 @@
  * @module components/chat/StreamingMessage
  */
 
-import { Card } from '../ui/card';
+import { Card } from '../ui/Card';
 
 interface StreamingMessageProps {
   /** The streaming text content */

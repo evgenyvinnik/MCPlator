@@ -9,8 +9,8 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Textarea } from '../ui/textarea';
+import { Button } from '../ui/Button';
+import { Textarea } from '../ui/Textarea';
 
 interface ChatInputProps {
   /** Current input value */
