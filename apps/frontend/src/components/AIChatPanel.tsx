@@ -281,30 +281,26 @@ export function AIChatPanel({
 
           {/* Chat Input */}
           <div
-            className={`${isMobile ? 'p-5' : 'p-4'} relative z-20 border-t border-white/10 backdrop-blur-lg bg-white/5`}
+            className={`${isMobile ? 'p-4 pb-6' : 'p-4'} relative z-20 border-t border-white/10 backdrop-blur-lg bg-white/5`}
           >
-            {/* <Card
-              className={`backdrop-blur-lg bg-white/10 border border-white/20 ${isMobile ? 'p-4' : 'p-3'} shadow-xl`}
-            > */}
-              <div className="flex gap-2 items-end">
-                <Textarea
-                  ref={textareaRef}
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                  placeholder="Type your message..."
-                  rows={1}
-                  isMobile={isMobile}
-                />
-                <Button
-                  onClick={handleSendMessage}
-                  disabled={!inputText.trim() || isStreaming}
-                  className={`bg-cyan-600 hover:bg-cyan-500 text-white border-0 rounded-full ${isMobile ? 'px-5' : 'px-4'} shadow-lg disabled:opacity-50`}
-                >
-                  <Send className={isMobile ? 'h-5 w-5' : 'h-4 w-4'} />
-                </Button>
-              </div>
-            {/* </Card> */}
+            <div className={`flex ${isMobile ? 'gap-3' : 'gap-2'} items-end`}>
+              <Textarea
+                ref={textareaRef}
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder="Type your message..."
+                rows={1}
+                isMobile={isMobile}
+              />
+              <Button
+                onClick={handleSendMessage}
+                disabled={!inputText.trim() || isStreaming}
+                className={`bg-cyan-600 hover:bg-cyan-500 text-white border-0 rounded-full ${isMobile ? 'px-5' : 'px-4'} shadow-lg disabled:opacity-50`}
+              >
+                <Send className={isMobile ? 'h-5 w-5' : 'h-4 w-4'} />
+              </Button>
+            </div>
           </div>
         </>
       )}

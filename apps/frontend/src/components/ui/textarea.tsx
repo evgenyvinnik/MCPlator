@@ -20,12 +20,8 @@ interface TextareaProps
 
 /**
  * Styled textarea component for AI chat input.
- *
- * Features:
- * - Gradient background (blue/purple AI theme)
- * - Gradient border effect
- * - High contrast placeholder text
- * - Cyan focus ring
+
+@@ -29,11 +25,11 @@ interface TextareaProps
  * - Auto-resize support (via external ref)
  * - Mobile-responsive text sizing
  *
@@ -46,7 +42,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <textarea
           ref={ref}
           data-slot="textarea"
-          className={`w-full min-h-0 text-white focus:outline-none resize-none px-4 scrollbar-hide ${isMobile ? 'text-lg py-3' : 'text-sm py-2'}`}
+          className={`w-full min-h-0 text-white focus:outline-none resize-none px-4 scrollbar-hide text-lg ${isMobile ? 'py-3' : 'py-2'}`}
           style={{
             display: 'block',
             margin: 0,
