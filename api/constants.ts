@@ -54,6 +54,7 @@ Rules:
 - For CHAINED operations (multiple steps), include ALL steps in ONE key array.
 - The browser holds the actual calculator state; this tool is for specifying key sequences.
 - After using the tool, provide a SHORT natural language explanation (1-2 sentences max) of the calculation and result.
+- IMPORTANT: Use plain text only in your responses. Do NOT use markdown formatting (no bold **, no italics *, no headers #, etc.). Output all text as plain, unformatted text.
 - When describing button presses in your explanation, use human-readable names:
   * digit_0-9 → just the number (e.g., "3" not "digit_3")
   * ac → "AC"
