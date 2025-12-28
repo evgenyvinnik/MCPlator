@@ -24,27 +24,21 @@
       <stop offset="100%" stop-color="#5d2f39"/>
     </linearGradient>
 
-    <!-- Subtle bezel gradient for the dark outer frame around each key -->
-    <linearGradient id="bezelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#4b4e56"/>
-      <stop offset="45%" stop-color="#2e3137"/>
-      <stop offset="100%" stop-color="#1b1d22"/>
+    <!-- Gloss / shading overlays (smoother than the old hard rectangles) -->
+    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.40)"/>
+      <stop offset="35%" stop-color="rgba(255,255,255,0.14)"/>
+      <stop offset="62%" stop-color="rgba(255,255,255,0)"/>
     </linearGradient>
-
-    <!-- Inset highlights / shadows (approximate CSS inset shadows) -->
-    <linearGradient id="insetTop" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
-      <stop offset="55%" stop-color="rgba(255,255,255,0)"/>
-    </linearGradient>
-    <linearGradient id="insetBottom" x1="0%" y1="0%" x2="0%" y2="100%">
+    <linearGradient id="sheenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
       <stop offset="70%" stop-color="rgba(255,255,255,0)"/>
-      <stop offset="100%" stop-color="rgba(255,255,255,0.16)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.14)"/>
     </linearGradient>
-    <linearGradient id="insetBottomShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+    <linearGradient id="shadeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="rgba(0,0,0,0)"/>
-      <stop offset="82%" stop-color="rgba(0,0,0,0)"/>
-      <stop offset="100%" stop-color="rgba(0,0,0,0.42)"/>
+      <stop offset="78%" stop-color="rgba(0,0,0,0)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.38)"/>
     </linearGradient>
 
     <!-- Multi-drop-shadow stack to mimic the CSS list closely -->
@@ -72,17 +66,6 @@
       A 7 7 0 0 1 0 18
       Z
     "/>
-    <path id="bezelPath" d="
-      M 0 5
-      A 5 5 0 0 1 5 0
-      H 25
-      A 5 5 0 0 1 30 5
-      V 20
-      A 9 9 0 0 1 21 29
-      H 9
-      A 9 9 0 0 1 0 20
-      Z
-    "/>
   </defs>
 
   <!-- Background -->
@@ -99,26 +82,25 @@
 
     <!-- keycap -->
     <g transform="translate(2,2)">
+      <!-- outer ring (0 0 0 3px rgba(0,0,0,0.1)) without bezel -->
+      <!-- <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="6" stroke-linejoin="round"/> -->
+
+      <!-- keycap body -->
       <use href="#keycapPath" fill="url(#redGrad)"/>
       <use href="#keycapPath" fill="none" stroke="#0b0c10" stroke-width="1"/>
 
-      <!-- inset edges (inset ±1px) -->
-      <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.30)" stroke-width="1" opacity="0.6"/>
-
-      <!-- top inner highlight (inset 0 1 1 0 rgba(255,255,255,0.5)) -->
-      <path d="M 2 2 H 24" stroke="rgba(255,255,255,0.55)" stroke-width="1.2" stroke-linecap="round"/>
-      <rect x="1" y="1" width="24" height="10" rx="3" fill="url(#insetTop)" opacity="0.85"/>
-
-      <!-- bottom inner glow + shadow -->
-      <rect x="1" y="1" width="24" height="24" rx="5" fill="url(#insetBottom)"/>
-      <rect x="1" y="1" width="24" height="24" rx="5" fill="url(#insetBottomShadow)"/>
+      <!-- inset edges + gloss/shade overlays -->
+      <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1" opacity="0.55"/>
+      <use href="#keycapPath" fill="url(#glossGrad)"/>
+      <use href="#keycapPath" fill="url(#sheenGrad)"/>
+      <use href="#keycapPath" fill="url(#shadeGrad)"/>
 
       <!-- side inset shadows (inset ±1px) -->
-      <rect x="1.3" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.45"/>
-      <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.45"/>
+      <!-- <rect x="1.3" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/>
+      <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/> -->
     </g>
   </g>
-  <text x="16" y="19" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="16" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">C</text>
+  <text x="17" y="18.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">C</text>
 
   <!-- Top-right: 1 (dark) -->
   <g transform="translate(34,3)" filter="url(#keyShadow)">
@@ -126,18 +108,18 @@
     <use href="#bezelPath" fill="url(#bezelGrad)" transform="translate(1,1)"/>
     <use href="#bezelPath" fill="none" stroke="rgba(0,0,0,0.8)" stroke-width="1" transform="translate(1,1)"/> -->
     <g transform="translate(2,2)">
+      <!-- <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="6" stroke-linejoin="round"/> -->
       <use href="#keycapPath" fill="url(#numGrad)"/>
       <use href="#keycapPath" fill="none" stroke="#0b0c10" stroke-width="1"/>
-      <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.30)" stroke-width="1" opacity="0.6"/>
-      <path d="M 2 2 H 24" stroke="rgba(255,255,255,0.55)" stroke-width="1.2" stroke-linecap="round"/>
-      <rect x="1" y="1" width="24" height="10" rx="3" fill="url(#insetTop)" opacity="0.85"/>
-      <rect x="1" y="1" width="24" height="24" rx="5" fill="url(#insetBottom)"/>
-      <rect x="1" y="1" width="24" height="24" rx="5" fill="url(#insetBottomShadow)"/>
-      <rect x="1.3" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.45"/>
-      <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.45"/>
+      <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1" opacity="0.55"/>
+      <use href="#keycapPath" fill="url(#glossGrad)"/>
+      <use href="#keycapPath" fill="url(#sheenGrad)"/>
+      <use href="#keycapPath" fill="url(#shadeGrad)"/>
+      <!-- <rect x="1.3" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/>
+      <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/> -->
     </g>
   </g>
-  <text x="47" y="19" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="17" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">1</text>
+  <text x="48" y="18.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">1</text>
 
   <!-- Bottom-left: AC (red) -->
   <g transform="translate(3,34)" filter="url(#keyShadow)">
@@ -145,18 +127,18 @@
     <use href="#bezelPath" fill="url(#bezelGrad)" transform="translate(1,1)"/>
     <use href="#bezelPath" fill="none" stroke="rgba(0,0,0,0.8)" stroke-width="1" transform="translate(1,1)"/> -->
     <g transform="translate(2,2)">
+      <!-- <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="6" stroke-linejoin="round"/> -->
       <use href="#keycapPath" fill="url(#redGrad)"/>
       <use href="#keycapPath" fill="none" stroke="#0b0c10" stroke-width="1"/>
-      <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.30)" stroke-width="1" opacity="0.6"/>
-      <path d="M 2 2 H 24" stroke="rgba(255,255,255,0.55)" stroke-width="1.2" stroke-linecap="round"/>
-      <rect x="1" y="1" width="24" height="10" rx="3" fill="url(#insetTop)" opacity="0.85"/>
-      <rect x="1" y="1" width="24" height="24" rx="5" fill="url(#insetBottom)"/>
-      <rect x="1" y="1" width="24" height="24" rx="5" fill="url(#insetBottomShadow)"/>
-      <rect x="1.3" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.45"/>
-      <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.45"/>
+      <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1" opacity="0.55"/>
+      <use href="#keycapPath" fill="url(#glossGrad)"/>
+      <use href="#keycapPath" fill="url(#sheenGrad)"/>
+      <use href="#keycapPath" fill="url(#shadeGrad)"/>
+      <!-- <rect x="1.3" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/>
+      <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/> -->
     </g>
   </g>
-  <text x="16" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="12" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">AC</text>
+  <text x="17.5" y="49.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">AC</text>
 
   <!-- Bottom-right: 0 (dark) -->
   <g transform="translate(34,34)" filter="url(#keyShadow)">
@@ -164,16 +146,16 @@
     <use href="#bezelPath" fill="url(#bezelGrad)" transform="translate(1,1)"/>
     <use href="#bezelPath" fill="none" stroke="rgba(0,0,0,0.8)" stroke-width="1" transform="translate(1,1)"/> -->
     <g transform="translate(2,2)">
+      <!-- <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="6" stroke-linejoin="round"/> -->
       <use href="#keycapPath" fill="url(#numGrad)"/>
       <use href="#keycapPath" fill="none" stroke="#0b0c10" stroke-width="1"/>
-      <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.30)" stroke-width="1" opacity="0.6"/>
-      <path d="M 2 2 H 24" stroke="rgba(255,255,255,0.55)" stroke-width="1.2" stroke-linecap="round"/>
-      <rect x="1" y="1" width="24" height="10" rx="3" fill="url(#insetTop)" opacity="0.85"/>
-      <rect x="1" y="1" width="24" height="24" rx="5" fill="url(#insetBottom)"/>
-      <rect x="1" y="1" width="24" height="24" rx="5" fill="url(#insetBottomShadow)"/>
-      <rect x="1.3" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.45"/>
-      <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.45"/>
+      <use href="#keycapPath" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1" opacity="0.55"/>
+      <use href="#keycapPath" fill="url(#glossGrad)"/>
+      <use href="#keycapPath" fill="url(#sheenGrad)"/>
+      <use href="#keycapPath" fill="url(#shadeGrad)"/>
+      <!-- <rect x="1.3" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/>
+      <rect x="23.7" y="3" width="1" height="18" fill="rgba(0,0,0,0.30)" opacity="0.40"/> -->
     </g>
   </g>
-  <text x="47" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="17" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">0</text>
+  <text x="48.5" y="49.5" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="15" fill="#fff" text-anchor="middle" dominant-baseline="middle" filter="url(#textShadow)">0</text>
 </svg>
