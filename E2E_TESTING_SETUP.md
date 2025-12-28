@@ -167,37 +167,24 @@ The E2E tests verify:
 
 ## Running Tests Locally
 
-### Option 1: Against Local Dev Server (Fast, no API calls)
+You can run E2E tests locally for development and debugging:
 
-```bash
-cd apps/frontend
-bun run test:ui
-```
+1. Start the dev server (Terminal 1):
+   ```bash
+   npm run dev
+   ```
 
-This runs tests against `localhost:5173` (Vite dev server). Note: The `/api/chat` endpoint won't work unless you have a backend running.
+2. Run tests (Terminal 2):
+   ```bash
+   npm run test:e2e
+   ```
 
-### Option 2: Against Vercel Dev (Full stack with API)
+### Options
 
-For true E2E testing with API calls locally:
+- **UI Mode** (interactive debugging): `npm run test:e2e:ui`
+- **Against Live Deployment**: `PLAYWRIGHT_TEST_BASE_URL=https://your-preview.vercel.app npm run test:e2e`
 
-```bash
-# Terminal 1: Start Vercel dev (runs frontend + API functions)
-export ANTHROPIC_API_KEY=your_key_here
-vercel dev
-
-# Terminal 2: Run tests against Vercel dev
-cd apps/frontend
-PLAYWRIGHT_TEST_BASE_URL=http://localhost:3000 bun run test
-```
-
-### Option 3: Against Live Preview Deployment
-
-Test against an actual Vercel preview URL:
-
-```bash
-cd apps/frontend
-PLAYWRIGHT_TEST_BASE_URL=https://your-preview.vercel.app bun run test
-```
+**Note:** Local tests run against the dev server without API functions. For full API testing, run tests against an actual Vercel deployment URL.
 
 ## Cost Considerations
 
