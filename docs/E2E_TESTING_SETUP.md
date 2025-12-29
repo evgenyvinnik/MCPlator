@@ -99,6 +99,7 @@ Add this to your `vercel.json`:
 2. Make sure `VERCEL_AUTOMATION_BYPASS_SECRET` is set in GitHub Actions secrets (check step 2)
 
 3. Push your changes:
+
    ```bash
    git add .
    git commit -m "Add E2E testing for Vercel deployments"
@@ -170,6 +171,7 @@ The E2E tests verify:
 You can run E2E tests locally for development and debugging:
 
 1. Start the dev server (Terminal 1):
+
    ```bash
    npm run dev
    ```
@@ -237,4 +239,5 @@ After setup is complete:
 ## References
 
 This setup follows Vercel's official recommendations:
+
 - [How can I run end-to-end tests after my Vercel Preview Deployment?](https://vercel.com/kb/guide/how-can-i-run-end-to-end-tests-after-my-vercel-preview-deployment)

@@ -58,7 +58,11 @@ interface DebugPanelProps {
  * - Consistent font sizing for readability
  * - Close button with matching styling
  */
-export function DebugPanel({ keys, onClose, isMobile = false }: DebugPanelProps) {
+export function DebugPanel({
+  keys,
+  onClose,
+  isMobile = false,
+}: DebugPanelProps) {
   return (
     <div className="mt-3 pt-3 border-t border-indigo-500/30 animate-in slide-in-from-top-2 duration-200">
       <div className="flex items-center justify-between mb-2">

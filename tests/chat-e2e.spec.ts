@@ -22,7 +22,11 @@ test.describe('Chat E2E Tests', () => {
     });
     page.on('requestfailed', (request) => {
       if (request.url().includes('/api/')) {
-        console.log('!! API Request FAILED:', request.url(), request.failure()?.errorText);
+        console.log(
+          '!! API Request FAILED:',
+          request.url(),
+          request.failure()?.errorText
+        );
       }
     });
 
@@ -30,7 +34,10 @@ test.describe('Chat E2E Tests', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     // Debug: Take a screenshot to see what's rendered
-    await page.screenshot({ path: 'test-results/debug-page-load.png', fullPage: true });
+    await page.screenshot({
+      path: 'test-results/debug-page-load.png',
+      fullPage: true,
+    });
 
     // Debug: Log page info
     console.log('Page title:', await page.title());
@@ -44,11 +51,16 @@ test.describe('Chat E2E Tests', () => {
 
     // Debug: Check body HTML to see what's actually rendered
     const bodyHTML = await page.locator('body').innerHTML();
-    console.log('Body contains "AI Assistant":', bodyHTML.includes('AI Assistant'));
+    console.log(
+      'Body contains "AI Assistant":',
+      bodyHTML.includes('AI Assistant')
+    );
     console.log('Body first 500 chars:', bodyHTML.substring(0, 500));
 
     // Wait for the chat interface to be ready
-    await expect(page.getByText('AI Assistant')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('AI Assistant')).toBeVisible({
+      timeout: 10000,
+    });
 
     const chatInput = page.getByPlaceholder('Type your message...');
     await expect(chatInput).toBeVisible();
@@ -57,14 +69,22 @@ test.describe('Chat E2E Tests', () => {
     await chatInput.fill('2 plus 2');
 
     // Find and click the send button (has Send icon)
-    const sendButton = page.locator('button').filter({ has: page.locator('svg') }).last();
+    const sendButton = page
+      .locator('button')
+      .filter({ has: page.locator('svg') })
+      .last();
     await sendButton.click();
 
     // Wait for the user message to appear in the chat
-    await expect(page.locator('text="2 plus 2"')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text="2 plus 2"')).toBeVisible({
+      timeout: 5000,
+    });
 
     // Debug: Screenshot after sending message
-    await page.screenshot({ path: 'test-results/debug-after-send.png', fullPage: true });
+    await page.screenshot({
+      path: 'test-results/debug-after-send.png',
+      fullPage: true,
+    });
     console.log('Message sent, waiting for API response...');
 
     // Wait for AI response - look for an assistant message or result card with actual text content
@@ -75,24 +95,32 @@ test.describe('Chat E2E Tests', () => {
     // 1. A result card with "Result" label (calculator output)
     // 2. An assistant message containing relevant text
     const resultCard = page.locator('text=Result').first();
-    const assistantMessage = page.locator('.bg-white\\/10').filter({
-      hasText: /4|four|calculating|result|equals|let me|I('ll| will)/i
-    }).first();
+    const assistantMessage = page
+      .locator('.bg-white\\/10')
+      .filter({
+        hasText: /4|four|calculating|result|equals|let me|I('ll| will)/i,
+      })
+      .first();
 
     // Wait for either response type
-    await expect(resultCard.or(assistantMessage)).toBeVisible({ timeout: 60000 });
+    await expect(resultCard.or(assistantMessage)).toBeVisible({
+      timeout: 60000,
+    });
 
     // Debug: Take screenshot after response
-    await page.screenshot({ path: 'test-results/debug-after-response.png', fullPage: true });
+    await page.screenshot({
+      path: 'test-results/debug-after-response.png',
+      fullPage: true,
+    });
 
     // Get the response text from whichever element is visible
     let responseText = '';
     if (await resultCard.isVisible()) {
       // If result card is visible, get its parent card content
-      responseText = await resultCard.locator('..').textContent() || '';
+      responseText = (await resultCard.locator('..').textContent()) || '';
       console.log('Found result card:', responseText);
     } else if (await assistantMessage.isVisible()) {
-      responseText = await assistantMessage.textContent() || '';
+      responseText = (await assistantMessage.textContent()) || '';
       console.log('Found assistant message:', responseText);
     }
 
@@ -100,7 +128,9 @@ test.describe('Chat E2E Tests', () => {
     console.log('Response text:', responseText);
 
     // The response should mention the calculation or result
-    expect(responseText.toLowerCase()).toMatch(/4|four|calculating|result|equals/i);
+    expect(responseText.toLowerCase()).toMatch(
+      /4|four|calculating|result|equals/i
+    );
   });
 
   test('should handle multiple chat messages', async ({ page }) => {
@@ -114,22 +144,32 @@ test.describe('Chat E2E Tests', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     // Wait for chat to be ready
-    await expect(page.getByText('AI Assistant')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('AI Assistant')).toBeVisible({
+      timeout: 10000,
+    });
 
     const chatInput = page.getByPlaceholder('Type your message...');
     await expect(chatInput).toBeVisible();
 
     // First message: 5 plus 3
     await chatInput.fill('5 plus 3');
-    const sendButton = page.locator('button').filter({ has: page.locator('svg') }).last();
+    const sendButton = page
+      .locator('button')
+      .filter({ has: page.locator('svg') })
+      .last();
     await sendButton.click();
 
     // Wait for first response - either result card or assistant message with relevant content
     const firstResultCard = page.locator('text=Result').first();
-    const firstAssistantMsg = page.locator('.bg-white\\/10').filter({
-      hasText: /8|eight|calculating|result|equals|let me|I('ll| will)/i
-    }).first();
-    await expect(firstResultCard.or(firstAssistantMsg)).toBeVisible({ timeout: 60000 });
+    const firstAssistantMsg = page
+      .locator('.bg-white\\/10')
+      .filter({
+        hasText: /8|eight|calculating|result|equals|let me|I('ll| will)/i,
+      })
+      .first();
+    await expect(firstResultCard.or(firstAssistantMsg)).toBeVisible({
+      timeout: 60000,
+    });
     console.log('First response received');
 
     // Second message: 10 minus 2

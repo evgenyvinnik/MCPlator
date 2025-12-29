@@ -68,6 +68,7 @@ If you prefer using the command line:
     - In which directory is your code located? **apps/frontend** (Important: Type `apps/frontend` instead of `./`)
     - Want to modify these settings? **N**
 5.  Add your Anthropic API key:
+
     ```bash
     vercel env add ANTHROPIC_API_KEY
     ```
@@ -75,6 +76,7 @@ If you prefer using the command line:
     - When prompted, enter your Anthropic API key
     - Select all environments (production, preview, development)
     - See [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md) for instructions on obtaining an API key
+
 6.  Wait for the deployment to complete. You will get a Production URL.
 
 ## Troubleshooting

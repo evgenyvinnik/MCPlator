@@ -12,8 +12,10 @@ import * as React from 'react';
 /**
  * Props for the Textarea component.
  */
-interface TextareaProps
-  extends Omit<React.ComponentProps<'textarea'>, 'className' | 'style'> {
+interface TextareaProps extends Omit<
+  React.ComponentProps<'textarea'>,
+  'className' | 'style'
+> {
   /** Whether to use mobile-sized styling */
   isMobile?: boolean;
 }
@@ -50,7 +52,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             maxHeight: '120px',
             lineHeight: '1.5',
             borderRadius: 'calc(1rem - 2px)',
-            background: 'linear-gradient(135deg, #282469 0%, #2f2d74 50%, #0b69e4 100%)',
+            background:
+              'linear-gradient(135deg, #282469 0%, #2f2d74 50%, #0b69e4 100%)',
           }}
           {...props}
         />

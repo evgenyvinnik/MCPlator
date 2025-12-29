@@ -98,7 +98,10 @@ async function generateOGImage() {
   `);
 
   // Read and resize the icon
-  const icon = await sharp(SVG_PATH).resize(iconSize, iconSize).png().toBuffer();
+  const icon = await sharp(SVG_PATH)
+    .resize(iconSize, iconSize)
+    .png()
+    .toBuffer();
 
   // Create text overlay
   const textOverlay = Buffer.from(`
@@ -221,7 +224,9 @@ async function main() {
     await generateMobileScreenshot();
 
     console.log('\n✅ All assets generated successfully!');
-    console.log('\n📝 Note: Replace the screenshot placeholders with actual app screenshots.');
+    console.log(
+      '\n📝 Note: Replace the screenshot placeholders with actual app screenshots.'
+    );
   } catch (error) {
     console.error('❌ Error generating assets:', error);
     process.exit(1);

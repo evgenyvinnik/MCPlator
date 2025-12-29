@@ -46,7 +46,8 @@ export function ResultCard({ text, keys, isMobile = false }: ResultCardProps) {
         style={{
           padding: '2px',
           borderRadius: '1rem',
-          background: 'linear-gradient(135deg, #222370ff, #391885ff, #066475ff)',
+          background:
+            'linear-gradient(135deg, #222370ff, #391885ff, #066475ff)',
         }}
       >
         <Card

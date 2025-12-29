@@ -141,18 +141,19 @@ App
 
 Manages the calculator's computational state:
 
-| State Field | Type | Description |
-|-------------|------|-------------|
-| `internalState` | `CalculatorInternalState` | Engine internal state |
-| `display` | `CalculatorDisplay` | Current display value + indicators |
-| `pressedKey` | `KeyId \| null` | Currently pressed key (for animations) |
-| `isAnimating` | `boolean` | Whether animation is running |
-| `animationQueue` | `AnimationSequence[]` | Pending AI animations |
-| `animationCallbacks` | `Map` | Callbacks for animation completion |
-| `isHydrated` | `boolean` | Whether state loaded from IndexedDB |
-| `shouldFlash` | `boolean` | Trigger flash on digit limit |
+| State Field          | Type                      | Description                            |
+| -------------------- | ------------------------- | -------------------------------------- |
+| `internalState`      | `CalculatorInternalState` | Engine internal state                  |
+| `display`            | `CalculatorDisplay`       | Current display value + indicators     |
+| `pressedKey`         | `KeyId \| null`           | Currently pressed key (for animations) |
+| `isAnimating`        | `boolean`                 | Whether animation is running           |
+| `animationQueue`     | `AnimationSequence[]`     | Pending AI animations                  |
+| `animationCallbacks` | `Map`                     | Callbacks for animation completion     |
+| `isHydrated`         | `boolean`                 | Whether state loaded from IndexedDB    |
+| `shouldFlash`        | `boolean`                 | Trigger flash on digit limit           |
 
 Key Actions:
+
 - `pressKey(keyId)`: Process key press, persist to DB
 - `enqueueAnimation(sequence, callback)`: Add AI animation
 - `hydrate()`: Load state from IndexedDB
@@ -161,14 +162,15 @@ Key Actions:
 
 Manages chat conversation state:
 
-| State Field | Type | Description |
-|-------------|------|-------------|
-| `messages` | `ChatMessage[]` | Complete message history |
-| `streamingMessage` | `{id, text} \| null` | Currently streaming response |
-| `isThinking` | `boolean` | AI processing indicator |
-| `isHydrated` | `boolean` | Whether messages loaded from DB |
+| State Field        | Type                 | Description                     |
+| ------------------ | -------------------- | ------------------------------- |
+| `messages`         | `ChatMessage[]`      | Complete message history        |
+| `streamingMessage` | `{id, text} \| null` | Currently streaming response    |
+| `isThinking`       | `boolean`            | AI processing indicator         |
+| `isHydrated`       | `boolean`            | Whether messages loaded from DB |
 
 Key Actions:
+
 - `addMessage(msg)`: Add and persist message
 - `updateStreamingMessage(id, text)`: Update streaming content
 - `hydrate()`: Load messages from IndexedDB
@@ -234,12 +236,12 @@ Frontend                            Backend
 
 ### Event Types
 
-| Event | Payload | Purpose |
-|-------|---------|---------|
-| `token` | `{token: string}` | Streaming text chunk |
-| `keys` | `{keys: string[]}` | Calculator key sequence |
-| `done` | `{messageId, fullText}` | Final complete message |
-| `error` | `{error: string}` | Error message |
+| Event   | Payload                 | Purpose                 |
+| ------- | ----------------------- | ----------------------- |
+| `token` | `{token: string}`       | Streaming text chunk    |
+| `keys`  | `{keys: string[]}`      | Calculator key sequence |
+| `done`  | `{messageId, fullText}` | Final complete message  |
+| `error` | `{error: string}`       | Error message           |
 
 ## Animation System
 
@@ -303,24 +305,28 @@ AI Response with keys
 ## Component Responsibilities
 
 ### RetroCalculator
+
 - Main wrapper component
 - Maps keypad values to calculator KeyIds
 - Handles power on/off state
 - Passes display state to RetroScreen
 
 ### RetroScreen
+
 - Renders LCD display with retro styling
 - Parses numbers into individual digits
 - Adds thousand separators
 - Shows M/E indicators and negative hexagon
 
 ### RetroKeypad
+
 - Renders 6x5 button grid
 - Handles user button clicks
 - Animates buttons during AI sequences
 - Uses refs to trigger programmatic animations
 
 ### AIChatPanel
+
 - Displays message history
 - Shows streaming responses with thinking indicator
 - Auto-resizing textarea input
@@ -329,6 +335,7 @@ AI Response with keys
 ## Key Patterns
 
 ### Singleton Database Connection
+
 ```typescript
 let dbPromise: Promise<IDBPDatabase> | null = null;
 export const getDB = () => {
@@ -340,6 +347,7 @@ export const getDB = () => {
 ```
 
 ### Animation Callbacks
+
 ```typescript
 enqueueAnimation(sequence, (displayText) => {
   // Called when animation completes
@@ -348,34 +356,36 @@ enqueueAnimation(sequence, (displayText) => {
 ```
 
 ### Streaming State Updates
+
 ```typescript
 onToken: (token) => {
   streamedText += token;
   updateStreamingMessage(assistantMsgId, streamedText);
-}
+};
 ```
 
 ## Technology Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | React 19.2.0 |
-| Language | TypeScript (strict) |
-| State | Zustand 5.0.8 |
-| Styling | Tailwind CSS 4.1.17 |
+| Category    | Technology               |
+| ----------- | ------------------------ |
+| Framework   | React 19.2.0             |
+| Language    | TypeScript (strict)      |
+| State       | Zustand 5.0.8            |
+| Styling     | Tailwind CSS 4.1.17      |
 | UI Variants | class-variance-authority |
-| Database | IndexedDB via `idb` |
-| Icons | Lucide React |
-| Build | Vite with React Compiler |
+| Database    | IndexedDB via `idb`      |
+| Icons       | Lucide React             |
+| Build       | Vite with React Compiler |
 
 ## Responsive Design
 
-| Breakpoint | Layout |
-|------------|--------|
+| Breakpoint        | Layout                                 |
+| ----------------- | -------------------------------------- |
 | Desktop (≥1024px) | Two columns: Calculator + Chat sidebar |
-| Mobile (<1024px) | Single column with bottom sheet chat |
+| Mobile (<1024px)  | Single column with bottom sheet chat   |
 
 Mobile behavior:
+
 - Chat opens as 75vh bottom sheet
 - FAB button to toggle chat
 - Sheet closes during AI processing, reopens on response
@@ -393,12 +403,13 @@ This project uses **React 19.2.0** with the **React Compiler** (`babel-plugin-re
 - Inline arrow functions are fine - the compiler handles them
 
 The compiler is configured in `vite.config.ts`:
+
 ```typescript
 react({
   babel: {
     plugins: [['babel-plugin-react-compiler', {}]],
   },
-})
+});
 ```
 
 ### 1. Component Code Splitting
@@ -406,6 +417,7 @@ react({
 **Lazy load AIChatPanel (Medium Impact)**
 
 The chat panel could be code-split for faster initial load:
+
 ```typescript
 const AIChatPanel = lazy(() => import('./components/AIChatPanel'));
 
@@ -420,6 +432,7 @@ const AIChatPanel = lazy(() => import('./components/AIChatPanel'));
 **Use CSS animations instead of inline styles (Medium Impact)**
 
 The `triggerButtonPress` function in RetroKeypad manipulates inline styles directly. CSS classes would be more maintainable:
+
 ```css
 .button.programmatic-press {
   transform: translateY(3px) scale(0.98);
@@ -433,6 +446,7 @@ The `triggerButtonPress` function in RetroKeypad manipulates inline styles direc
 **Replace `uuid` with native API (Low Impact)**
 
 `uuid` adds ~3KB. For simple IDs, use `crypto.randomUUID()` (browser native):
+
 ```typescript
 // Current
 import { v4 as uuid } from 'uuid';
@@ -447,6 +461,7 @@ const id = crypto.randomUUID();
 **Legacy components (Cleanup)**
 
 The following files appear unused and could be removed:
+
 - `useRetroCalculator.ts` - Standalone calculator logic (superseded by engine/)
 - `LCDDisplay.tsx` - Old display component (replaced by RetroScreen)
 - `Keypad.tsx` - Old keypad component (replaced by RetroKeypad)
@@ -457,6 +472,7 @@ The following files appear unused and could be removed:
 **Add keyboard support to chat (UX)**
 
 The chat textarea could benefit from:
+
 - Escape to clear input
 - Up arrow to edit last message
 - Focus management after send
@@ -464,6 +480,7 @@ The chat textarea could benefit from:
 **Add ARIA labels (Accessibility)**
 
 Calculator buttons lack ARIA labels for screen readers:
+
 ```tsx
 <button aria-label="Add 5" onClick={() => pressKey('digit_5')}>
   5
@@ -472,10 +489,10 @@ Calculator buttons lack ARIA labels for screen readers:
 
 ### Priority Matrix
 
-| Optimization | Impact | Effort | Priority |
-|-------------|--------|--------|----------|
-| CSS animations for buttons | Medium | Medium | P2 |
-| Code splitting | Medium | Low | P2 |
-| Remove unused code | Low | Low | P2 |
-| Replace uuid with native | Low | Low | P3 |
-| Keyboard accessibility | Medium | Medium | P3 |
+| Optimization               | Impact | Effort | Priority |
+| -------------------------- | ------ | ------ | -------- |
+| CSS animations for buttons | Medium | Medium | P2       |
+| Code splitting             | Medium | Low    | P2       |
+| Remove unused code         | Low    | Low    | P2       |
+| Replace uuid with native   | Low    | Low    | P3       |
+| Keyboard accessibility     | Medium | Medium | P3       |
