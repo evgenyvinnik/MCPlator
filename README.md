@@ -2,7 +2,9 @@
 
 A fully functional retro Casio-style calculator with an LLM-powered AI assistant. Features a polished retro UI with authentic animations and natural language calculator control.
 
-## Project Summary
+![MCPlator Desktop Screenshot](public/screenshots/desktop.png)
+
+## Features
 
 - **Authentic Casio calculator** with complete functionality (memory, percentage, square root, sign change, etc.)
 - **Polished retro UI** built with CSS Modules featuring authentic 3D button effects and LCD display
@@ -14,35 +16,25 @@ A fully functional retro Casio-style calculator with an LLM-powered AI assistant
 
 ## Project Stats
 
-**Total SLOC:** 8,896 lines (non-empty, excluding dependencies)
+**Total SLOC:** 11,181 lines (non-empty, excluding dependencies)
 
 | Extension         | Lines |
 | ----------------- | ----- |
-| TypeScript (.ts)  | 2,106 |
-| CSS (.css)        | 1,808 |
-| TSX (.tsx)        | 1,058 |
-| Markdown (.md)    | 3,477 |
-| JSON (.json)      | 209   |
+| Markdown (.md)    | 3,935 |
+| TypeScript (.ts)  | 2,509 |
+| CSS (.css)        | 2,077 |
+| TSX (.tsx)        | 1,952 |
+| JavaScript (.js)  | 341   |
+| JSON (.json)      | 224   |
 | JavaScript (.mjs) | 98    |
-| HTML (.html)      | 95    |
-| JavaScript (.js)  | 45    |
-
-### Deployment
-
-For detailed, step-by-step deployment instructions, please refer to [BUILD.md](./BUILD.md).
-
-### Quick Deploy to Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fevgenyvinnik%2FMCPlator&project-name=mcplator&repository-name=mcplator&root-directory=apps%2Ffrontend)
-
-**Note:** When deploying, ensure you set the **Root Directory** to `apps/frontend`.
+| HTML (.html)      | 45    |
 
 ## Tech Stack
 
-### Frontend (`apps/frontend`)
+### Frontend
 
 - **Framework:** React 19 + TypeScript 5.9
-- **Build:** Vite 7.2
+- **Build:** Vite 7.3
 - **State management:** Zustand + IndexedDB (manual persistence)
 - **Styling:** CSS Modules + Tailwind CSS 4.1 (hybrid approach)
 - **Storage:** IndexedDB (via `idb` library)
@@ -50,28 +42,27 @@ For detailed, step-by-step deployment instructions, please refer to [BUILD.md](.
 
 ### Backend (`/api`)
 
-- **Platform:** Vercel Serverless Functions (for SSE support)
-- **Runtime:** Edge Runtime
+- **Platform:** Vercel Serverless Functions (Edge Runtime)
 - **AI:** Anthropic Claude API (Claude Haiku 4.5 model)
 - **Streaming:** Server-Sent Events (SSE) for real-time token streaming
-
-### Shared (`packages/`)
-
-- **Monorepo:** Bun workspaces
-- **shared-types:** Common TypeScript definitions (KeyId, ChatMessage, SSE types)
-- **calculator-engine:** Complete Casio-style calculator logic (86 tests, 100% passing)
 
 ## Project Structure
 
 ```text
-calculator-casio-llm/
-  packages/
-    shared-types/       # Shared TS types
-    calculator-engine/  # Canonical calculator logic
-  apps/
-    frontend/           # React application
-  api/
-    chat.ts            # Vercel serverless function for AI chat
+MCPlator/
+├── src/              # React application source
+│   ├── components/   # UI components
+│   ├── engine/       # Calculator computation logic
+│   ├── types/        # TypeScript type definitions
+│   ├── state/        # Zustand stores
+│   ├── hooks/        # Custom React hooks
+│   ├── api/          # Frontend API utilities
+│   ├── db/           # IndexedDB persistence
+│   └── assets/       # Images, fonts, icons
+├── api/              # Vercel serverless functions
+├── public/           # Static assets
+├── tests/            # Playwright E2E tests
+└── docs/             # Documentation
 ```
 
 ## Getting Started
@@ -92,7 +83,7 @@ bun install
 bun run dev
 ```
 
-The frontend runs on `http://localhost:5173`. The API endpoint (`/api/chat`) is handled by Vercel in production and proxied during local development.
+The frontend runs on `http://localhost:5173`. The API endpoint (`/api/chat`) is handled by Vercel in production.
 
 ### Environment Variables
 
@@ -109,6 +100,23 @@ ANTHROPIC_API_KEY=sk-ant-...
 ## Scripts
 
 - `bun run dev` - Start frontend dev server
-- `bun run build` - Build all workspaces
-- `bun run test` - Run tests across workspaces
+- `bun run build` - Build for production
+- `bun run test` - Run Playwright E2E tests
+- `bun run lint` - Run ESLint
 - `bun run sloc` - Calculate source lines of code
+
+## Deployment
+
+For detailed, step-by-step deployment instructions, please refer to [BUILD.md](./BUILD.md).
+
+### Quick Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fevgenyvinnik%2FMCPlator&project-name=mcplator&repository-name=mcplator)
+
+## Credits
+
+The calculator UI design is based on [keremciu/retro-calculator](https://github.com/keremciu/retro-calculator).
+
+## License
+
+MIT

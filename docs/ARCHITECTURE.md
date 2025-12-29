@@ -2,11 +2,27 @@
 
 This document describes the architecture of MCPlator, an AI-powered calculator application, including component interactions, data flow, and design patterns.
 
+The calculator UI design is based on [keremciu/retro-calculator](https://github.com/keremciu/retro-calculator).
+
 ## Overview
 
-MCPlator is an AI-powered calculator application styled after the Casio SL-300SV. The frontend is built with React 19, TypeScript, and uses Zustand for state management with IndexedDB for persistence.
+MCPlator is an AI-powered calculator application styled after the Casio SL-300SV. The frontend is built with React 19, TypeScript, and uses Zustand for state management with IndexedDB for persistence. The backend consists of Vercel serverless functions that handle AI chat via the Anthropic Claude API.
 
-## Directory Structure
+## Project Structure
+
+```
+MCPlator/
+├── src/                        # Frontend source code
+├── api/                        # Vercel serverless functions
+│   ├── chat.ts                 # AI chat endpoint (SSE streaming)
+│   ├── constants.ts            # API configuration
+│   └── utils.ts                # Helper functions
+├── public/                     # Static assets
+├── tests/                      # Playwright E2E tests
+└── docs/                       # Documentation
+```
+
+## Frontend Directory Structure
 
 ```
 src/
