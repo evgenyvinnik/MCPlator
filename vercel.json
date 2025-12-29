@@ -1,6 +1,6 @@
 {
-  "buildCommand": "cd apps/frontend && bun run build",
-  "outputDirectory": "apps/frontend/dist",
+  "buildCommand": "bun run build",
+  "outputDirectory": "dist",
   "installCommand": "bun install",
   "framework": "vite"
 }

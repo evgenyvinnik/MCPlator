@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { v4 as uuid } from 'uuid';
-import type { KeyId } from '../apps/frontend/src/types/calculator';
+import type { KeyId } from '../src/types/calculator';
 import {
   MODEL,
   TEMPERATURE,

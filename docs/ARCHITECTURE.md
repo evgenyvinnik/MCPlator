@@ -1,6 +1,6 @@
-# Frontend Architecture Documentation
+# Architecture Documentation
 
-This document describes the architecture of the MCPlator frontend application, including component interactions, data flow, and design patterns.
+This document describes the architecture of MCPlator, an AI-powered calculator application, including component interactions, data flow, and design patterns.
 
 ## Overview
 
