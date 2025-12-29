@@ -10,6 +10,9 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
   assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf'],
   server: {
     proxy: {
