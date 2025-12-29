@@ -14,7 +14,7 @@ import RetroScreen from './RetroScreen';
 import RetroKeypad from './RetroKeypad';
 import { useCalculatorStore } from '../state/useCalculatorStore';
 import logo from '../assets/casio_logo.svg';
-import type { KeyId } from '@calculator/shared-types';
+import type { KeyId } from '../types';
 import styles from './RetroCalculator.module.css';
 
 /**

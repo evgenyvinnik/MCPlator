@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCalculatorStore } from '../state/useCalculatorStore';
-import type { KeyId } from '@calculator/shared-types';
+import type { KeyId } from '../types';
 
 const keys: { id: KeyId; label: string; className?: string }[] = [
   { id: 'mc', label: 'MC' },

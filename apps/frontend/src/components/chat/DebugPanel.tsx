@@ -8,7 +8,7 @@
  */
 
 import { X } from 'lucide-react';
-import type { KeyId } from '@calculator/shared-types';
+import type { KeyId } from '../../types';
 
 /**
  * Maps KeyId to a human-readable label.

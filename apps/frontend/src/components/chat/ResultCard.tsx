@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { Bug } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { DebugPanel } from './DebugPanel';
-import type { KeyId } from '@calculator/shared-types';
+import type { KeyId } from '../../types';
 
 interface ResultCardProps {
   /** The result text to display */

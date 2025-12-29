@@ -8,7 +8,7 @@
  */
 
 import { getDB } from './indexedDB';
-import type { ChatMessage } from '@calculator/shared-types';
+import type { ChatMessage } from '../types';
 
 /**
  * Chat database operations for message persistence.

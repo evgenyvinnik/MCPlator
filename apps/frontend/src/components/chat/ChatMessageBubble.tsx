@@ -8,7 +8,7 @@
  */
 
 import { Card } from '../ui/Card';
-import type { ChatRole } from '@calculator/shared-types';
+import type { ChatRole } from '../../types';
 
 interface ChatMessageBubbleProps {
   /** The message text */

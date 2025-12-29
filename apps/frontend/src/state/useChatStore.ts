@@ -8,7 +8,7 @@
  */
 
 import { create } from 'zustand';
-import type { ChatMessage } from '@calculator/shared-types';
+import type { ChatMessage } from '../types';
 import { chatDB } from '../db/chatDB';
 
 /**

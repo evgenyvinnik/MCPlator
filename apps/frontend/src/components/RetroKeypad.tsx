@@ -12,7 +12,7 @@ import React, { useRef, useEffect } from 'react';
 import sqrtIcon from '../assets/icons/sqrt.svg';
 import changeSignIcon from '../assets/icons/change-sign.svg';
 import { useCalculatorStore } from '../state/useCalculatorStore';
-import type { KeyId } from '@calculator/shared-types';
+import type { KeyId } from '../types';
 import styles from './RetroKeypad.module.css';
 
 /**

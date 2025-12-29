@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { v4 as uuid } from 'uuid';
+import type { KeyId } from '../apps/frontend/src/types/calculator';
 import {
   MODEL,
   TEMPERATURE,
@@ -9,37 +10,6 @@ import {
   calculatorPressKeysTool,
 } from './constants';
 import { sseEvent, isCalculatorRelated, streamRejectionMessage } from './utils';
-
-/**
- * Type definition for calculator key IDs.
- * Matches the key types defined in the calculator_press_keys tool schema.
- */
-type KeyId =
-  | 'digit_0'
-  | 'digit_1'
-  | 'digit_2'
-  | 'digit_3'
-  | 'digit_4'
-  | 'digit_5'
-  | 'digit_6'
-  | 'digit_7'
-  | 'digit_8'
-  | 'digit_9'
-  | 'decimal'
-  | 'add'
-  | 'sub'
-  | 'mul'
-  | 'div'
-  | 'percent'
-  | 'sqrt'
-  | 'plus_minus'
-  | 'equals'
-  | 'ac'
-  | 'c'
-  | 'mc'
-  | 'mr'
-  | 'm_plus'
-  | 'm_minus';
 
 /**
  * Request body structure for the chat API.

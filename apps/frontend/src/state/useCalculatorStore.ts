@@ -8,13 +8,13 @@
  */
 
 import { create } from 'zustand';
-import { calculatorEngine } from '@calculator/calculator-engine';
+import { calculatorEngine } from '../engine';
+import type { CalculatorInternalState } from '../engine';
 import type {
   CalculatorDisplay,
   AnimationSequence,
   KeyId,
-} from '@calculator/shared-types';
-import type { CalculatorInternalState } from '@calculator/calculator-engine';
+} from '../types';
 import { getDB } from '../db/indexedDB';
 
 /**

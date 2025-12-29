@@ -9,7 +9,7 @@
 
 import { useEffect } from 'react';
 import { useCalculatorStore } from '../state/useCalculatorStore';
-import type { AnimationCommand } from '@calculator/shared-types';
+import type { AnimationCommand } from '../types';
 
 /**
  * Returns a promise that resolves after the specified milliseconds.

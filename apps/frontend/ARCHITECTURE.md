@@ -22,6 +22,13 @@ src/
 │       ├── card.tsx            # Composable Card components
 │       ├── input.tsx           # Styled Input component
 │       └── utils.ts            # cn() utility function
+├── engine/                     # Calculator computation logic
+│   ├── index.ts                # Calculator engine implementation
+│   └── types.ts                # Engine types (CalculatorInternalState)
+├── types/                      # Shared type definitions
+│   ├── index.ts                # Re-exports all types
+│   ├── calculator.ts           # Calculator types (KeyId, CalculatorDisplay)
+│   └── chat.ts                 # Chat types (ChatMessage, ChatRole)
 ├── state/
 │   ├── useCalculatorStore.ts   # Calculator state (Zustand)
 │   └── useChatStore.ts         # Chat state (Zustand)
@@ -424,7 +431,7 @@ const id = crypto.randomUUID();
 **Legacy components (Cleanup)**
 
 The following files appear unused and could be removed:
-- `useRetroCalculator.ts` - Standalone calculator logic (superseded by calculator-engine)
+- `useRetroCalculator.ts` - Standalone calculator logic (superseded by engine/)
 - `LCDDisplay.tsx` - Old display component (replaced by RetroScreen)
 - `Keypad.tsx` - Old keypad component (replaced by RetroKeypad)
 - `CalculatorSurface.tsx` - Container for old components

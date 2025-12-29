@@ -17,8 +17,6 @@
     "generate:pwa-assets": "node scripts/generate-pwa-assets.js"
   },
   "dependencies": {
-    "@calculator/calculator-engine": "*",
-    "@calculator/shared-types": "*",
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

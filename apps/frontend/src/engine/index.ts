@@ -1,5 +1,5 @@
 import type { CalculatorEngine, CalculatorInternalState } from './types';
-import type { CalculatorDisplay } from '@calculator/shared-types';
+import type { CalculatorDisplay } from '../types';
 
 export * from './types';
 
