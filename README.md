@@ -12,20 +12,24 @@ A fully functional retro Casio-style calculator with an LLM-powered AI assistant
   - Understands natural language ("add 2 plus one hundred", "what's 15% of 80", "square root of 144")
   - Translates requests into calculator key sequences
   - Animates key presses on the calculator display in real-time
+- **LMCIFY sharing** ("Let Me Calculate It For You"):
+  - Share calculations via URL with compressed message encoding
+  - Auto-plays shared calculations with realistic typing animation
+  - Dynamic typing speed that scales with message length
 - **Persistent state** stored in IndexedDB (calculator memory, chat history, daily quota)
 
 ## Project Stats
 
-**Total SLOC:** 11,181 lines (non-empty, excluding dependencies)
+**Total SLOC:** 12,420 lines (non-empty, excluding dependencies)
 
 | Extension         | Lines |
 | ----------------- | ----- |
-| Markdown (.md)    | 3,935 |
-| TypeScript (.ts)  | 2,509 |
+| Markdown (.md)    | 4,775 |
+| TypeScript (.ts)  | 2,790 |
 | CSS (.css)        | 2,077 |
-| TSX (.tsx)        | 1,952 |
-| JavaScript (.js)  | 341   |
-| JSON (.json)      | 224   |
+| TSX (.tsx)        | 2,046 |
+| JavaScript (.js)  | 346   |
+| JSON (.json)      | 243   |
 | JavaScript (.mjs) | 98    |
 | HTML (.html)      | 45    |
 
