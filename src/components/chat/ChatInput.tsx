@@ -32,6 +32,7 @@ interface ChatInputProps {
  * - Auto-resizing textarea (max 120px height)
  * - Enter to send, Shift+Enter for newline
  * - Send button with disabled state
+ * - Silent 512 character limit
  */
 export function ChatInput({
   value,
@@ -71,6 +72,7 @@ export function ChatInput({
           placeholder="Type your message..."
           rows={1}
           isMobile={isMobile}
+          maxLength={512}
         />
         <Button
           onClick={onSend}

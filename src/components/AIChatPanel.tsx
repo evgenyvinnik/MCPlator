@@ -17,6 +17,8 @@ import { ChatInput } from './chat/ChatInput';
 import { ChatMessageBubble } from './chat/ChatMessageBubble';
 import { ResultCard } from './chat/ResultCard';
 import { StreamingMessage } from './chat/StreamingMessage';
+import { generateLmcifyLink } from '../utils/lmcify';
+import { useLmcifyAutoPlay } from '../hooks/useLmcifyAutoPlay';
 
 /**
  * Props for the AIChatPanel component.
@@ -74,24 +76,11 @@ export function AIChatPanel({
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when new messages arrive
-  useEffect(() => {
-    if ((messages.length > 0 || streamingMessage) && chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [messages, streamingMessage]);
-
   /**
-   * Sends the current input message to the AI.
-   * Clears input, closes mobile sheet during processing,
-   * and reopens when response arrives.
+   * Sends a message to the AI (used by both manual and auto-play).
    */
-  const handleSendMessage = async () => {
-    if (!inputText.trim() || isStreaming) return;
-
-    const text = inputText;
-    setInputText('');
+  const sendMessage = async (text: string) => {
+    if (!text.trim() || isStreaming) return;
 
     // On mobile, close the bottom sheet while processing
     if (isMobile && onToggle) {
@@ -106,6 +95,52 @@ export function AIChatPanel({
     }
   };
 
+  // Initialize auto-play for shared links
+  const { autoPlayMessage, isAutoPlaying } = useLmcifyAutoPlay(
+    sendMessage,
+    {
+      typingSpeed: 100,
+      sendDelay: 1000,
+    },
+    () => {
+      // When auto-play starts, open the chat panel on mobile
+      if (isMobile && onOpen) {
+        onOpen();
+      }
+    }
+  );
+
+  // Sync auto-play message with input text
+  useEffect(() => {
+    if (isAutoPlaying && autoPlayMessage) {
+      setInputText(autoPlayMessage);
+    } else if (!isAutoPlaying && !autoPlayMessage) {
+      // Clear input after auto-play completes
+      setInputText('');
+    }
+  }, [autoPlayMessage, isAutoPlaying]);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if ((messages.length > 0 || streamingMessage) && chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages, streamingMessage]);
+
+  /**
+   * Sends the current input message to the AI.
+   * Clears input after sending.
+   */
+  const handleSendMessage = async () => {
+    if (!inputText.trim() || isStreaming) return;
+
+    const text = inputText;
+    setInputText('');
+
+    await sendMessage(text);
+  };
+
   /**
    * Handles minimize/close toggle for mobile layout.
    */
@@ -117,6 +152,17 @@ export function AIChatPanel({
     } else {
       setIsMinimized(true);
     }
+  };
+
+  /**
+   * Handles sharing a message via LMCIFY link.
+   * Generates a shareable link and copies it to clipboard.
+   */
+  const handleShareMessage = (messageText: string) => {
+    const link = generateLmcifyLink(messageText);
+    navigator.clipboard.writeText(link).catch((err) => {
+      console.error('Failed to copy link:', err);
+    });
   };
 
   return (
@@ -166,6 +212,11 @@ export function AIChatPanel({
                     role={message.role}
                     createdAt={message.createdAt}
                     isMobile={isMobile}
+                    onShare={
+                      message.role === 'user'
+                        ? () => handleShareMessage(message.text)
+                        : undefined
+                    }
                   />
                 )}
               </div>
@@ -185,7 +236,7 @@ export function AIChatPanel({
             value={inputText}
             onChange={setInputText}
             onSend={handleSendMessage}
-            disabled={isStreaming}
+            disabled={isStreaming || isAutoPlaying}
             isMobile={isMobile}
           />
         </>
