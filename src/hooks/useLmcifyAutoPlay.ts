@@ -14,10 +14,37 @@ import { getLmcifyFromUrl } from '../utils/lmcify';
  * Configuration for auto-play behavior.
  */
 interface AutoPlayConfig {
-  /** Milliseconds between each character when typing */
+  /** Milliseconds between each character when typing (for short messages) */
   typingSpeed?: number;
   /** Milliseconds to wait before sending after typing completes */
   sendDelay?: number;
+}
+
+/**
+ * Calculate dynamic typing speed based on message length.
+ * Short messages (≤50 chars) use the base speed.
+ * Longer messages progressively speed up to keep total time reasonable.
+ *
+ * @param messageLength - Length of the message in characters
+ * @param baseSpeed - Base typing speed in ms (used for short messages)
+ * @returns Calculated typing speed in ms per character
+ */
+function calculateTypingSpeed(messageLength: number, baseSpeed: number): number {
+  const shortMessageThreshold = 50;
+  const minSpeed = 10; // Minimum ms per character (fastest)
+
+  if (messageLength <= shortMessageThreshold) {
+    return baseSpeed;
+  }
+
+  // For longer messages, scale down the speed
+  // Target: ~3 seconds total typing time for messages over threshold
+  // This gives a smooth experience without being too slow
+  const targetTotalTime = 3000; // ms
+  const calculatedSpeed = targetTotalTime / messageLength;
+
+  // Clamp between minSpeed and baseSpeed
+  return Math.max(minSpeed, Math.min(baseSpeed, calculatedSpeed));
 }
 
 /**
@@ -76,24 +103,17 @@ export function useLmcifyAutoPlay(
   }, [currentUrl]);
 
   useEffect(() => {
-    console.log('[LMCIFY] Effect running, currentUrl:', currentUrl);
-
     // Check for LMCIFY parameter in URL
     const sharedMessage = getLmcifyFromUrl(currentUrl);
-    console.log('[LMCIFY] Decoded message:', sharedMessage);
 
     if (!sharedMessage) {
-      console.log('[LMCIFY] No message found in URL');
       return;
     }
 
     // Check if we've already played this exact message
     if (playedMessagesRef.current.has(sharedMessage)) {
-      console.log('[LMCIFY] Message already played, skipping');
       return;
     }
-
-    console.log('[LMCIFY] Starting auto-play for message:', sharedMessage);
 
     setIsAutoPlaying(true);
 
@@ -104,21 +124,20 @@ export function useLmcifyAutoPlay(
 
     // Type the message character by character
     let currentIndex = 0;
+    const dynamicTypingSpeed = calculateTypingSpeed(sharedMessage.length, typingSpeed);
+
     const typeNextCharacter = () => {
       if (currentIndex <= sharedMessage.length) {
         const partial = sharedMessage.slice(0, currentIndex);
-        console.log('[LMCIFY] Typing character', currentIndex, ':', partial);
         setAutoPlayMessage(partial);
         currentIndex++;
         typingTimeoutRef.current = window.setTimeout(
           typeNextCharacter,
-          typingSpeed
+          dynamicTypingSpeed
         );
       } else {
         // Typing complete, send the message after a delay
-        console.log('[LMCIFY] Typing complete, sending message in', sendDelay, 'ms');
         sendTimeoutRef.current = window.setTimeout(() => {
-          console.log('[LMCIFY] Sending message:', sharedMessage);
           onSend(sharedMessage);
 
           // Clear the auto-play message
@@ -132,13 +151,11 @@ export function useLmcifyAutoPlay(
           const url = new URL(window.location.href);
           url.searchParams.delete('lmcify');
           window.history.replaceState({}, '', url.toString());
-          console.log('[LMCIFY] Auto-play complete, URL cleaned');
         }, sendDelay);
       }
     };
 
     // Start typing after a short delay
-    console.log('[LMCIFY] Starting typing in 300ms');
     typingTimeoutRef.current = window.setTimeout(typeNextCharacter, 300);
 
     // Cleanup function
