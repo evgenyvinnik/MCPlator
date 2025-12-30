@@ -87,7 +87,7 @@ export default async function handler(req: Request): Promise<Response> {
   }
 
   try {
-    const body: ChatRequestBody = await req.json();
+    const body = (await req.json()) as ChatRequestBody;
     const { message, history } = body;
 
     // Pre-filter: Reject non-calculator queries before sending to LLM

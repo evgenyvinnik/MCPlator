@@ -120,7 +120,7 @@ export function isCalculatorRelated(message: string): boolean {
  */
 export async function streamRejectionMessage(
   writer: WritableStreamDefaultWriter<Uint8Array>,
-  encoder: TextEncoder,
+  encoder: InstanceType<typeof TextEncoder>,
   messageId: string
 ): Promise<void> {
   // Split message into words for token-by-token streaming
