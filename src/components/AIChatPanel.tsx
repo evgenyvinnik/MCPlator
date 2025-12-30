@@ -110,15 +110,9 @@ export function AIChatPanel({
     }
   );
 
-  // Sync auto-play message with input text
-  useEffect(() => {
-    if (isAutoPlaying && autoPlayMessage) {
-      setInputText(autoPlayMessage);
-    } else if (!isAutoPlaying && !autoPlayMessage) {
-      // Clear input after auto-play completes
-      setInputText('');
-    }
-  }, [autoPlayMessage, isAutoPlaying]);
+  // Derive the displayed input text based on auto-play state
+  // When auto-playing, show the progressively typed message; otherwise show user input
+  const displayedInputText = isAutoPlaying && autoPlayMessage ? autoPlayMessage : inputText;
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -233,7 +227,7 @@ export function AIChatPanel({
           </div>
 
           <ChatInput
-            value={inputText}
+            value={displayedInputText}
             onChange={setInputText}
             onSend={handleSendMessage}
             disabled={isStreaming || isAutoPlaying}

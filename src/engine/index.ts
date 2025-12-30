@@ -396,7 +396,7 @@ export const calculatorEngine: CalculatorEngine = {
     indicators: {
       error: state.isError,
       memory: state.hasMemory,
-      op: state.lastOperator, // UI layer should map to symbols: add→'+', sub→'-', mul→'×', div→'÷'
+      negative: !state.isError && parseFloat(state.displayValue) < 0,
     },
   }),
 };
