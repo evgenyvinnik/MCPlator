@@ -2,7 +2,8 @@
 
 A fully functional retro Casio-style calculator with an LLM-powered AI assistant. Features a polished retro UI with authentic animations and natural language calculator control.
 
-![MCPlator Desktop Screenshot](public/screenshots/desktop.png)
+<img width="1271" height="1041" alt="Screenshot 2025-12-29 at 9 07 40 PM" src="https://github.com/user-attachments/assets/06cfd84f-d723-4bcb-aa37-27ff2f6df32e" />
+
 
 ## Features
 
