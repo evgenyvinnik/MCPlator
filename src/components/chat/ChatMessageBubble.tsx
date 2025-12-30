@@ -39,6 +39,7 @@ export function ChatMessageBubble({
   onShare,
 }: ChatMessageBubbleProps) {
   const [showCopied, setShowCopied] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleShare = () => {
     if (onShare) {
@@ -49,16 +50,22 @@ export function ChatMessageBubble({
   };
 
   return (
-    <div className="flex items-center gap-2 w-full">
-      {/* Share button - only show for user messages */}
+    <div
+      className="flex items-center gap-2 w-full group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Share button - only show for user messages, appears on hover (desktop) or always visible (mobile) */}
       {role === 'user' && onShare && (
         <button
           onClick={handleShare}
-          className="flex-shrink-0 p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-200 group relative"
+          className={`flex-shrink-0 p-1.5 rounded-full transition-all duration-200 bg-cyan-500/30 hover:bg-cyan-500/50 relative ${
+            isMobile || isHovered ? 'opacity-100' : 'opacity-0'
+          }`}
           aria-label="Share message"
           title="Share this calculation"
         >
-          <Share2 className="w-4 h-4 text-white/60 group-hover:text-white/90" />
+          <Share2 className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'} text-cyan-200`} />
           {showCopied && (
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-emerald-500 text-white text-xs rounded whitespace-nowrap">
               Link copied!

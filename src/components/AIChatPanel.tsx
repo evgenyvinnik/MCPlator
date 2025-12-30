@@ -97,8 +97,8 @@ export function AIChatPanel({
 
   // Initialize auto-play for shared links
   const { autoPlayMessage, isAutoPlaying } = useLmcifyAutoPlay(sendMessage, {
-    typingSpeed: 50,
-    sendDelay: 800,
+    typingSpeed: 100,
+    sendDelay: 1000,
   });
 
   // Sync auto-play message with input text
