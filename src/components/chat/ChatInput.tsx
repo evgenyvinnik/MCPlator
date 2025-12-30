@@ -32,7 +32,7 @@ interface ChatInputProps {
  * - Auto-resizing textarea (max 120px height)
  * - Enter to send, Shift+Enter for newline
  * - Send button with disabled state
- * - 512 character limit with visual counter
+ * - Silent 512 character limit
  */
 export function ChatInput({
   value,
@@ -42,9 +42,6 @@ export function ChatInput({
   isMobile = false,
 }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const MAX_LENGTH = 512;
-  const remaining = MAX_LENGTH - value.length;
-  const isNearLimit = remaining <= 50;
 
   // Auto-resize textarea as content changes (capped at 120px)
   useEffect(() => {
@@ -67,27 +64,16 @@ export function ChatInput({
       className={`${isMobile ? 'p-4 pb-6' : 'p-4'} relative z-20 border-t border-white/10 backdrop-blur-lg bg-white/5`}
     >
       <div className={`flex ${isMobile ? 'gap-3' : 'gap-2'} items-end`}>
-        <div className="flex-1 relative">
-          <Textarea
-            ref={textareaRef}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            onKeyDown={handleKeyPress}
-            placeholder="Type your message..."
-            rows={1}
-            isMobile={isMobile}
-            maxLength={MAX_LENGTH}
-          />
-          {value.length > 0 && (
-            <div
-              className={`absolute bottom-1 right-3 text-xs font-mono ${
-                isNearLimit ? 'text-yellow-300' : 'text-white/40'
-              }`}
-            >
-              {remaining}
-            </div>
-          )}
-        </div>
+        <Textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyPress}
+          placeholder="Type your message..."
+          rows={1}
+          isMobile={isMobile}
+          maxLength={512}
+        />
         <Button
           onClick={onSend}
           disabled={!value.trim() || disabled}
