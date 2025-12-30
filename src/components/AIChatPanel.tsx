@@ -114,6 +114,9 @@ export function AIChatPanel({
   useEffect(() => {
     if (isAutoPlaying && autoPlayMessage) {
       setInputText(autoPlayMessage);
+    } else if (!isAutoPlaying && !autoPlayMessage) {
+      // Clear input after auto-play completes
+      setInputText('');
     }
   }, [autoPlayMessage, isAutoPlaying]);
 

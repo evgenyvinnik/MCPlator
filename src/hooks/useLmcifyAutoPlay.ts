@@ -120,6 +120,9 @@ export function useLmcifyAutoPlay(
         sendTimeoutRef.current = window.setTimeout(() => {
           console.log('[LMCIFY] Sending message:', sharedMessage);
           onSend(sharedMessage);
+
+          // Clear the auto-play message
+          setAutoPlayMessage('');
           setIsAutoPlaying(false);
 
           // Mark this message as played AFTER successfully sending
