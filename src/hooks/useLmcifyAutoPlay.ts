@@ -76,16 +76,24 @@ export function useLmcifyAutoPlay(
   }, [currentUrl]);
 
   useEffect(() => {
+    console.log('[LMCIFY] Effect running, currentUrl:', currentUrl);
+
     // Check for LMCIFY parameter in URL
     const sharedMessage = getLmcifyFromUrl(currentUrl);
+    console.log('[LMCIFY] Decoded message:', sharedMessage);
+
     if (!sharedMessage) {
+      console.log('[LMCIFY] No message found in URL');
       return;
     }
 
     // Check if we've already played this exact message
     if (playedMessagesRef.current.has(sharedMessage)) {
+      console.log('[LMCIFY] Message already played, skipping');
       return;
     }
+
+    console.log('[LMCIFY] Starting auto-play for message:', sharedMessage);
 
     // Mark this message as played
     playedMessagesRef.current.add(sharedMessage);
@@ -100,7 +108,9 @@ export function useLmcifyAutoPlay(
     let currentIndex = 0;
     const typeNextCharacter = () => {
       if (currentIndex <= sharedMessage.length) {
-        setAutoPlayMessage(sharedMessage.slice(0, currentIndex));
+        const partial = sharedMessage.slice(0, currentIndex);
+        console.log('[LMCIFY] Typing character', currentIndex, ':', partial);
+        setAutoPlayMessage(partial);
         currentIndex++;
         typingTimeoutRef.current = window.setTimeout(
           typeNextCharacter,
@@ -108,7 +118,9 @@ export function useLmcifyAutoPlay(
         );
       } else {
         // Typing complete, send the message after a delay
+        console.log('[LMCIFY] Typing complete, sending message in', sendDelay, 'ms');
         sendTimeoutRef.current = window.setTimeout(() => {
+          console.log('[LMCIFY] Sending message:', sharedMessage);
           onSend(sharedMessage);
           setIsAutoPlaying(false);
 
@@ -116,11 +128,13 @@ export function useLmcifyAutoPlay(
           const url = new URL(window.location.href);
           url.searchParams.delete('lmcify');
           window.history.replaceState({}, '', url.toString());
+          console.log('[LMCIFY] Auto-play complete, URL cleaned');
         }, sendDelay);
       }
     };
 
     // Start typing after a short delay
+    console.log('[LMCIFY] Starting typing in 300ms');
     typingTimeoutRef.current = window.setTimeout(typeNextCharacter, 300);
 
     // Cleanup function
