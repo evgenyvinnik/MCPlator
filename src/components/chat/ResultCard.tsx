@@ -23,12 +23,33 @@ interface ResultCardProps {
 }
 
 /**
+ * Formats a number string with thousand separators.
+ * Handles integers, decimals, and negative numbers.
+ */
+function formatWithThousandSeparators(value: string): string {
+  const trimmed = value.trim();
+
+  // Check if it's a valid number
+  const num = parseFloat(trimmed);
+  if (isNaN(num)) {
+    return value; // Return as-is if not a number
+  }
+
+  // Use toLocaleString for proper formatting
+  // This handles integers, decimals, and negatives
+  return num.toLocaleString('en-US', {
+    maximumFractionDigits: 9, // Preserve decimal precision
+  });
+}
+
+/**
  * Displays a calculator result with optional debug panel.
  *
  * Features:
  * - Gradient border styling
  * - Debug icon that appears on hover (desktop) or always visible (mobile)
  * - Expandable panel showing pressed keys
+ * - Thousand separators for numeric results
  */
 export function ResultCard({ text, keys, isMobile = false }: ResultCardProps) {
   const [isDebugOpen, setIsDebugOpen] = useState(false);
@@ -62,7 +83,7 @@ export function ResultCard({ text, keys, isMobile = false }: ResultCardProps) {
           <p
             className={`${isMobile ? 'text-3xl' : 'text-2xl'} font-bold text-white font-mono break-words overflow-hidden`}
           >
-            {text}
+            {formatWithThousandSeparators(text)}
           </p>
 
           {isDebugOpen && hasKeys && (
