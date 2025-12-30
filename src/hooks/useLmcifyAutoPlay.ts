@@ -95,8 +95,6 @@ export function useLmcifyAutoPlay(
 
     console.log('[LMCIFY] Starting auto-play for message:', sharedMessage);
 
-    // Mark this message as played
-    playedMessagesRef.current.add(sharedMessage);
     setIsAutoPlaying(true);
 
     // Notify parent that auto-play is starting (e.g., to open chat panel)
@@ -123,6 +121,9 @@ export function useLmcifyAutoPlay(
           console.log('[LMCIFY] Sending message:', sharedMessage);
           onSend(sharedMessage);
           setIsAutoPlaying(false);
+
+          // Mark this message as played AFTER successfully sending
+          playedMessagesRef.current.add(sharedMessage);
 
           // Clear URL parameter after sending (clean up URL)
           const url = new URL(window.location.href);
