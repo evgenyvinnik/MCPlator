@@ -149,7 +149,34 @@ interface AnimationSequence {
 
 **When to Apply**: Any system where async operations trigger visual feedback that takes time.
 
-### Pattern 4: Server-Sent Events for Streaming
+### Pattern 4: Single Source of Truth for Key Metadata
+
+Centralize all key-related definitions (labels, categories, mappings) in a single module.
+
+```typescript
+// types/keyMetadata.ts - centralized key definitions
+export const KEY_METADATA: Record<KeyId, KeyMetadata> = {
+  digit_0: { label: '0', category: 'NUMBER' },
+  add: { label: '+', category: 'OPERATOR' },
+  mc: { label: 'MC', category: 'MEMORY' },
+  // ... all keys defined once
+};
+
+// Derived mappings for different consumers
+export const KEY_LABELS: Record<KeyId, string> = /* derived from KEY_METADATA */;
+export const RETRO_KEY_TO_KEY_ID: Partial<Record<RetroKeyValue, KeyId>> = { /* ... */ };
+export const KEY_ID_TO_RETRO_KEY: Partial<Record<KeyId, RetroKeyValue>> = { /* ... */ };
+```
+
+**Benefits**:
+- Single source of truth eliminates inconsistencies
+- Adding new keys requires changes in only one file
+- Type safety across all key consumers
+- Bidirectional mappings between different key identifier systems
+
+**When to Apply**: Any system with multiple representations of the same entities (e.g., internal IDs vs display labels, API keys vs UI keys).
+
+### Pattern 6: Server-Sent Events for Streaming
 
 Use SSE for real-time AI response streaming instead of WebSockets.
 
@@ -174,7 +201,7 @@ const reader = response.body.getReader();
 - One-way only (use POST for requests)
 - Limited to text data (use JSON encoding)
 
-### Pattern 5: Pre-filtering for Cost Optimization
+### Pattern 7: Pre-filtering for Cost Optimization
 
 Validate requests before expensive API calls.
 
@@ -1001,9 +1028,32 @@ Keys received from AI
 
 ### E2E Tests (Playwright)
 
-- **Full User Flow**: Type message, see animation, get result
-- **LMCIFY Flow**: Open shared URL, watch auto-play
-- **Error Cases**: Network failure, quota exceeded
+Located in `tests/` directory:
+
+- **Calculator UI Tests** (`calculator.spec.ts`):
+  - Initial display state verification
+  - Basic arithmetic operations (addition, subtraction, multiplication, division)
+  - Chained calculations
+  - Clear and AC functionality
+  - Memory operations
+  - Edge cases (division by zero, overflow)
+
+- **LMCIFY Tests** (`lmcify.spec.ts`):
+  - Auto-play from URL parameter
+  - Invalid parameter handling
+  - Message typing animation
+
+```typescript
+// Example: Basic addition test
+test('should perform basic addition: 2 + 3 = 5', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await clickButton(page, '2');
+  await clickButton(page, '+');
+  await clickButton(page, '3');
+  await clickButton(page, '=');
+  expect(await getDisplayValue(page)).toBe('5');
+});
+```
 
 ---
 

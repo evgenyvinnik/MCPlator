@@ -23,18 +23,18 @@ A fully functional retro Casio-style calculator with an LLM-powered AI assistant
 
 ## Project Stats
 
-**Total SLOC:** 12,420 lines (non-empty, excluding dependencies)
+**Total SLOC:** 13,135 lines (non-empty, excluding dependencies)
 
 | Extension         | Lines |
 | ----------------- | ----- |
-| Markdown (.md)    | 4,775 |
-| TypeScript (.ts)  | 2,790 |
+| Markdown (.md)    | 5,108 |
+| TypeScript (.ts)  | 3,167 |
 | CSS (.css)        | 2,077 |
-| TSX (.tsx)        | 2,046 |
+| TSX (.tsx)        | 1,955 |
 | JavaScript (.js)  | 346   |
-| JSON (.json)      | 243   |
+| JSON (.json)      | 257   |
+| HTML (.html)      | 127   |
 | JavaScript (.mjs) | 98    |
-| HTML (.html)      | 45    |
 
 ## Tech Stack
 
