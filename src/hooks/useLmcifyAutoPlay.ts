@@ -50,23 +50,45 @@ export function useLmcifyAutoPlay(
 
   const [autoPlayMessage, setAutoPlayMessage] = useState<string>('');
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-  const hasAutoPlayedRef = useRef(false);
+  const [currentUrl, setCurrentUrl] = useState(window.location.search);
+  const playedMessagesRef = useRef(new Set<string>());
   const typingTimeoutRef = useRef<number | undefined>(undefined);
   const sendTimeoutRef = useRef<number | undefined>(undefined);
 
+  // Monitor URL changes
   useEffect(() => {
-    // Only auto-play once per session
-    if (hasAutoPlayedRef.current) {
-      return;
-    }
+    const handleUrlChange = () => {
+      setCurrentUrl(window.location.search);
+    };
 
+    window.addEventListener('popstate', handleUrlChange);
+    // Also check periodically in case URL changes without popstate
+    const interval = setInterval(() => {
+      if (window.location.search !== currentUrl) {
+        setCurrentUrl(window.location.search);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      clearInterval(interval);
+    };
+  }, [currentUrl]);
+
+  useEffect(() => {
     // Check for LMCIFY parameter in URL
-    const sharedMessage = getLmcifyFromUrl(window.location.search);
+    const sharedMessage = getLmcifyFromUrl(currentUrl);
     if (!sharedMessage) {
       return;
     }
 
-    hasAutoPlayedRef.current = true;
+    // Check if we've already played this exact message
+    if (playedMessagesRef.current.has(sharedMessage)) {
+      return;
+    }
+
+    // Mark this message as played
+    playedMessagesRef.current.add(sharedMessage);
     setIsAutoPlaying(true);
 
     // Notify parent that auto-play is starting (e.g., to open chat panel)
@@ -110,8 +132,7 @@ export function useLmcifyAutoPlay(
         clearTimeout(sendTimeoutRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onSend, typingSpeed, sendDelay]);
+  }, [currentUrl, onSend, typingSpeed, sendDelay, onAutoPlayStart]);
 
   return {
     autoPlayMessage,
