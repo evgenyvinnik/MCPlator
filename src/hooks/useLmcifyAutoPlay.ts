@@ -43,7 +43,8 @@ interface AutoPlayConfig {
  */
 export function useLmcifyAutoPlay(
   onSend: (message: string) => void,
-  config: AutoPlayConfig = {}
+  config: AutoPlayConfig = {},
+  onAutoPlayStart?: () => void
 ) {
   const { typingSpeed = 50, sendDelay = 800 } = config;
 
@@ -67,6 +68,11 @@ export function useLmcifyAutoPlay(
 
     hasAutoPlayedRef.current = true;
     setIsAutoPlaying(true);
+
+    // Notify parent that auto-play is starting (e.g., to open chat panel)
+    if (onAutoPlayStart) {
+      onAutoPlayStart();
+    }
 
     // Type the message character by character
     let currentIndex = 0;
@@ -104,6 +110,7 @@ export function useLmcifyAutoPlay(
         clearTimeout(sendTimeoutRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onSend, typingSpeed, sendDelay]);
 
   return {

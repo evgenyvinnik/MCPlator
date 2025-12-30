@@ -96,10 +96,19 @@ export function AIChatPanel({
   };
 
   // Initialize auto-play for shared links
-  const { autoPlayMessage, isAutoPlaying } = useLmcifyAutoPlay(sendMessage, {
-    typingSpeed: 100,
-    sendDelay: 1000,
-  });
+  const { autoPlayMessage, isAutoPlaying } = useLmcifyAutoPlay(
+    sendMessage,
+    {
+      typingSpeed: 100,
+      sendDelay: 1000,
+    },
+    () => {
+      // When auto-play starts, open the chat panel on mobile
+      if (isMobile && onOpen) {
+        onOpen();
+      }
+    }
+  );
 
   // Sync auto-play message with input text
   useEffect(() => {

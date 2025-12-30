@@ -51,7 +51,7 @@ export function ChatMessageBubble({
 
   return (
     <div
-      className="flex items-center gap-2 w-full group"
+      className="max-w-[85%] flex items-start gap-2 group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -59,7 +59,7 @@ export function ChatMessageBubble({
       {role === 'user' && onShare && (
         <button
           onClick={handleShare}
-          className={`flex-shrink-0 p-1.5 rounded-full transition-all duration-200 bg-cyan-500/30 hover:bg-cyan-500/50 relative ${
+          className={`mt-px flex-shrink-0 p-1.5 rounded-full transition-all duration-200 bg-cyan-500/30 hover:bg-cyan-500/50 relative ${
             isMobile || isHovered ? 'opacity-100' : 'opacity-0'
           }`}
           aria-label="Share message"
@@ -67,7 +67,7 @@ export function ChatMessageBubble({
         >
           <Share2 className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'} text-cyan-200`} />
           {showCopied && (
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-emerald-500 text-white text-xs rounded whitespace-nowrap">
+            <div className="absolute top-0 right-full mr-2 px-2 py-1 bg-emerald-500 text-white text-xs rounded whitespace-nowrap">
               Link copied!
             </div>
           )}
@@ -75,7 +75,7 @@ export function ChatMessageBubble({
       )}
 
       <Card
-        className={`max-w-[85%] ${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl ${
+        className={`${isMobile ? 'p-4' : 'p-3'} backdrop-blur-lg border-0 shadow-xl ${
           role === 'user'
             ? 'bg-cyan-600/80 text-white'
             : 'bg-white/10 text-white border border-white/20'
