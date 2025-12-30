@@ -1,7 +1,14 @@
 {
   "name": "mc-plator",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Retro Calculator with AI Co-Pilot - A Casio-style calculator with LLM-powered natural language control",
+  "author": "Evgeny Vinnik",
+  "homepage": "https://mcplator.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/evgenyvinnik/MCPlator"
+  },
   "type": "module",
   "scripts": {
     "dev": "cross-env NODE_ENV=development vite",

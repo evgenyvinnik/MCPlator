@@ -1,4 +1,4 @@
-import type { KeyId, CalculatorDisplay } from '../types';
+import type { KeyId, CalculatorDisplay } from '../types/calculator';
 
 export type CalculatorInternalState = {
   displayValue: string;

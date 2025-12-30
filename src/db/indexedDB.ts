@@ -29,9 +29,9 @@ interface CasioDBSchema extends DBSchema {
     value: {
       id: 'current';
       /** Calculator engine internal state */
-      state: import('../engine').CalculatorInternalState;
+      state: import('../engine/calculatorEngine').CalculatorInternalState;
       /** Display value and indicators */
-      display: import('../types').CalculatorDisplay;
+      display: import('../types/calculator').CalculatorDisplay;
       /** ISO timestamp of last update */
       updatedAt: string;
     };
@@ -42,7 +42,7 @@ interface CasioDBSchema extends DBSchema {
    */
   'chat-messages': {
     key: string;
-    value: import('../types').ChatMessage;
+    value: import('../types/chat').ChatMessage;
     indexes: { 'by-created': string };
   };
   /**

@@ -12,40 +12,8 @@ import React, { useRef, useEffect } from 'react';
 import sqrtIcon from '../assets/icons/sqrt.svg';
 import changeSignIcon from '../assets/icons/change-sign.svg';
 import { useCalculatorStore } from '../state/useCalculatorStore';
-import type { KeyId } from '../types';
+import { KEY_ID_TO_RETRO_KEY } from '../types/keyMetadata';
 import styles from './RetroKeypad.module.css';
-
-/**
- * Maps calculator engine KeyIds to RetroKeypad button identifiers.
- * Used to trigger visual button presses during AI-driven animations.
- */
-const keyIdToRetroKey: Partial<Record<KeyId, string>> = {
-  digit_0: '0',
-  digit_1: '1',
-  digit_2: '2',
-  digit_3: '3',
-  digit_4: '4',
-  digit_5: '5',
-  digit_6: '6',
-  digit_7: '7',
-  digit_8: '8',
-  digit_9: '9',
-  decimal: 'float',
-  add: 'plus',
-  sub: 'minus',
-  mul: 'multiply',
-  div: 'divide',
-  percent: 'percentage',
-  equals: 'perform',
-  ac: 'on',
-  c: 'clear',
-  mc: 'mc',
-  mr: 'mr',
-  m_plus: 'm+',
-  m_minus: 'm-',
-  plus_minus: 'change_sign',
-  // Note: 'sqrt' maps to itself
-};
 
 /**
  * Physical button layout matching Casio SL-300SV.
@@ -146,7 +114,7 @@ const RetroKeypad: React.FC<RetroKeypadProps> = ({ onKeyClick }) => {
 
   // Map animation system KeyId to our button identifier
   const activeRetroKey = pressedKey
-    ? keyIdToRetroKey[pressedKey] || null
+    ? KEY_ID_TO_RETRO_KEY[pressedKey] || null
     : null;
 
   /**

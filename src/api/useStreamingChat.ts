@@ -15,7 +15,7 @@ import { useChatStore } from '../state/useChatStore';
 import { useCalculatorStore } from '../state/useCalculatorStore';
 import { quotaDB } from '../db/quotaDB';
 import { streamChat } from './sseClient';
-import type { KeyId } from '../types';
+import type { KeyId } from '../types/calculator';
 import { v4 as uuid } from 'uuid';
 
 /**

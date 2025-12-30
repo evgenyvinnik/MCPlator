@@ -1,34 +1,35 @@
 import React from 'react';
 import { useCalculatorStore } from '../state/useCalculatorStore';
-import type { KeyId } from '../types';
+import { KEY_LABELS } from '../types/keyMetadata';
+import type { KeyId } from '../types/calculator';
 
-const keys: { id: KeyId; label: string; className?: string }[] = [
-  { id: 'mc', label: 'MC' },
-  { id: 'mr', label: 'MR' },
-  { id: 'm_minus', label: 'M-' },
-  { id: 'm_plus', label: 'M+' },
-  { id: 'percent', label: '%' },
-  { id: 'div', label: '÷' },
-  { id: 'digit_7', label: '7' },
-  { id: 'digit_8', label: '8' },
-  { id: 'digit_9', label: '9' },
-  { id: 'mul', label: '×' },
-  { id: 'digit_4', label: '4' },
-  { id: 'digit_5', label: '5' },
-  { id: 'digit_6', label: '6' },
-  { id: 'sub', label: '-' },
-  { id: 'digit_1', label: '1' },
-  { id: 'digit_2', label: '2' },
-  { id: 'digit_3', label: '3' },
-  { id: 'add', label: '+' },
-  { id: 'ac', label: 'AC', className: 'bg-red-400 hover:bg-red-500' },
-  { id: 'digit_0', label: '0' },
-  { id: 'decimal', label: '.' },
-  {
-    id: 'equals',
-    label: '=',
-    className: 'col-span-1 bg-blue-400 hover:bg-blue-500',
-  },
+/**
+ * Keypad layout configuration.
+ * Uses KeyIds directly - labels are pulled from centralized KEY_LABELS.
+ */
+const keys: { id: KeyId; className?: string }[] = [
+  { id: 'mc' },
+  { id: 'mr' },
+  { id: 'm_minus' },
+  { id: 'm_plus' },
+  { id: 'percent' },
+  { id: 'div' },
+  { id: 'digit_7' },
+  { id: 'digit_8' },
+  { id: 'digit_9' },
+  { id: 'mul' },
+  { id: 'digit_4' },
+  { id: 'digit_5' },
+  { id: 'digit_6' },
+  { id: 'sub' },
+  { id: 'digit_1' },
+  { id: 'digit_2' },
+  { id: 'digit_3' },
+  { id: 'add' },
+  { id: 'ac', className: 'bg-red-400 hover:bg-red-500' },
+  { id: 'digit_0' },
+  { id: 'decimal' },
+  { id: 'equals', className: 'col-span-1 bg-blue-400 hover:bg-blue-500' },
 ];
 
 export const Keypad: React.FC = () => {
@@ -47,7 +48,7 @@ export const Keypad: React.FC = () => {
           `}
           onClick={() => pressKey(k.id)}
         >
-          {k.label}
+          {KEY_LABELS[k.id]}
         </button>
       ))}
     </div>

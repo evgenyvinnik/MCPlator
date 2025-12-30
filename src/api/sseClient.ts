@@ -7,7 +7,7 @@
  * @module api/sseClient
  */
 
-import type { ChatRequestBody } from '../types';
+import type { ChatRequestBody } from '../types/chat';
 
 /** Length of "event: " prefix in SSE format */
 const SSE_EVENT_PREFIX_LENGTH = 7;

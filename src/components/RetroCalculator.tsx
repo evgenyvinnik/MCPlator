@@ -14,44 +14,8 @@ import RetroScreen from './RetroScreen';
 import RetroKeypad from './RetroKeypad';
 import { useCalculatorStore } from '../state/useCalculatorStore';
 import logo from '../assets/casio_logo.svg';
-import type { KeyId } from '../types';
+import { RETRO_KEY_TO_KEY_ID, MEMORY_KEY_MAP } from '../types/keyMetadata';
 import styles from './RetroCalculator.module.css';
-
-/**
- * Maps RetroKeypad button values to calculator engine KeyId values.
- *
- * The keypad uses human-readable values (e.g., 'plus', 'multiply')
- * while the calculator engine uses normalized KeyIds (e.g., 'add', 'mul').
- */
-const retroKeyToKeyId: Record<string, KeyId> = {
-  // Number keys
-  '0': 'digit_0',
-  '1': 'digit_1',
-  '2': 'digit_2',
-  '3': 'digit_3',
-  '4': 'digit_4',
-  '5': 'digit_5',
-  '6': 'digit_6',
-  '7': 'digit_7',
-  '8': 'digit_8',
-  '9': 'digit_9',
-  // Decimal point
-  float: 'decimal',
-  // Arithmetic operations
-  plus: 'add',
-  minus: 'sub',
-  multiply: 'mul',
-  divide: 'div',
-  // Equals
-  perform: 'equals',
-  // Clear functions
-  on: 'ac',
-  clear: 'c',
-  // Special functions
-  percentage: 'percent',
-  change_sign: 'plus_minus',
-  sqrt: 'sqrt',
-};
 
 /**
  * Main calculator component that renders the complete Casio SL-300SV replica.
@@ -110,13 +74,7 @@ const RetroCalculator: React.FC = () => {
 
     // Handle memory operations separately (they have type === 'MEMORY')
     if (key.type === 'MEMORY') {
-      const memoryKeyMap: Record<string, KeyId> = {
-        clear: 'mc',
-        recall: 'mr',
-        plus: 'm_plus',
-        minus: 'm_minus',
-      };
-      const keyId = memoryKeyMap[key.value];
+      const keyId = MEMORY_KEY_MAP[key.value];
       if (keyId) {
         pressKey(keyId);
       }
@@ -124,7 +82,7 @@ const RetroCalculator: React.FC = () => {
     }
 
     // Map standard keys
-    const keyId = retroKeyToKeyId[key.value];
+    const keyId = RETRO_KEY_TO_KEY_ID[key.value as keyof typeof RETRO_KEY_TO_KEY_ID];
     if (keyId) {
       pressKey(keyId);
     }

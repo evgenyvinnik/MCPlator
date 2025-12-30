@@ -8,7 +8,7 @@
  */
 
 import { Card } from '../ui/Card';
-import type { ChatRole } from '../../types';
+import type { ChatRole } from '../../types/chat';
 import { Share2 } from 'lucide-react';
 import { useState } from 'react';
 

@@ -8,9 +8,9 @@
  */
 
 import { create } from 'zustand';
-import { calculatorEngine } from '../engine';
-import type { CalculatorInternalState } from '../engine';
-import type { CalculatorDisplay, AnimationSequence, KeyId } from '../types';
+import { calculatorEngine } from '../engine/calculatorEngine';
+import type { CalculatorInternalState } from '../engine/calculatorEngine';
+import type { CalculatorDisplay, AnimationSequence, KeyId } from '../types/calculator';
 import { getDB } from '../db/indexedDB';
 
 /**

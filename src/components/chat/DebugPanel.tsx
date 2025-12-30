@@ -8,38 +8,8 @@
  */
 
 import { X } from 'lucide-react';
-import type { KeyId } from '../../types';
-
-/**
- * Maps KeyId to a human-readable label.
- */
-const keyIdToLabel: Record<KeyId, string> = {
-  digit_0: '0',
-  digit_1: '1',
-  digit_2: '2',
-  digit_3: '3',
-  digit_4: '4',
-  digit_5: '5',
-  digit_6: '6',
-  digit_7: '7',
-  digit_8: '8',
-  digit_9: '9',
-  decimal: '.',
-  add: '+',
-  sub: '−',
-  mul: '×',
-  div: '÷',
-  percent: '%',
-  sqrt: '√',
-  plus_minus: '±',
-  equals: '=',
-  ac: 'AC',
-  c: 'C',
-  mc: 'MC',
-  mr: 'MR',
-  m_plus: 'M+',
-  m_minus: 'M−',
-};
+import { KEY_LABELS } from '../../types/keyMetadata';
+import type { KeyId } from '../../types/calculator';
 
 interface DebugPanelProps {
   /** Array of keys pressed by the LLM */
@@ -81,7 +51,7 @@ export function DebugPanel({
             key={index}
             className={`${isMobile ? 'px-2.5 py-1 text-sm' : 'px-2 py-0.5 text-sm'} bg-indigo-500/20 border border-indigo-500/40 rounded-md text-indigo-200 font-mono whitespace-nowrap`}
           >
-            {keyIdToLabel[key] || key}
+            {KEY_LABELS[key] || key}
           </span>
         ))}
       </div>
