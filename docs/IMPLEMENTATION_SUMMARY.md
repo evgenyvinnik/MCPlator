@@ -60,7 +60,7 @@ This document summarizes the implementation of the updated spec as described in 
 
 ### Backend
 
-1. **LLM Provider**: Switched from OpenAI to Anthropic Claude (Haiku model)
+1. **LLM Provider**: Switched from OpenAI to Anthropic Claude (Sonnet 4.6 model)
 2. **Communication**: Changed from REST API to Server-Sent Events (SSE)
 3. **Runtime**: Edge Functions for production, Bun for local development
 4. **Streaming**: Real-time token-by-token response streaming

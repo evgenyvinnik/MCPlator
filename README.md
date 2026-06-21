@@ -50,7 +50,7 @@ A fully functional retro Casio-style calculator with an LLM-powered AI assistant
 ### Backend (`/api`)
 
 - **Platform:** Vercel Serverless Functions (Edge Runtime)
-- **AI:** Anthropic Claude API (Claude Haiku 4.5 model)
+- **AI:** Anthropic Claude API (Claude Sonnet 4.6 model)
 - **Streaming:** Server-Sent Events (SSE) for real-time token streaming
 
 ## Project Structure

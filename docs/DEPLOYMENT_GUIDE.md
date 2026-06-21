@@ -123,7 +123,7 @@ Monitor your Anthropic API usage at https://console.anthropic.com
 
 The application uses:
 
-- Model: `claude-3-5-haiku-20241022`
+- Model: `claude-sonnet-4-6`
 - Max tokens: 1024 per request
 - Pricing: ~$0.25 per 1M input tokens, ~$1.25 per 1M output tokens
 

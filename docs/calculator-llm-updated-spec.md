@@ -17,7 +17,7 @@ A web-based emulation of a Casio-style calculator with:
 
 ### Key Changes from v1:
 
-- **LLM**: Claude Haiku (Anthropic) instead of OpenAI
+- **LLM**: Claude Sonnet 4.6
 - **Communication**: Server-Sent Events (SSE) for streaming responses
 - **Runtime**: Bun instead of Node.js
 - **Storage**: IndexedDB instead of localStorage
@@ -916,7 +916,7 @@ export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
-export const MODEL = 'claude-3-5-haiku-20241022';
+export const MODEL = 'claude-sonnet-4-6';
 ```
 
 ### 7.2 Calculator Tool Definition
@@ -1483,5 +1483,5 @@ VITE_API_URL=http://localhost:3001
 1. **SSE Streaming**: Real-time token-by-token display, better UX
 2. **Bun**: Faster local development, native TypeScript
 3. **IndexedDB**: More storage capacity, better for structured data, async API
-4. **Claude Haiku**: Competitive pricing, strong tool use support, fast responses
+4. **Claude Sonnet**: Competitive pricing, strong tool use support, fast responses
 5. **Vercel Compatible**: Edge runtime supports SSE without timeouts

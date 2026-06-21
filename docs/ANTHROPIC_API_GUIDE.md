@@ -144,7 +144,7 @@ If you want to test the UI locally without setting up an Anthropic API key:
 
 ## API Usage and Costs
 
-- The MCPlator app uses the **Claude 3.5 Haiku** model, which is cost-effective for this use case
+- The MCPlator app uses the **Claude Sonnet 4.6** model, which is cost-effective for this use case
 - Each calculator operation typically uses a small number of tokens
 - Monitor your usage in the [Anthropic Console](https://console.anthropic.com/)
 - Set up billing alerts to avoid unexpected charges
