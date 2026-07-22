@@ -31,11 +31,18 @@ const anthropic = new Anthropic({
 });
 
 /**
- * Vercel Edge Runtime configuration.
- * Using Edge Runtime for optimal SSE (Server-Sent Events) support.
+ * Vercel Node.js Runtime configuration.
+ *
+ * This function streams SSE via the Web-standard Request/Response +
+ * TransformStream API, which the Node.js runtime supports natively.
+ *
+ * We use the Node.js runtime (not Edge) because @anthropic-ai/sdk (>= 0.112)
+ * transitively imports node:fs / node:path, which the Edge Runtime does not
+ * allow — deploying this handler on Edge fails the build with
+ * "referencing unsupported modules: node:fs, node:path".
  */
 export const config = {
-  runtime: 'edge',
+  runtime: 'nodejs',
 };
 
 /**
