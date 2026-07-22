@@ -233,7 +233,7 @@ export const useRetroCalculator = () => {
 };
 
 function calculate(a: number, b: number, op: string): number | 'ERROR' {
-  let res = 0;
+  let res: number;
   switch (op) {
     case 'plus':
       res = a + b;
