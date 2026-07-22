@@ -87,12 +87,7 @@ export const config = {
  * event: done
  * data: {"messageId":"...", "fullText":"I'll calculate that for you. 2 + 3 = 5"}
  */
-export default async function handler(req: Request): Promise<Response> {
-  // Only accept POST requests
-  if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
-  }
-
+export async function POST(req: Request): Promise<Response> {
   try {
     const body = (await req.json()) as ChatRequestBody;
     const { message, history } = body;
