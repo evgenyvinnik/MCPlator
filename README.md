@@ -96,7 +96,7 @@ The frontend runs on `http://localhost:5173`. The API endpoint (`/api/chat`) is 
 
 For the AI chat features to work, you need to set up your Anthropic API key.
 
-**For detailed instructions on getting an Anthropic API key, see [ANTHROPIC_API_GUIDE.md](./ANTHROPIC_API_GUIDE.md).**
+**For detailed instructions on getting an Anthropic API key, see [ANTHROPIC_API_GUIDE.md](./docs/ANTHROPIC_API_GUIDE.md).**
 
 Create a `.env` file in the project root (or set in Vercel dashboard):
 
@@ -114,7 +114,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 ## Deployment
 
-For detailed, step-by-step deployment instructions, please refer to [BUILD.md](./BUILD.md).
+For detailed, step-by-step deployment instructions, please refer to [docs/BUILD.md](./docs/BUILD.md).
 
 ### Quick Deploy to Vercel
 

@@ -54,7 +54,7 @@ export function isCalculatorRelated(message: string): boolean {
     /\b(percent|percentage|%)\b/,
     /\b(square root|sqrt)\b/,
     // Numbers with operators (any format)
-    /\d+\s*[\+\-\*×÷\/\%]\s*\d+/,
+    /\d+\s*[+*×÷/%-]\s*\d+/,
     /\d+\s*(plus|minus|times|divided|multiplied|by)\s*\d+/i,
     // Asking about calculator or entering numbers
     /\b(calculator|calc)\b/,
