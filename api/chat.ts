@@ -31,18 +31,11 @@ const anthropic = new Anthropic({
 });
 
 /**
- * Vercel Node.js Runtime configuration.
- *
- * This function streams SSE via the Web-standard Request/Response +
- * TransformStream API, which the Node.js runtime supports natively.
- *
- * We use the Node.js runtime (not Edge) because @anthropic-ai/sdk (>= 0.112)
- * transitively imports node:fs / node:path, which the Edge Runtime does not
- * allow — deploying this handler on Edge fails the build with
- * "referencing unsupported modules: node:fs, node:path".
+ * Vercel Edge Runtime configuration.
+ * Using Edge Runtime for optimal SSE (Server-Sent Events) support.
  */
 export const config = {
-  runtime: 'nodejs',
+  runtime: 'edge',
 };
 
 /**
@@ -87,7 +80,12 @@ export const config = {
  * event: done
  * data: {"messageId":"...", "fullText":"I'll calculate that for you. 2 + 3 = 5"}
  */
-export async function POST(req: Request): Promise<Response> {
+export default async function handler(req: Request): Promise<Response> {
+  // Only accept POST requests
+  if (req.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 });
+  }
+
   try {
     const body = (await req.json()) as ChatRequestBody;
     const { message, history } = body;
