@@ -1,4 +1,15 @@
-import type { Tool } from '@anthropic-ai/sdk/resources/messages';
+/**
+ * Minimal Anthropic tool-definition shape (the subset this app uses).
+ *
+ * Declared locally instead of importing `Tool` from `@anthropic-ai/sdk` so the
+ * Edge bundle carries no dependency on the SDK — the SDK pulls in
+ * node:fs / node:path and cannot run on the Vercel Edge Runtime.
+ */
+export interface AnthropicTool {
+  name: string;
+  description: string;
+  input_schema: Record<string, unknown>;
+}
 
 /**
  * The Claude model to use for chat interactions.
@@ -116,7 +127,7 @@ Key Sequences - IMPORTANT:
  *   keys: ["ac", "digit_2", "add", "digit_3", "equals"]
  * }
  */
-export const calculatorPressKeysTool: Tool = {
+export const calculatorPressKeysTool: AnthropicTool = {
   name: 'calculator_press_keys',
   description:
     'Simulate pressing calculator keys in order. Use this tool to perform any calculator operation by specifying the sequence of keys to press.',
