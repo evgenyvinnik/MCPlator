@@ -3,13 +3,14 @@
  * Provides offline caching and PWA functionality
  */
 
-const CACHE_NAME = 'mcplator-v1';
-const STATIC_CACHE_NAME = 'mcplator-static-v1';
+const CACHE_NAME = 'mcplator-v2';
+const STATIC_CACHE_NAME = 'mcplator-static-v2';
 
 // Assets to cache immediately on install
 const STATIC_ASSETS = [
   '/',
   '/index.html',
+  '/about',
   '/manifest.json',
   '/mcplator-favicon.svg',
 ];
@@ -87,9 +88,12 @@ self.addEventListener('fetch', (event) => {
             return cachedResponse;
           }
 
-          // If it's a navigation request, return the cached index.html
+          // Preserve the requested page when offline, including URL aliases.
           if (request.mode === 'navigate') {
-            return caches.match('/index.html');
+            const offlinePage = /^\/about(?:\/|\.html)?$/.test(url.pathname)
+              ? '/about'
+              : '/index.html';
+            return caches.match(offlinePage);
           }
 
           // Return a simple offline response for other requests

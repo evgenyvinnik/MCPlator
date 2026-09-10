@@ -80,6 +80,33 @@ body {
   min-height: 100vh;
 }
 
+.site-info {
+  position: fixed;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  left: 1.25rem;
+  z-index: 20;
+  font-size: 14px;
+}
+
+.site-info a {
+  display: inline-block;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #3c4c65;
+  border-radius: 6px;
+  background: #0a0e1a;
+  color: #cbd5e1;
+  text-decoration: none;
+}
+
+.site-info a:hover {
+  color: #8de8f5;
+}
+
+.site-info a:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 3px;
+}
+
 .glass-card {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(16px);
