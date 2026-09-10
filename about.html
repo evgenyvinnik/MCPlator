@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About MCPlator | Free AI &amp; Retro Online Calculator</title>
+    <meta
+      name="description"
+      content="Meet MCPlator, a free retro online calculator with an AI co-pilot. Calculate percentages, use natural language, and share calculations that replay step by step."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://mcplator.com/about" />
+    <link rel="icon" type="image/svg+xml" href="/mcplator-favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0a0e1a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MCPlator" />
+    <meta property="og:url" content="https://mcplator.com/about" />
+    <meta
+      property="og:title"
+      content="About MCPlator | Free AI &amp; Retro Online Calculator"
+    />
+    <meta
+      property="og:description"
+      content="A familiar retro calculator with an AI co-pilot. Ask in plain language, watch the keys, and share the calculation."
+    />
+    <meta property="og:image" content="https://mcplator.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="About MCPlator | Free AI &amp; Retro Online Calculator"
+    />
+    <meta
+      name="twitter:description"
+      content="A familiar retro calculator with an AI co-pilot. Ask in plain language, watch the keys, and share the calculation."
+    />
+    <meta name="twitter:image" content="https://mcplator.com/og-image.png" />
+    <link rel="stylesheet" href="/src/about.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "AboutPage",
+            "@id": "https://mcplator.com/about#page",
+            "url": "https://mcplator.com/about",
+            "name": "About MCPlator | Free AI & Retro Online Calculator",
+            "description": "Meet MCPlator, a free retro online calculator with an AI co-pilot. Calculate percentages, use natural language, and share calculations that replay step by step.",
+            "inLanguage": "en",
+            "about": { "@id": "https://mcplator.com/#app" }
+          },
+          {
+            "@type": "WebApplication",
+            "@id": "https://mcplator.com/#app",
+            "name": "MCPlator",
+            "url": "https://mcplator.com/",
+            "description": "A retro online calculator with an AI co-pilot that translates natural language into visible calculator key presses.",
+            "applicationCategory": "UtilitiesApplication",
+            "operatingSystem": "Any",
+            "isAccessibleForFree": true,
+            "creator": {
+              "@type": "Person",
+              "name": "Evgeny Vinnik",
+              "url": "https://github.com/evgenyvinnik"
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="wordmark" href="/" aria-label="MCPlator home">
+          <img src="/mcplator-favicon.svg" alt="" width="32" height="32" />
+          MCPlator
+        </a>
+        <nav aria-label="Main navigation">
+          <a href="/about" aria-current="page">About</a>
+          <a class="nav-calculator" href="/"
+            >Open calculator <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </header>
+
+      <main id="main">
+        <section class="hero" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">About MCPlator</p>
+            <h1 id="page-title">
+              A retro calculator.<br /><span>An AI co-pilot.</span>
+            </h1>
+            <p class="hero-description">
+              MCPlator is a free online calculator that pairs the familiar feel
+              of a pocket calculator with natural language. Tap the keys
+              yourself, or tell the AI what to calculate and watch it press the
+              buttons.
+            </p>
+            <a class="primary-link" href="/"
+              >Try the AI calculator <span aria-hidden="true">↗</span></a
+            >
+            <p class="hero-note">In your browser. No account needed.</p>
+          </div>
+          <figure class="hero-demo media-card">
+            <div class="media-heading">
+              <span class="demo-label">Watch the keys</span
+              ><span class="sample-label">Recorded demo</span>
+            </div>
+            <video
+              id="percentage-demo"
+              class="calculator-video"
+              controls
+              muted
+              loop
+              playsinline
+              preload="none"
+              poster="/about/percentage-poster.webp"
+              width="360"
+              height="580"
+              aria-label="Recorded calculator demo: the AI presses 80 times 15 percent equals, producing 12."
+              data-demo
+            >
+              <source src="/about/percentage.webm" type="video/webm" />
+              Your browser does not support this video. The calculation is 80 ×
+              15% = 12.
+            </video>
+            <figcaption>
+              <strong>“What is 15% of 80?”</strong>
+              <span>Follow each press, all the way to 12.</span>
+              <button
+                class="motion-toggle"
+                type="button"
+                data-video="percentage-demo"
+                aria-controls="percentage-demo"
+                hidden
+              >
+                Play animation
+              </button>
+            </figcaption>
+          </figure>
+        </section>
+
+        <section class="content-section" aria-labelledby="how-it-works">
+          <div class="section-heading">
+            <p class="eyebrow">01 / How it works</p>
+            <h2 id="how-it-works">Use the keys. Or use your words.</h2>
+          </div>
+          <div class="section-body">
+            <p>
+              For a quick sum, use the on-screen keypad just as you would a desk
+              calculator. It supports addition, subtraction, multiplication,
+              division, decimals, percentages, square roots, and memory
+              functions.
+            </p>
+            <p>
+              For a natural language calculation, open the chat and type a
+              request such as “add 2 plus one hundred.” The AI assistant,
+              powered by Claude, turns your request into a sequence of
+              calculator keys. MCPlator animates those presses, computes the
+              result in the browser, and shows a short explanation in the chat.
+            </p>
+            <p>
+              On a phone, tap the chat icon to open the assistant. On a desktop,
+              the chat sits beside the calculator so you can follow both at
+              once.
+            </p>
+          </div>
+        </section>
+
+        <div class="device-gallery" aria-label="MCPlator on desktop and mobile">
+          <figure class="desktop-shot media-card">
+            <a
+              href="/about/desktop.webp"
+              aria-label="View full-size desktop calculator screenshot"
+            >
+              <img
+                src="/about/desktop.webp"
+                alt="MCPlator on desktop: the retro calculator shows 12 beside the AI chat and its percentage calculation result."
+                width="1100"
+                height="780"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+            <figcaption>
+              <strong>The whole conversation, side by side.</strong
+              ><span
+                >The calculator, the question, and the answer in one view.</span
+              >
+            </figcaption>
+          </figure>
+          <figure class="mobile-shot media-card">
+            <a
+              href="/about/mobile.webp"
+              aria-label="View full-size mobile calculator screenshot"
+            >
+              <img
+                src="/about/mobile.webp"
+                alt="The mobile MCPlator calculator showing 21 after dividing 84 by 4, with a chat button in the top corner."
+                width="780"
+                height="1688"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+            <figcaption>
+              <strong>A pocket calculator. Again.</strong
+              ><span>Tap the chat icon whenever you need a hand.</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <section class="examples-section" aria-labelledby="examples">
+          <p class="eyebrow">02 / Everyday math</p>
+          <h2 id="examples">A few things to ask your AI calculator.</h2>
+          <p>
+            Try these prompts in the calculator’s chat, or work them out with
+            the keypad.
+          </p>
+          <div class="examples-table-wrapper">
+            <table>
+              <caption class="sr-only">
+                Example calculator prompts and their results
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">What you need</th>
+                  <th scope="col">What to ask</th>
+                  <th scope="col">Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Find a percentage</th>
+                  <td>“What is 15% of 80?”</td>
+                  <td>12</td>
+                </tr>
+                <tr>
+                  <th scope="row">Split a bill</th>
+                  <td>“Divide 84 by 4.”</td>
+                  <td>21</td>
+                </tr>
+                <tr>
+                  <th scope="row">Calculate a discount</th>
+                  <td>“Take 20% off 150.”</td>
+                  <td>120</td>
+                </tr>
+                <tr>
+                  <th scope="row">Find a square root</th>
+                  <td>“Square root of 144.”</td>
+                  <td>12</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <figure class="discount-demo media-card">
+            <video
+              id="discount-demo"
+              class="calculator-video"
+              controls
+              muted
+              loop
+              playsinline
+              preload="none"
+              poster="/about/discount-poster.webp"
+              width="360"
+              height="580"
+              aria-label="Recorded calculator demo: the AI takes 20 percent off 150, producing 120."
+              data-demo
+            >
+              <source src="/about/discount.webm" type="video/webm" />
+              Your browser does not support this video. Taking 20% off 150 gives
+              120.
+            </video>
+            <figcaption>
+              <span class="demo-label">A discount, one key at a time</span>
+              <h3>“Take 20% off 150.”</h3>
+              <p>
+                The assistant enters the amount, subtracts the percentage, and
+                presses equals. You can watch the display change as it goes.
+              </p>
+              <p class="demo-equation">150 − 20% = <strong>120</strong></p>
+              <button
+                class="motion-toggle"
+                type="button"
+                data-video="discount-demo"
+                aria-controls="discount-demo"
+                hidden
+              >
+                Play animation
+              </button>
+            </figcaption>
+          </figure>
+        </section>
+
+        <section class="content-section" aria-labelledby="beyond-basics">
+          <div class="section-heading">
+            <p class="eyebrow">03 / Beyond the answer</p>
+            <h2 id="beyond-basics">Keep a number. Share the steps.</h2>
+          </div>
+          <div class="section-body">
+            <h3>Familiar calculator memory</h3>
+            <p>
+              Use M+ to add a value to memory, M− to subtract, MR to recall it,
+              and MC to clear it. C clears the current entry; AC clears both the
+              calculation and memory. Calculator state and chat history are
+              saved in this browser so you can return to them later.
+            </p>
+            <h3>Let Me Calculate It For You</h3>
+            <p>
+              LMCIFY is MCPlator’s way to share a calculation. Use the share
+              action on a chat message to create a link. When someone opens it,
+              the prompt types itself into the chat and the AI runs the
+              calculation. The link carries the prompt, so a replay makes a new
+              AI request rather than showing a saved answer.
+            </p>
+          </div>
+        </section>
+
+        <div
+          class="detail-gallery"
+          aria-label="Calculator display and memory key details"
+        >
+          <figure class="media-card detail-shot">
+            <img
+              src="/about/display.webp"
+              alt="Close-up of MCPlator’s LCD display showing the answer 12 in seven-segment digits."
+              width="308"
+              height="130"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <strong>A familiar LCD display.</strong
+              ><span>Big digits, a clear result, and a little nostalgia.</span>
+            </figcaption>
+          </figure>
+          <figure class="media-card detail-shot">
+            <img
+              src="/about/memory-keys.webp"
+              alt="Close-up of the MC, MR, M−, M+, percentage, and number keys on the retro calculator."
+              width="304"
+              height="168"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <strong>More than the number keys.</strong
+              ><span
+                >Store, recall, and reuse values with calculator memory.</span
+              >
+            </figcaption>
+          </figure>
+        </div>
+
+        <figure class="sharing-demo media-card">
+          <div class="media-heading">
+            <span class="demo-label">Let Me Calculate It For You</span
+            ><span class="sample-label">Recorded demo</span>
+          </div>
+          <video
+            id="sharing-demo"
+            controls
+            muted
+            loop
+            playsinline
+            preload="none"
+            poster="/about/sharing-poster.webp"
+            width="960"
+            height="780"
+            aria-label="Recorded sharing demo: a shared prompt types Divide 84 by 4 into the chat, then the calculator presses the keys and shows 21."
+            data-demo
+          >
+            <source src="/about/sharing.webm" type="video/webm" />
+            Your browser does not support this video. Opening the shared prompt
+            runs 84 ÷ 4 = 21.
+          </video>
+          <figcaption>
+            <div>
+              <strong>Send the link. Let the calculation unfold.</strong
+              ><span
+                >A shared prompt types itself into the chat and runs on the
+                calculator.</span
+              >
+            </div>
+            <button
+              class="motion-toggle"
+              type="button"
+              data-video="sharing-demo"
+              aria-controls="sharing-demo"
+              hidden
+            >
+              Play animation
+            </button>
+          </figcaption>
+        </figure>
+
+        <section class="content-section" aria-labelledby="questions">
+          <div class="section-heading">
+            <p class="eyebrow">04 / Good to know</p>
+            <h2 id="questions">About the calculator.</h2>
+          </div>
+          <div class="section-body faq">
+            <details open>
+              <summary>Is MCPlator free to use?</summary>
+              <p>
+                Yes. You can use the online calculator without creating an
+                account. AI chat has a daily usage limit; the app will tell you
+                when you reach it. The manual keypad remains available.
+              </p>
+            </details>
+            <details>
+              <summary>Is this a scientific calculator?</summary>
+              <p>
+                MCPlator is built for everyday arithmetic, percentages, square
+                roots, and memory operations. Its keypad does not include
+                graphing, trigonometry, or symbolic algebra.
+              </p>
+            </details>
+            <details>
+              <summary>Does the AI calculate the answer itself?</summary>
+              <p>
+                The AI chooses which keys to press, and MCPlator’s calculator
+                engine performs the operations. The AI can misunderstand a
+                request, so follow the visible steps and check that they match
+                what you meant.
+              </p>
+            </details>
+            <details>
+              <summary>Where do my calculations go?</summary>
+              <p>
+                Manual calculations run in your browser. Chat requests are sent
+                to the app’s server and Claude to generate a response.
+                Calculator state and chat history are stored in this browser,
+                and a shared LMCIFY link includes the prompt you chose to share.
+              </p>
+            </details>
+          </div>
+        </section>
+
+        <section class="content-section credits" aria-labelledby="project">
+          <div class="section-heading">
+            <p class="eyebrow">05 / The project</p>
+            <h2 id="project">
+              Old-school buttons.<br />A new way to use them.
+            </h2>
+          </div>
+          <div class="section-body">
+            <p>
+              MCPlator is an open-source project by
+              <a href="https://github.com/evgenyvinnik">Evgeny Vinnik</a>,
+              released under the MIT license. Its Casio-style interface builds
+              on
+              <a href="https://github.com/keremciu/retro-calculator"
+                >keremciu’s retro calculator design</a
+              >, pairing an LCD display and tactile-looking keys with an AI chat
+              assistant.
+            </p>
+            <a class="text-link" href="https://github.com/evgenyvinnik/MCPlator"
+              >Explore the source on GitHub <span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p>
+          MCPlator <span>· A little nostalgia. A little intelligence.</span>
+        </p>
+        <a href="/">Back to the calculator <span aria-hidden="true">↗</span></a>
+      </footer>
+    </div>
+    <script type="module" src="/src/about.ts"></script>
+  </body>
+</html>
