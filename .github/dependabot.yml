@@ -1,7 +1,7 @@
 version: 2
 updates:
-  # Monitor npm dependencies (works for bun too)
-  - package-ecosystem: "npm"
+  # Monitor Bun dependencies
+  - package-ecosystem: "bun"
     directory: "/"
     schedule:
       interval: "weekly"
