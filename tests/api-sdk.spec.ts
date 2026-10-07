@@ -46,6 +46,13 @@ const textBlock = (index: number, chunks: string[]) =>
     .join('') +
   streamEvent('content_block_stop', { index });
 
+// The Anthropic client in api/chat.ts captures `fetch` when the module first
+// loads, and the module stays cached across tests in a worker. Route every call
+// through one dispatcher so each test's mock is used.
+let mockFetch: typeof fetch = () =>
+  Promise.reject(new Error('fetch is not mocked'));
+const dispatchFetch: typeof fetch = (input, init) => mockFetch(input, init);
+
 /**
  * Runs the chat handler against a mocked Anthropic API that replies with
  * `responses` in order, and returns the parsed SSE events and request bodies.
@@ -56,7 +63,8 @@ async function runChat(message: string, responses: string[]) {
   const requests: Record<string, unknown>[] = [];
 
   process.env.ANTHROPIC_API_KEY = 'test-only-not-a-real-key';
-  globalThis.fetch = async (input, init) => {
+  globalThis.fetch = dispatchFetch;
+  mockFetch = async (input, init) => {
     const url = input instanceof Request ? input.url : String(input);
     expect(url).toBe('https://api.anthropic.com/v1/messages');
     const body = JSON.parse(String(init?.body));
