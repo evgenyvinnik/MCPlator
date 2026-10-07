@@ -123,9 +123,9 @@ Monitor your Anthropic API usage at https://console.anthropic.com
 
 The application uses:
 
-- Model: `claude-haiku-4-5`
-- Max tokens: 1024 per request
-- Pricing: ~$1.00 per 1M input tokens, ~$5.00 per 1M output tokens
+- Model: `claude-haiku-5-5` (adaptive thinking, `low` effort)
+- Max tokens: 4096 per request (includes thinking)
+- Pricing: ~$0.10 per 1M input tokens, ~$0.50 per 1M output tokens (prompts up to 100K tokens)
 
 ### Quota System
 

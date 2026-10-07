@@ -3,8 +3,9 @@ import { v4 as uuid } from 'uuid';
 import type { KeyId } from '../src/types/calculator';
 import {
   MODEL,
-  TEMPERATURE,
+  EFFORT,
   MAX_TOKENS,
+  REJECTION_MESSAGE,
   TOKEN_DELAY_BEFORE_KEYS,
   SYSTEM_PROMPT,
   calculatorPressKeysTool,
@@ -129,6 +130,7 @@ export default async function handler(req: Request): Promise<Response> {
       try {
         let fullText = '';
         let keys: KeyId[] = [];
+        let refused = false;
         const messageId = uuid();
 
         // Initial AI request with streaming enabled
@@ -136,7 +138,8 @@ export default async function handler(req: Request): Promise<Response> {
         const stream = await anthropic.messages.stream({
           model: MODEL,
           max_tokens: MAX_TOKENS,
-          temperature: TEMPERATURE,
+          thinking: { type: 'adaptive' },
+          output_config: { effort: EFFORT },
           system: SYSTEM_PROMPT,
           tools: [calculatorPressKeysTool],
           messages,
@@ -189,7 +192,8 @@ export default async function handler(req: Request): Promise<Response> {
               const finalStream = await anthropic.messages.stream({
                 model: MODEL,
                 max_tokens: MAX_TOKENS,
-                temperature: TEMPERATURE,
+                thinking: { type: 'adaptive' },
+                output_config: { effort: EFFORT },
                 system: SYSTEM_PROMPT,
                 tools: [calculatorPressKeysTool],
                 messages: finalMessages,
@@ -227,8 +231,29 @@ export default async function handler(req: Request): Promise<Response> {
               if (!keysSent) {
                 await writer.write(encoder.encode(sseEvent('keys', { keys })));
               }
+
+              if (
+                (await finalStream.finalMessage()).stop_reason === 'refusal'
+              ) {
+                refused = true;
+              }
             }
           }
+        }
+
+        if ((await stream.finalMessage()).stop_reason === 'refusal') {
+          refused = true;
+        }
+
+        // Haiku 5.5 safety classifiers can decline a request (stop_reason 'refusal').
+        // Replace any partial text with the standard rejection message.
+        if (refused) {
+          if (!fullText) {
+            await writer.write(
+              encoder.encode(sseEvent('token', { token: REJECTION_MESSAGE }))
+            );
+          }
+          fullText = REJECTION_MESSAGE;
         }
 
         // Send completion event with full message

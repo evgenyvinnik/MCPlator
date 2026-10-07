@@ -2,21 +2,25 @@ import type { Tool } from '@anthropic-ai/sdk/resources/messages';
 
 /**
  * The Claude model to use for chat interactions.
- * Using Haiku 4.5 for fast, cost-effective responses.
+ * Using Haiku 5.5 for fast, cost-effective responses.
+ * Note: Haiku 5.5 rejects non-default sampling parameters (temperature, top_p, top_k)
+ * and assistant prefill, so neither is sent.
  */
-export const MODEL = 'claude-haiku-4-5';
+export const MODEL = 'claude-haiku-5-5';
 
 /**
- * Temperature setting for AI responses (0-1 scale).
- * Lower values (0.3) make responses more deterministic and consistent.
+ * How much the model thinks before answering.
+ * Haiku 5.5 runs adaptive thinking by default (effort defaults to 'medium');
+ * 'low' keeps short calculator requests fast and cheap.
  */
-export const TEMPERATURE = 0.3;
+export const EFFORT = 'low' as const;
 
 /**
  * Maximum tokens to generate in AI responses.
- * Limited to 1024 for concise calculator explanations.
+ * Thinking counts toward this limit on Haiku 5.5, so it leaves room for
+ * thinking plus a concise calculator explanation.
  */
-export const MAX_TOKENS = 1024;
+export const MAX_TOKENS = 4096;
 
 /**
  * Number of tokens to wait before sending calculator key presses.
