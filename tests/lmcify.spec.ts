@@ -28,7 +28,9 @@ test.describe('LMCIFY URL Sharing Tests', () => {
     page,
   }) => {
     await page.goto('/?lmcify=invalid_data!!!', { waitUntil: 'networkidle' });
-    await expect(page.getByText('AI Assistant')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('AI Assistant')).toBeVisible({
+      timeout: 10000,
+    });
     const chatInput = page.getByPlaceholder('Type your message...');
     const inputValue = await chatInput.inputValue();
     expect(inputValue).toBe('');

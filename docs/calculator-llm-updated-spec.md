@@ -270,10 +270,7 @@ export type SSEErrorEvent = {
 };
 
 export type SSEEvent =
-  | SSETokenEvent
-  | SSEKeysEvent
-  | SSEDoneEvent
-  | SSEErrorEvent;
+  SSETokenEvent | SSEKeysEvent | SSEDoneEvent | SSEErrorEvent;
 ```
 
 ---

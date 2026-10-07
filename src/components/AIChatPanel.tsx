@@ -112,7 +112,8 @@ export function AIChatPanel({
 
   // Derive the displayed input text based on auto-play state
   // When auto-playing, show the progressively typed message; otherwise show user input
-  const displayedInputText = isAutoPlaying && autoPlayMessage ? autoPlayMessage : inputText;
+  const displayedInputText =
+    isAutoPlaying && autoPlayMessage ? autoPlayMessage : inputText;
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {

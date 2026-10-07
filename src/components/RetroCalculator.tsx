@@ -82,7 +82,8 @@ const RetroCalculator: React.FC = () => {
     }
 
     // Map standard keys
-    const keyId = RETRO_KEY_TO_KEY_ID[key.value as keyof typeof RETRO_KEY_TO_KEY_ID];
+    const keyId =
+      RETRO_KEY_TO_KEY_ID[key.value as keyof typeof RETRO_KEY_TO_KEY_ID];
     if (keyId) {
       pressKey(keyId);
     }

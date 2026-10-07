@@ -14,11 +14,7 @@ import type { KeyId } from './calculator';
  * Categories for calculator keys.
  */
 export type KeyCategory =
-  | 'NUMBER'
-  | 'OPERATOR'
-  | 'MEMORY'
-  | 'FUNCTION'
-  | 'CONTROL';
+  'NUMBER' | 'OPERATOR' | 'MEMORY' | 'FUNCTION' | 'CONTROL';
 
 /**
  * Metadata for a calculator key.

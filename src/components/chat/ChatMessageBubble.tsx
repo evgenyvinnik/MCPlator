@@ -65,7 +65,9 @@ export function ChatMessageBubble({
           aria-label="Share message"
           title="Share this calculation"
         >
-          <Share2 className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'} text-cyan-200`} />
+          <Share2
+            className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'} text-cyan-200`}
+          />
           {showCopied && (
             <div className="absolute top-0 right-full mr-2 px-2 py-1 bg-emerald-500 text-white text-xs rounded whitespace-nowrap">
               Link copied!
