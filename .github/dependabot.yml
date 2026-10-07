@@ -11,6 +11,10 @@ updates:
       # Revisit when typescript-eslint supports TypeScript 7 (currently <6.1.0).
       - dependency-name: "typescript"
         versions: [">=7.0.0 <8.0.0"]
+      # Revisit when babel-plugin-react-compiler supports Babel 8; under Babel 8
+      # it silently compiles fewer components.
+      - dependency-name: "@babel/core"
+        versions: [">=8.0.0 <9.0.0"]
     groups:
       # Group all non-major updates together
       development-dependencies:
