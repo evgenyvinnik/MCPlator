@@ -10,7 +10,11 @@
 import { create } from 'zustand';
 import { calculatorEngine } from '../engine/calculatorEngine';
 import type { CalculatorInternalState } from '../engine/calculatorEngine';
-import type { CalculatorDisplay, AnimationSequence, KeyId } from '../types/calculator';
+import type {
+  CalculatorDisplay,
+  AnimationSequence,
+  KeyId,
+} from '../types/calculator';
 import { getDB } from '../db/indexedDB';
 
 /**

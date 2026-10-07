@@ -29,7 +29,10 @@ interface AutoPlayConfig {
  * @param baseSpeed - Base typing speed in ms (used for short messages)
  * @returns Calculated typing speed in ms per character
  */
-function calculateTypingSpeed(messageLength: number, baseSpeed: number): number {
+function calculateTypingSpeed(
+  messageLength: number,
+  baseSpeed: number
+): number {
   const shortMessageThreshold = 50;
   const minSpeed = 10; // Minimum ms per character (fastest)
 
@@ -124,7 +127,10 @@ export function useLmcifyAutoPlay(
 
     // Type the message character by character
     let currentIndex = 0;
-    const dynamicTypingSpeed = calculateTypingSpeed(sharedMessage.length, typingSpeed);
+    const dynamicTypingSpeed = calculateTypingSpeed(
+      sharedMessage.length,
+      typingSpeed
+    );
 
     const typeNextCharacter = () => {
       if (currentIndex <= sharedMessage.length) {

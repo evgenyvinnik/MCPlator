@@ -7,9 +7,13 @@ test.describe('Calculator UI Tests', () => {
    * Helper to get the calculator display value by reading digit elements
    * Reconstructs the display value from individual digit containers
    */
-  async function getDisplayValue(page: import('@playwright/test').Page): Promise<string> {
+  async function getDisplayValue(
+    page: import('@playwright/test').Page
+  ): Promise<string> {
     const displayContainer = page.locator('[class*="displayValue"]').first();
-    const digitContainers = displayContainer.locator('[class*="digitContainer"]');
+    const digitContainers = displayContainer.locator(
+      '[class*="digitContainer"]'
+    );
     const count = await digitContainers.count();
 
     let value = '';
@@ -21,7 +25,9 @@ test.describe('Calculator UI Tests', () => {
       value += digit || '';
 
       // Check if this digit has a visible decimal point after it
-      const decimalPoint = container.locator('[class*="decimalPoint"][class*="visible"]');
+      const decimalPoint = container.locator(
+        '[class*="decimalPoint"][class*="visible"]'
+      );
       if ((await decimalPoint.count()) > 0) {
         value += '.';
       }
@@ -34,10 +40,15 @@ test.describe('Calculator UI Tests', () => {
    * Helper to click a calculator button by its label
    * Uses exact text matching to avoid ambiguity (e.g., '+' vs 'M+')
    */
-  async function clickButton(page: import('@playwright/test').Page, label: string) {
+  async function clickButton(
+    page: import('@playwright/test').Page,
+    label: string
+  ) {
     // For single character labels (operators, digits), use exact matching
     // The locator needs to find a button whose text content is exactly the label
-    const button = page.locator('button').filter({ hasText: new RegExp(`^${escapeRegex(label)}$`) });
+    const button = page
+      .locator('button')
+      .filter({ hasText: new RegExp(`^${escapeRegex(label)}$`) });
     await button.click();
   }
 

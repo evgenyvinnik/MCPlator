@@ -87,6 +87,7 @@ function pressKey(state: InternalState, key: KeyId): InternalState {
 ```
 
 **Benefits**:
+
 - Predictable state changes
 - Easy debugging (compare before/after)
 - Compatible with React's reconciliation
@@ -111,11 +112,13 @@ const useCalculatorStore = create<CalculatorStore>((set, get) => ({
 ```
 
 **Benefits**:
+
 - No forgotten save calls
 - State always in sync with storage
 - Simplified component logic
 
 **Trade-offs**:
+
 - More write operations (mitigate with debouncing for frequent updates)
 - Need to handle async errors gracefully
 
@@ -143,6 +146,7 @@ interface AnimationSequence {
 ```
 
 **Benefits**:
+
 - Producer (AI response) doesn't wait for consumer (animation)
 - Multiple animations can queue while one plays
 - Callbacks enable follow-up actions after animation
@@ -169,6 +173,7 @@ export const KEY_ID_TO_RETRO_KEY: Partial<Record<KeyId, RetroKeyValue>> = { /* .
 ```
 
 **Benefits**:
+
 - Single source of truth eliminates inconsistencies
 - Adding new keys requires changes in only one file
 - Type safety across all key consumers
@@ -184,7 +189,9 @@ Use SSE for real-time AI response streaming instead of WebSockets.
 // Backend sends typed events
 writer.write(`event: token\ndata: ${JSON.stringify({ token })}\n\n`);
 writer.write(`event: keys\ndata: ${JSON.stringify({ keys })}\n\n`);
-writer.write(`event: done\ndata: ${JSON.stringify({ messageId, fullText })}\n\n`);
+writer.write(
+  `event: done\ndata: ${JSON.stringify({ messageId, fullText })}\n\n`
+);
 
 // Frontend parses events
 const reader = response.body.getReader();
@@ -192,12 +199,14 @@ const reader = response.body.getReader();
 ```
 
 **Benefits**:
+
 - Simpler than WebSockets (HTTP-based, auto-reconnect)
 - Native browser support
 - Works through proxies and load balancers
 - Unidirectional (perfect for AI responses)
 
 **Trade-offs**:
+
 - One-way only (use POST for requests)
 - Limited to text data (use JSON encoding)
 
@@ -208,27 +217,29 @@ Validate requests before expensive API calls.
 ```typescript
 function isCalculatorRelated(message: string): boolean {
   const patterns = [
-    /\d+\s*[\+\-\*\/\%]\s*\d+/,  // Math expressions
+    /\d+\s*[\+\-\*\/\%]\s*\d+/, // Math expressions
     /calculate|compute|what('s| is)/i,
     /add|subtract|multiply|divide/i,
     // ... more patterns
   ];
-  return patterns.some(p => p.test(message));
+  return patterns.some((p) => p.test(message));
 }
 
 // In API handler
 if (!isCalculatorRelated(userMessage)) {
-  return earlyRejectResponse("I can only help with calculations");
+  return earlyRejectResponse('I can only help with calculations');
 }
 // Only call Claude if relevant
 ```
 
 **Benefits**:
+
 - 20-30% API cost savings on off-topic requests
 - Faster response for filtered requests
 - Reduces load on AI service
 
 **Trade-offs**:
+
 - May incorrectly filter edge cases
 - Needs tuning for your domain
 
@@ -260,14 +271,14 @@ App.tsx
 
 ### Component Responsibilities
 
-| Component | Responsibility | State Dependencies |
-|-----------|---------------|-------------------|
-| `RetroCalculator` | Layout, animation coordination | `useCalculatorStore` |
-| `RetroScreen` | Display rendering | `display`, `shouldFlash` |
-| `RetroKeypad` | Key event handling | `pressedKey`, `isAnimating` |
-| `AIChatPanel` | Chat UI orchestration | `useChatStore`, streaming |
-| `ChatInput` | User input, share button | Local + LMCIFY utils |
-| `StreamingMessage` | Real-time response display | `streamingMessage` |
+| Component          | Responsibility                 | State Dependencies          |
+| ------------------ | ------------------------------ | --------------------------- |
+| `RetroCalculator`  | Layout, animation coordination | `useCalculatorStore`        |
+| `RetroScreen`      | Display rendering              | `display`, `shouldFlash`    |
+| `RetroKeypad`      | Key event handling             | `pressedKey`, `isAnimating` |
+| `AIChatPanel`      | Chat UI orchestration          | `useChatStore`, streaming   |
+| `ChatInput`        | User input, share button       | Local + LMCIFY utils        |
+| `StreamingMessage` | Real-time response display     | `streamingMessage`          |
 
 ### Styling Approach
 
@@ -282,6 +293,7 @@ import styles from './RetroKeypad.module.css';
 ```
 
 **Rationale**:
+
 - CSS Modules: Scoped styles, complex animations, pseudo-elements
 - Tailwind: Rapid prototyping, responsive utilities, consistency
 
@@ -315,7 +327,10 @@ interface CalculatorStore {
 
   // Actions
   pressKey: (keyId: KeyId) => void;
-  enqueueAnimation: (commands: AnimationCommand[], onComplete?: Callback) => void;
+  enqueueAnimation: (
+    commands: AnimationCommand[],
+    onComplete?: Callback
+  ) => void;
   hydrate: () => Promise<void>;
   // ... more actions
 }
@@ -378,21 +393,25 @@ The calculator is modeled as a pure state machine:
 
 ```typescript
 interface CalculatorInternalState {
-  displayValue: string;        // Current display (e.g., "123.45")
-  memoryValue: number;         // M register
-  hasMemory: boolean;          // M indicator
+  displayValue: string; // Current display (e.g., "123.45")
+  memoryValue: number; // M register
+  hasMemory: boolean; // M indicator
   lastOperator: Operator | null;
-  lastOperand: number | null;  // First operand for pending op
-  isError: boolean;            // E indicator
+  lastOperand: number | null; // First operand for pending op
+  isError: boolean; // E indicator
   shouldStartNewNumber: boolean;
 }
 
 // Pure function - no side effects
 function pressKey(state: InternalState, key: KeyId): InternalState {
   switch (key) {
-    case 'digit_0': case 'digit_1': // ...
+    case 'digit_0':
+    case 'digit_1': // ...
       return handleDigit(state, key);
-    case 'add': case 'sub': case 'mul': case 'div':
+    case 'add':
+    case 'sub':
+    case 'mul':
+    case 'div':
       return handleOperator(state, key);
     case 'equals':
       return handleEquals(state);
@@ -543,7 +562,10 @@ Turn 2: Tool result → AI explains outcome
 
 ```typescript
 // Uses lz-string for compression
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
+import {
+  compressToEncodedURIComponent,
+  decompressFromEncodedURIComponent,
+} from 'lz-string';
 
 function encodeLmcify(message: string): string {
   return compressToEncodedURIComponent(message);
@@ -580,9 +602,10 @@ function useLmcifyAutoPlay(options: {
     playedMessages.add(message);
 
     // Calculate dynamic typing speed
-    const typingSpeed = message.length > 50
-      ? Math.max(10, 3000 / message.length)
-      : baseTypingSpeed;
+    const typingSpeed =
+      message.length > 50
+        ? Math.max(10, 3000 / message.length)
+        : baseTypingSpeed;
 
     // Type each character
     let index = 0;
@@ -621,7 +644,8 @@ Message Length | Typing Speed | Total Time
 
 ```typescript
 function useAnimationRunner() {
-  const { animationQueue, animationCallbacks, isAnimating } = useCalculatorStore();
+  const { animationQueue, animationCallbacks, isAnimating } =
+    useCalculatorStore();
 
   useEffect(() => {
     if (isAnimating || animationQueue.length === 0) return;
@@ -660,8 +684,8 @@ function useAnimationRunner() {
 
 ```typescript
 const ANIMATION_TIMING = {
-  KEY_HOLD_MS: 180,      // How long key appears pressed
-  KEY_GAP_MS: 50,        // Gap between key presses
+  KEY_HOLD_MS: 180, // How long key appears pressed
+  KEY_GAP_MS: 50, // Gap between key presses
   PRE_PLAY_DELAY_MS: 300, // Delay before auto-play starts
   POST_TYPE_DELAY_MS: 1000, // Delay after typing before send
 };
@@ -737,7 +761,10 @@ async function canMakeApiCall(dailyLimit: number = 100): Promise<boolean> {
 async function recordApiCall(): Promise<void> {
   const today = new Date().toISOString().split('T')[0];
   const db = await openDB(DB_NAME, DB_VERSION);
-  const record = await db.get(STORES.QUOTA, today) || { date: today, count: 0 };
+  const record = (await db.get(STORES.QUOTA, today)) || {
+    date: today,
+    count: 0,
+  };
   await db.put(STORES.QUOTA, { ...record, count: record.count + 1 });
 }
 ```
@@ -857,6 +884,7 @@ Keys received from AI
 **Chose**: IndexedDB (client-side)
 
 **Rationale**:
+
 - No user accounts needed
 - Calculator state is inherently per-device
 - Reduces backend complexity
@@ -864,6 +892,7 @@ Keys received from AI
 - No GDPR concerns with user data storage
 
 **Trade-offs**:
+
 - No cross-device sync
 - Lost on browser data clear
 - Limited debugging visibility
@@ -875,12 +904,14 @@ Keys received from AI
 **Chose**: Server-Sent Events
 
 **Rationale**:
+
 - Simpler server implementation
 - Works with serverless (Vercel Edge)
 - Auto-reconnect built-in
 - Sufficient for unidirectional AI responses
 
 **Trade-offs**:
+
 - One-way only (fine for this use case)
 - Maximum 6 concurrent connections per domain
 
@@ -891,12 +922,14 @@ Keys received from AI
 **Chose**: Separate Calculator and Chat stores
 
 **Rationale**:
+
 - Different update frequencies
 - Independent persistence needs
 - Easier to reason about
 - Better for testing
 
 **Trade-offs**:
+
 - Cross-store communication slightly more complex
 - Need to coordinate hydration
 
@@ -907,11 +940,13 @@ Keys received from AI
 **Chose**: Regex-based pre-filter
 
 **Rationale**:
+
 - Significant cost savings (20-30%)
 - Faster rejection of off-topic requests
 - Simple to implement and tune
 
 **Trade-offs**:
+
 - May incorrectly filter valid requests
 - Needs ongoing tuning
 - Doesn't catch sophisticated off-topic
@@ -923,11 +958,13 @@ Keys received from AI
 **Chose**: lz-string compression
 
 **Rationale**:
+
 - Much shorter URLs for longer messages
 - URL-safe encoding built-in
 - Better for social sharing (URL length limits)
 
 **Trade-offs**:
+
 - Additional dependency
 - Slightly more CPU for encode/decode
 - Not human-readable (debugging harder)
@@ -939,11 +976,13 @@ Keys received from AI
 ### For More Complex AI Interactions
 
 1. **Multiple Tools**: Define additional tools in the API
+
    ```typescript
    const tools = [calculatorTool, graphingTool, unitConverterTool];
    ```
 
 2. **Conversation Memory**: Increase context window
+
    ```typescript
    const contextMessages = messages.slice(-20); // More history
    ```
@@ -958,24 +997,29 @@ Keys received from AI
 ### For More Complex State
 
 1. **State Slices**: Split stores further by domain
+
    ```typescript
-   useCalculatorStore, useChatStore, useGraphStore, useSettingsStore
+   (useCalculatorStore, useChatStore, useGraphStore, useSettingsStore);
    ```
 
 2. **Middleware**: Add logging, persistence, or devtools
+
    ```typescript
    create(devtools(persist(subscribeWithSelector((set) => ...))));
    ```
 
 3. **Computed State**: Use selectors for derived values
    ```typescript
-   const total = useStore(state => state.items.reduce((a, b) => a + b.price, 0));
+   const total = useStore((state) =>
+     state.items.reduce((a, b) => a + b.price, 0)
+   );
    ```
 
 ### For More Complex UI
 
 1. **Component Library**: Extract reusable components
 2. **Lazy Loading**: Code-split large features
+
    ```typescript
    const GraphPanel = lazy(() => import('./GraphPanel'));
    ```
@@ -1000,6 +1044,7 @@ Keys received from AI
 ### Unit Tests
 
 - **Calculator Engine**: Pure function, easy to test all cases
+
   ```typescript
   test('division by zero shows error', () => {
     let state = pressKey(initial, 'digit_5');
@@ -1060,13 +1105,13 @@ test('should perform basic addition: 2 + 3 = 5', async ({ page }) => {
 
 MCPlator demonstrates a clean architecture for AI-integrated applications:
 
-| Concern | Solution |
-|---------|----------|
+| Concern          | Solution                                |
+| ---------------- | --------------------------------------- |
 | State Management | Zustand with separate stores per domain |
-| Persistence | IndexedDB with reactive auto-save |
-| AI Integration | SSE streaming + tool calling |
-| Animation | Queue-based with completion callbacks |
-| Sharing | URL encoding with lz-string compression |
-| Cost Control | Pre-filtering + daily quotas |
+| Persistence      | IndexedDB with reactive auto-save       |
+| AI Integration   | SSE streaming + tool calling            |
+| Animation        | Queue-based with completion callbacks   |
+| Sharing          | URL encoding with lz-string compression |
+| Cost Control     | Pre-filtering + daily quotas            |
 
 The patterns and trade-offs documented here should transfer well to more complex applications while maintaining code clarity and developer experience.

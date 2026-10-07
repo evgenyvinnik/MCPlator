@@ -6,7 +6,6 @@ A fully functional retro Casio-style calculator with an LLM-powered AI assistant
 
 <img width="1271" height="1041" alt="Screenshot 2025-12-29 at 9 07 40 PM" src="https://github.com/user-attachments/assets/06cfd84f-d723-4bcb-aa37-27ff2f6df32e" />
 
-
 ## Features
 
 - **Authentic Casio calculator** with complete functionality (memory, percentage, square root, sign change, etc.)
@@ -50,7 +49,7 @@ A fully functional retro Casio-style calculator with an LLM-powered AI assistant
 ### Backend (`/api`)
 
 - **Platform:** Vercel Serverless Functions (Edge Runtime)
-- **AI:** Anthropic Claude API (Claude Haiku 4.5 model)
+- **AI:** Anthropic Claude API (Claude Haiku 5.5 model)
 - **Streaming:** Server-Sent Events (SSE) for real-time token streaming
 
 ## Project Structure
