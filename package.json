@@ -25,18 +25,18 @@
     "generate:pwa-assets": "node scripts/generate-pwa-assets.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.132.0",
+    "@anthropic-ai/sdk": "^0.133.0",
     "@radix-ui/react-slot": "^1.4.0",
     "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "idb": "^8.0.4",
-    "lucide-react": "^1.52.0",
+    "lucide-react": "^1.54.0",
     "lz-string": "^1.5.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tailwind-merge": "^3.7.0",
-    "uuid": "^14.0.2",
+    "uuid": "^14.0.3",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
